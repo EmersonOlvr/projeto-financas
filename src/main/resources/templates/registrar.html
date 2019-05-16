@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html>
+	<!-- SE o usuario estiver logado redireciona para a pagina Home -->
+	
+	<head>
+		<meta charset="utf-8">
+		<title>Registrar | <th:block th:insert="includes/include.html :: site_titulo"></th:block></title>
+		<th:block th:insert="includes/include.html :: #head"></th:block>
+		
+		<script type="text/javascript">
+			function desativar(field) {
+				field.disabled = true;
+			}
+		</script>
+	</head>
+
+	<body class="text-center">
+		<form action="registrar" th:object="${usuario}" name="reg_form" class="principal form-registrar" method="POST" onsubmit="desativar(this.registrar)">
+			<h1 class="mt-2 h3 mb-3 font-weight-normal">Criar nova conta</h1>
+			
+			<!-- verifica se existe alguma mensagem de erro -->
+			<div th:if="${!#strings.isEmpty(msgErro)}" class="text-erro mb-2">
+				[[${msgErro}]]
+			</div>
+			<!-- verifica se registrou -->
+			<div th:if="${!#strings.isEmpty(msgSucesso)}" class="text-sucesso mb-2">
+				[[${msgSucesso}]]
+			</div>
+
+			<div class="form-row">
+				<div class="form-group col-md-6 mb-0 pr-0">
+					<input type="text" th:field="*{nome}" class="form-control" placeholder="Nome" pattern="^[A-zÀ-ú ]+$" required>
+				</div>
+				<div class="form-group col-md-6 mb-0 pl-0">
+					<input type="text" th:field="*{sobrenome}" class="form-control" placeholder="Sobrenome" pattern="^[A-zÀ-ú ]+$" required>
+				</div>
+			</div>
+			<input type="email" th:field="*{email}" class="form-control" placeholder="Endereço de E-mail" required>
+			<input type="password" th:field="*{senha}"  class="form-control" minlength="6" placeholder="Senha" autocomplete="off" required>
+			<input type="password" th:field="*{senhaRepetida}" class="form-control" placeholder="Senha (repita)" autocomplete="off" required>
+			<button class="btn btn-lg btn-primary btn-block" name="registrar" type="submit">Registrar</button>
+
+			<p class="mt-1 text-muted text-left">ou <a href="entrar">Faça login</a></p>
+			
+			<th:block th:insert="includes/include.html :: footer"></th:block>
+		</form>
+	</body>
+</html>
