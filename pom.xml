@@ -8,11 +8,11 @@
 		<version>2.1.4.RELEASE</version>
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
-	<groupId>com.emerson</groupId>
-	<artifactId>sistema-login-java</artifactId>
+	<groupId>com.jolteam</groupId>
+	<artifactId>financas</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<name>sistema-login-java</name>
-	<description>Sistema de Login com Java</description>
+	<name>Projeto Finanças</name>
+	<description>Projeto de finanças pessoais</description>
 
 	<properties>
 		<java.version>1.8</java.version>
