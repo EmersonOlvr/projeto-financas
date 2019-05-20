@@ -133,9 +133,7 @@ public class UsuarioController {
 		// se não existir nenhum, retorna null
 		Usuario usuario = this.usuarioRep.findByEmail(email);
 		
-		if (usuario == null || !BCrypt.checkpw(senha, usuario.getSenha())) {
-			model.addAttribute("msgErro", "E-mail ou senha inválidos.");
-		} else {
+		if (usuario != null && BCrypt.checkpw(senha, usuario.getSenha())) {
 			// atualiza o último acesso e o último IP
 			usuario.setUltimoAcesso(LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")));
 			usuario.setUltimoIp(this.getUserIp(request));
@@ -144,6 +142,8 @@ public class UsuarioController {
 			this.usuarioRep.save(usuario);
 			
 			System.out.println("Logou! "+usuario);
+		} else {
+			model.addAttribute("msgErro", "E-mail ou senha inválidos.");
 		}
 		
 		return "entrar";
