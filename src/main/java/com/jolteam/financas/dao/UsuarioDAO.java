@@ -8,6 +8,7 @@ import com.jolteam.financas.model.Usuario;
 
 public interface UsuarioDAO extends JpaRepository<Usuario, Integer> {
 	
-	List<Usuario> findByEmail(String email);
+	Usuario findByEmail(String email);
+	List<Usuario> findAllByEmail(String email);
 	
 }

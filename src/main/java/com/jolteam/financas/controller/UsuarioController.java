@@ -69,7 +69,7 @@ public class UsuarioController {
 		if (!result.hasFieldErrors()) {
 			if (!usuario.getSenha().equals(usuario.getSenhaRepetida())) {
 				result.addError(new ObjectError("senhasNaoConferem", "As senhas não conferem."));
-			} else if (usuarioRep.findByEmail(usuario.getEmail()).size() > 0) {
+			} else if (usuarioRep.findAllByEmail(usuario.getEmail()).size() > 0) {
 				result.addError(new ObjectError("emailEmUso", "O e-mail inserido já está em uso."));
 				
 			} else {
@@ -129,16 +129,13 @@ public class UsuarioController {
 	
 	@PostMapping("/entrar")
 	public String autenticarUsuario(Model model, @RequestParam String email, String senha, HttpServletRequest request) {
-		List<Usuario> lista = this.usuarioRep.findByEmail(email);
-		String msgErro;
-		if (lista.size() == 0 || !BCrypt.checkpw(senha, lista.get(0).getSenha())) {
-			msgErro = "E-mail ou senha inválidos.";
-			model.addAttribute("msgErro", msgErro);
-			System.out.println(msgErro);
+		// busca no banco o usuário com o e-mail fornecido
+		// se não existir nenhum, retorna null
+		Usuario usuario = this.usuarioRep.findByEmail(email);
+		
+		if (usuario == null || !BCrypt.checkpw(senha, usuario.getSenha())) {
+			model.addAttribute("msgErro", "E-mail ou senha inválidos.");
 		} else {
-			// obtém o usuário do banco
-			Usuario usuario = lista.get(0);
-			
 			// atualiza o último acesso e o último IP
 			usuario.setUltimoAcesso(LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")));
 			usuario.setUltimoIp(this.getUserIp(request));
@@ -148,6 +145,7 @@ public class UsuarioController {
 			
 			System.out.println("Logou! "+usuario);
 		}
+		
 		return "entrar";
 	}
 	
