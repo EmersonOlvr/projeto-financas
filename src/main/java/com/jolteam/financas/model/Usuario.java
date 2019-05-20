@@ -22,18 +22,21 @@ public class Usuario {
 	private Integer id;
 	
 	@Column(length=50, nullable=false)
-	@Pattern(regexp="^[A-zÀ-ú ]+$", message="Nome inválido: somente letras e espaços são permitidos.", groups=NomePatternGroup.class)
+	@NotBlank(message="Insira um nome.", groups=NomeNotBlankGroup.class)
+	@Pattern(regexp="^[A-zÀ-ú ]*$", message="Nome inválido: somente letras e espaços são permitidos.", groups=NomePatternGroup.class)
 	@Size(min=2, message="Nome inválido: mínimo de {min} letras.", groups=NomeSizeMinGroup.class)
 	@Size(max=50, message="Nome inválido: máximo de {max} letras.", groups=NomeSizeMaxGroup.class)
 	private String nome;
 	
 	@Column(length=50, nullable=false)
-	@Pattern(regexp="^[A-zÀ-ú ]+$", message="Sobrenome inválido: somente letras e espaços são permitidos.", groups=SobrenomePatternGroup.class)
+	@NotBlank(message="Insira um sobrenome.", groups=SobrenomeNotBlankGroup.class)
+	@Pattern(regexp="^[A-zÀ-ú ]*$", message="Sobrenome inválido: somente letras e espaços são permitidos.", groups=SobrenomePatternGroup.class)
 	@Size(min=2, message="Sobrenome inválido: mínimo de {min} letras.", groups=SobrenomeSizeMinGroup.class)
 	@Size(max=50, message="Sobrenome inválido: máximo de {max} letras.", groups=SobrenomeSizeMaxGroup.class)
 	private String sobrenome;
 	
 	@Column(length=64, unique=true, nullable=false)
+	@NotBlank(message="Insira um e-mail.", groups=EmailNotBlankGroup.class)
 	@Pattern(regexp="^[\\w-\\+]+(\\.[\\w]+)*@[\\w-]+(\\.[\\w]+)*(\\.[A-z]{2,})$", message="E-mail em formato inválido.", groups=EmailPatternGroup.class)
 	@Size(max=64, message="E-mail inválido: máximo de {max} caracteres.", groups=EmailSizeMaxGroup.class)
 	private String email;

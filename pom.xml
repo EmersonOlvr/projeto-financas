@@ -11,7 +11,7 @@
 	<groupId>com.jolteam</groupId>
 	<artifactId>financas</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<name>Projeto Finanças</name>
+	<name>projeto-financas</name>
 	<description>Projeto de finanças pessoais</description>
 
 	<properties>
