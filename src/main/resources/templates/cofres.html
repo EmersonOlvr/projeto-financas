@@ -7,7 +7,7 @@
 
 	<title>Cofres</title>
 
-	<link rel="stylesheet" type="text/css" href="/css/main.css">
+	<th:block th:insert="/includes/include.html :: #head"></th:block>
 </head>
 <body class="app">
 	<div id="loader">
@@ -48,6 +48,7 @@
 												<th scope="col">#</th>
 												<th scope="col">Nome do Cofre</th>
 												<th scope="col">Total acumulado</th>
+												<th scope="col">Data de Criação</th>
 												<th scope="col" colspan="2">Ações</th>
 											</tr>
 										</thead>
@@ -56,6 +57,7 @@
 												<th scope="row">1</th>
 												<td>Porquinho Azul</td>
 												<td>R$ 25,50</td>
+												<td>31/05/2019</td>
 												<td><button class="btn btn-outline-primary" onclick="location.href='/cofres/editar/1'">Editar</button></td>
 												<td><button class="btn btn-outline-danger" onclick="location.href='/cofres/excluir/1'">Excluir</button></td>
 											</tr>
@@ -63,6 +65,7 @@
 												<th scope="row">2</th>
 												<td>Cofre do Quarto</td>
 												<td>R$ 4.008,10</td>
+												<td>31/05/2019</td>
 												<td><button class="btn btn-outline-primary" onclick="location.href='/cofres/editar/2'">Editar</button></td>
 												<td><button class="btn btn-outline-danger" onclick="location.href='/cofres/excluir/2'">Excluir</button></td>
 											</tr>
@@ -70,6 +73,7 @@
 												<th scope="row">3</th>
 												<td>Porquinho Rosa</td>
 												<td>R$ 30,25</td>
+												<td>31/05/2019</td>
 												<td><button class="btn btn-outline-primary" onclick="location.href='/cofres/editar/3'">Editar</button></td>
 												<td><button class="btn btn-outline-danger" onclick="location.href='/cofres/excluir/3'">Excluir</button></td>
 											</tr>

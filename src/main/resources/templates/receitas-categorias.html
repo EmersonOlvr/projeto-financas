@@ -7,7 +7,7 @@
 
 	<title>Categorias de Receitas</title>
 
-	<link rel="stylesheet" type="text/css" href="/css/main.css">
+	<th:block th:insert="/includes/include.html :: #head"></th:block>
 </head>
 <body class="app">
 	<div id="loader">
@@ -67,7 +67,7 @@
 								<form id="needs-validation" novalidate>
 									<label for="validationCustom01">Nome da Categoria</label>
 									<div class="input-group mb-3">
-										<input type="text" class="form-control" id="validationCustom01" placeholder="Nome da Categoria..." aria-label="Nome da Categoria...">
+										<input type="text" class="form-control" id="validationCustom01" placeholder="Nome da Categoria..." aria-label="Nome da Categoria..." required>
 										<div class="input-group-append">
 											<button class="btn btn-outline-primary" type="submit">Adicionar</button>
 										</div>
