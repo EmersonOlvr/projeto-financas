@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width,initial-scale=1,shrink-to-fit=no">
+	<link rel="icon" href="/img/favicon.ico">
+
+	<title>Configurações</title>
+
+	<link rel="stylesheet" type="text/css" href="/css/main.css">
+</head>
+<body class="app">
+	<div id="loader">
+		<div class="spinner"></div>
+	</div>
+	<script>
+		window.addEventListener('load', function load() {
+			const loader = document.getElementById('loader');
+			setTimeout(function() {
+				loader.classList.add('fadeOut');
+			}, 300);
+		});
+	</script>
+	<!--Menu do Tema-->
+	<div>
+		<th:block th:insert="/includes/include.html :: menuLateral"></th:block>
+		<div class="page-container">
+			<th:block th:insert="/includes/include.html :: menuSuperior"></th:block>
+
+
+			
+			<main class="main-content bgc-grey-100">
+				<h6 class="text">Alterar Dados de Usuário</h6>
+				<hr/>
+				<form action="" method="post" class="container" id="needs-validation" novalidate>
+					<div class="row">
+						<div class="col-md-5 mb-3">
+							<label for="validationCustom01">Nome</label>
+							<input type="text" class="form-control" id="validationCustom01" placeholder="Nome"  required>
+							<div class="invalid-feedback">Digite seu Nome</div>
+						</div>
+						<div class="col-md-5 mb-3">
+							<label for="validationCustom02">Sobrenome</label>
+							<input type="text" class="form-control" id="validationCustom02" placeholder="Sobrenome"  required>
+							<div class="invalid-feedback">Digite seu Sobrenome.</div>
+						</div>
+					</div>
+					<div class="row">
+						<div class="col-md-6 mb-3">
+							<label for="validationCustom03">Email</label>
+							<input type="email" class="form-control" id="validationCustom03" placeholder="Email" required>
+							<div class="invalid-feedback">Favor forneca email válido.</div>
+						</div>
+						<div class="col-md-3 mb-3">
+							<label for="validationCustom04">Senha</label>
+							<input type="password" class="form-control" id="validationCustom04" placeholder="Senha" required>
+							<div class="invalid-feedback">Digite Senha</div>
+						</div>
+						<div class="col-md-3 mb-3">
+							<label for="validationCustom05">Foto </label>
+							<input type="file" id="validationCustom05">
+							<div class="invalid-feedback"></div>
+						</div>
+					</div>
+					<button class="btn btn-primary" type="submit">Salvar Alterações</button>
+				</form>
+
+				<script>
+					!function() {
+						"use strict";
+						window.addEventListener("load", function() {
+							var e=document.getElementById("needs-validation");
+							e.addEventListener("submit", function(t) {
+								!1===e.checkValidity() && (t.preventDefault(), t.stopPropagation()), e.classList.add("was-validated")
+							}, !1)
+						}, !1)
+					}()
+				</script>
+			</main>
+
+
+
+			<th:block th:insert="/includes/include.html :: footer"></th:block>
+		</div>
+	</div>
+
+	<th:block th:insert="/includes/include.html :: scripts"></th:block>
+</body>
+</html>

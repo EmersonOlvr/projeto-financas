@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width,initial-scale=1,shrink-to-fit=no">
+	<link rel="icon" href="/img/favicon.ico">
+
+	<title>Histórico das Despesas</title>
+
+	<link rel="stylesheet" type="text/css" href="/css/main.css">
+</head>
+<body class="app">
+	<div id="loader">
+		<div class="spinner"></div>
+	</div>
+	<script>
+		window.addEventListener('load', function load() {
+			const loader = document.getElementById('loader');
+			setTimeout(function() {
+				loader.classList.add('fadeOut');
+			}, 300);
+		});
+	</script>
+	<!--Menu do Tema-->
+	<div>
+		<th:block th:insert="/includes/include.html :: menuLateral"></th:block>
+		<div class="page-container">
+			<th:block th:insert="/includes/include.html :: menuSuperior"></th:block>
+
+
+
+			<main class="main-content bgc-grey-100">
+				<h4 class="c-grey-900">Histórico das Despesas ordenado por Categoria</h4>
+				<div class="row">
+					<div class="col-md-12 mb-3">
+						<div class="bgc-white bd bdrs-3 p-20">
+							<h4 class="c-grey-900 mB-20">Alimentação</h4>
+							<table class="table table-hover table-bordered">
+								<thead>
+									<tr>
+										<th scope="col">Código</th>
+										<th scope="col">Nome</th>
+										<th scope="col">Categoria</th>
+										<th scope="col">Ano/Mês/Dia</th>
+										<th scope="col">Valor</th>
+									</tr>
+								</thead>
+								<tbody>
+									<tr>
+										<th scope="row">1</th>
+										<td>Walmart</td>
+										<td>Alimentação</td>
+										<td>2014/03/25</td>
+										<td>R$ 20,80</td>
+									</tr>
+									<tr>
+										<th scope="row">2</th>
+										<td>Leão Atacarejo</td>
+										<td>Alimentação</td>
+										<td>2014/03/26</td>
+										<td>R$ 15,80</td>
+									</tr>
+								</tbody>
+							</table>
+						</div>
+					</div>
+					<div class="col-md-12 mb-3">
+						<div class="bgc-white bd bdrs-3 p-20">
+							<h4 class="c-grey-900 mB-20">Saúde</h4>
+							<table class="table table-hover table-bordered">
+								<thead>
+									<tr>
+										<th scope="col">Código</th>
+										<th scope="col">Nome</th>
+										<th scope="col">Categoria</th>
+										<th scope="col">Ano/Mês/Dia</th>
+										<th scope="col">Valor</th>
+									</tr>
+								</thead>
+								<tbody>
+									<tr>
+										<th scope="row">1</th>
+										<td>Farmácia do Povo</td>
+										<td>Saúde</td>
+										<td>2014/03/25</td>
+										<td>R$ 17,75</td>
+									</tr>
+									<tr>
+										<th scope="row">2</th>
+										<td>Farmácia Permanente</td>
+										<td>Saúde</td>
+										<td>2014/03/26</td>
+										<td>R$ 45,90</td>
+									</tr>
+								</tbody>
+							</table>
+						</div>
+					</div>
+					<div class="col-md-12 mb-3">
+						<div class="bgc-white bd bdrs-3 p-20">
+							<h4 class="c-grey-900 mB-20">Transporte</h4>
+							<table class="table table-hover table-bordered">
+								<thead>
+									<tr>
+										<th scope="col">Código</th>
+										<th scope="col">Nome</th>
+										<th scope="col">Categoria</th>
+										<th scope="col">Ano/Mês/Dia</th>
+										<th scope="col">Valor</th>
+									</tr>
+								</thead>
+								<tbody>
+									<tr>
+										<th scope="row">1</th>
+										<td>Posto Shell</td>
+										<td>Transporte</td>
+										<td>2014/03/12</td>
+										<td>R$ 86,00</td>
+									</tr>
+									<tr>
+										<th scope="row">2</th>
+										<td>Posto Ipiranga</td>
+										<td>Transporte</td>
+										<td>2014/03/30</td>
+										<td>R$ 40,50</td>
+									</tr>
+								</tbody>
+							</table>
+						</div>
+					</div>
+				</div>
+			</main>
+
+
+
+			<th:block th:insert="/includes/include.html :: footer"></th:block>
+		</div>
+	</div>
+
+	<th:block th:insert="/includes/include.html :: scripts"></th:block>
+</body>
+</html>

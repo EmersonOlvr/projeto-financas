@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.jolteam.financas.dao.UsuarioDAO;
 import com.jolteam.financas.errorgroups.usuario.UsuarioValidationSequence;
@@ -41,12 +42,12 @@ public class UsuarioController {
 
 	@GetMapping("/")
 	public String viewIndex() {
-		return "index";
+		return "/deslogado/index";
 	}
 	
-	@GetMapping("/registrar")
-	public ModelAndView viewRegistrar(Model model) {
-		ModelAndView mv = new ModelAndView("registrar");
+	@GetMapping("/cadastrar")
+	public ModelAndView viewCadastrar(Model model) {
+		ModelAndView mv = new ModelAndView("/deslogado/cadastrar");
 		
 		// se receber (através do método addFlashAttribute do RedirectAttributes) o objeto usuario (com os atributos que foram
 		// preenchidos pelo usuário), ele é adicionado na view senão, é adicionado um objeto com atributos vazios. 
@@ -58,12 +59,12 @@ public class UsuarioController {
 		return mv;
 	}
 	
-	@PostMapping("/registrar")
-	public ModelAndView registrarUsuario(HttpServletRequest request, Model model, 
+	@PostMapping("/cadastrar")
+	public ModelAndView cadastrarUsuario(HttpServletRequest request, Model model, 
 								   @ModelAttribute @Validated(UsuarioValidationSequence.class) Usuario usuario, 
 								   BindingResult result) 
 	{
-		ModelAndView mv = new ModelAndView("registrar");
+		ModelAndView mv = new ModelAndView("/deslogado/cadastrar");
 		
 		// checa se houve algum erro na validação dos campos
 		if (!result.hasFieldErrors()) {
@@ -118,12 +119,12 @@ public class UsuarioController {
 			}
 		}
 
-		return new ModelAndView("registrar").addObject("usuario", usuario);
+		return new ModelAndView("/deslogado/cadastrar").addObject("usuario", usuario);
 	}
 	
 	@GetMapping("/entrar")
 	public ModelAndView viewEntrar() {
-		ModelAndView mv = new ModelAndView("entrar");
+		ModelAndView mv = new ModelAndView("/deslogado/entrar");
 		return mv;
 	}
 	
@@ -146,24 +147,97 @@ public class UsuarioController {
 			model.addAttribute("msgErro", "E-mail ou senha inválidos.");
 		}
 		
-		return "entrar";
+		return "/deslogado/entrar";
+	}
+	
+	@GetMapping("/ativacao-conta")
+	public String viewAtivacaoConta() {
+		return "/deslogado/ativacao-conta";
+	}
+	
+	@GetMapping("/recuperar-senha")
+	public String viewRecuperarSenha() {
+		return "/deslogado/recuperar-senha";
+	}
+	
+	@GetMapping("recuperar-senha/2")
+	public String viewRecuperarSenhaMsg() {
+		return "/deslogado/recuperar-senha-2";
+	}
+	
+	@GetMapping("/redefinir-senha")
+	public String viewRedefinirSenha() {
+		return "/deslogado/redefinir-senha";
+	}
+	
+	@GetMapping("/configuracoes")
+	public String viewConfiguracoes() {
+		return "/configuracoes";
+	}
+	@PostMapping("/configuracoes")
+	public String atualizarUsuario(Model model, @ModelAttribute Usuario usuario) {
+		this.usuarioRep.save(usuario);
+		model.addAttribute("msgSucesso", "Configurações salvas!");
+		return "/configuracoes";
 	}
 	
 	@GetMapping("/home")
 	public String viewHome() {
-		return "home";
+		return "/home";
 	}
 	
-	@GetMapping("/ajustes")
-	public String viewAjustes() {
-		return "ajustes";
+	@GetMapping("/movimentos")
+	public String viewMovimentos() {
+		return "/movimentos";
 	}
-
-	@GetMapping("/teste/{num}/{str}")
-	public String testePathVariables(Model model, @PathVariable Long num, @PathVariable String str) {
-		model.addAttribute("num", num);
-		model.addAttribute("str", str);
-		return "testes";
+	
+	@GetMapping("/receitas/adicionar")
+	public String viewAdicionarReceitas() {
+		return "/receitas-adicionar";
+	}
+	
+	@GetMapping("/receitas/categorias")
+	public String viewCategoriasReceita() {
+		return "/receitas-categorias";
+	}
+	
+	@GetMapping("/receitas/historico")
+	public String viewHistoricoReceitas() {
+		return "/receitas-historico";
+	}
+	
+	@GetMapping("/despesas/adicionar")
+	public String viewAdicionarDespesas() {
+		return "/despesas-adicionar";
+	}
+	
+	@GetMapping("/despesas/categorias")
+	public String viewCategoriasDespesa() {
+		return "/despesas-categorias";
+	}
+	
+	@GetMapping("/despesas/historico")
+	public String viewHistoricoDespesas() {
+		return "/despesas-historico";
+	}
+	
+	@GetMapping("/cofres")
+	public String viewCofres(Model model) {
+		return "/cofres";
+	}
+	
+	@GetMapping("/cofres/editar/{id}")
+	public String viewEditarCofre(@PathVariable Integer id) {
+		System.out.println("Editando o cofre: "+id+".");
+		return "/cofres-editar";
+	}
+	
+	@GetMapping("/cofres/excluir/{id}")
+	public String excluirCofre(@PathVariable Integer id, RedirectAttributes ra) {
+		System.out.println("Excluindo o cofre: "+id+"...");
+		
+		ra.addFlashAttribute("msgSucesso", "Cofre excluído!");
+		return "redirect:/cofres";
 	}
 	
 }

@@ -1,0 +1,32 @@
+
+<!doctype html>
+<html>
+<head>
+	<title>Teste</title>
+	<script type="text/javascript" src="/js/vendor.js"></script>
+	<script type="text/javascript" src="/js/bundle.js"></script>
+	<script type="text/javascript" src="https://www.chartjs.org/samples/latest/utils.js"></script>
+
+	<script type="text/javascript" src="/js/_chartsData.js"></script>
+	<script type="text/javascript" src="/js/_chartsConfig.js"></script>
+</head>
+<body>
+	<div style="width: 50%">
+		<canvas id="chart-area-1" height="100"></canvas>
+		<canvas id="chart-area-2" height="100"></canvas>
+	</div>
+
+	<script type="text/javascript">
+		window.onload = function() {
+			var ctx1 = document.getElementById('chart-area-1').getContext('2d');
+			window.myPie = new Chart(ctx1, config1);
+
+			var ctx2 = document.getElementById('chart-area-2').getContext('2d');
+			window.myPie = new Chart(ctx2, config2);
+		};
+	</script>
+
+	<script src="https://ajax.cloudflare.com/cdn-cgi/scripts/a2bd7673/cloudflare-static/rocket-loader.min.js" data-cf-settings="102770dbd46e0752700ce51d-|49" defer=""></script>
+	<script src="https://ajax.cloudflare.com/cdn-cgi/scripts/a2bd7673/cloudflare-static/rocket-loader.min.js" data-cf-settings="5c2d23da0d2980a677ad1eae-|49" defer=""></script>
+</body>
+</html>
