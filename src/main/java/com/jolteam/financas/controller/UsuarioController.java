@@ -1,8 +1,9 @@
 package com.jolteam.financas.controller;
 
 import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -21,15 +22,26 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import com.jolteam.financas.dao.CategoriaDAO;
+import com.jolteam.financas.dao.LogDAO;
+import com.jolteam.financas.dao.TransacaoDAO;
 import com.jolteam.financas.dao.UsuarioDAO;
 import com.jolteam.financas.errorgroups.usuario.UsuarioValidationSequence;
+import com.jolteam.financas.model.Categoria;
+import com.jolteam.financas.model.Cofre;
+import com.jolteam.financas.model.Log;
+import com.jolteam.financas.model.TiposLogs;
+import com.jolteam.financas.model.TiposTransacoes;
+import com.jolteam.financas.model.Transacao;
 import com.jolteam.financas.model.Usuario;
 
 @Controller
 public class UsuarioController {
 
-	@Autowired
-	private UsuarioDAO usuarioRep;
+	@Autowired private UsuarioDAO usuarios;
+	@Autowired private LogDAO logs;
+	@Autowired private TransacaoDAO transacoes;
+	@Autowired private CategoriaDAO categorias;
 	
 	// método para obter o IP do usuário
 	private String getUserIp(HttpServletRequest request) {
@@ -64,15 +76,13 @@ public class UsuarioController {
 								   @ModelAttribute @Validated(UsuarioValidationSequence.class) Usuario usuario, 
 								   BindingResult result) 
 	{
-		ModelAndView mv = new ModelAndView("/deslogado/cadastrar");
 		
-		// checa se houve algum erro na validação dos campos
+		// checa se houve algum erro na validação dos campos do usuário
 		if (!result.hasFieldErrors()) {
 			if (!usuario.getSenha().equals(usuario.getSenhaRepetida())) {
 				result.addError(new ObjectError("senhasNaoConferem", "As senhas não conferem."));
-			} else if (usuarioRep.findAllByEmail(usuario.getEmail()).size() > 0) {
+			} else if (usuarios.findByEmail(usuario.getEmail()).isPresent()) {
 				result.addError(new ObjectError("emailEmUso", "O e-mail inserido já está em uso."));
-				
 			} else {
 				// remove os espaços do começo e do final do nome e do sobrenome
 				usuario.setNome(usuario.getNome().trim());
@@ -92,19 +102,16 @@ public class UsuarioController {
 				String senhaHash = BCrypt.hashpw(usuario.getSenha(), BCrypt.gensalt(complexidade));
 				usuario.setSenha(senhaHash);
 				
-				// data e hora atual
-				String datetime = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
-				
 				// atributos que vieram do formulário nulos mas que não podem ser nulos no banco
-				usuario.setEmailAtivado(false);
-				usuario.setPermissao(1);
-				usuario.setRegistroData(datetime);
+				usuario.setContaAtivada(false);
+				usuario.setPermissao((short) 1);
+				usuario.setRegistroData(LocalDateTime.now());
 				usuario.setRegistroIp(this.getUserIp(request));
 				
 				// tenta...
 				try {
 					// ...salvar o usuário no banco de dados
-					this.usuarioRep.save(usuario);
+					this.usuarios.save(usuario);
 					
 					// adiciona o atributo "msgSucesso" na view
 					model.addAttribute("msgSucesso", "Registrado com sucesso!");
@@ -132,15 +139,15 @@ public class UsuarioController {
 	public String autenticarUsuario(Model model, @RequestParam String email, String senha, HttpServletRequest request) {
 		// busca no banco o usuário com o e-mail fornecido
 		// se não existir nenhum, retorna null
-		Usuario usuario = this.usuarioRep.findByEmail(email);
+		Optional<Usuario> usuario = this.usuarios.findByEmail(email);
 		
-		if (usuario != null && BCrypt.checkpw(senha, usuario.getSenha())) {
-			// atualiza o último acesso e o último IP
-			usuario.setUltimoAcesso(LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")));
-			usuario.setUltimoIp(this.getUserIp(request));
+		if (usuario.isPresent() && BCrypt.checkpw(senha, usuario.get().getSenha())) {
+			// insere um novo log de login no banco
+			String ip = this.getUserIp(request);
+			logs.save(new Log(usuario.get(), TiposLogs.LOGIN, LocalDateTime.now(), ip));
 			
 			// atualiza o usuário no banco
-			this.usuarioRep.save(usuario);
+			this.usuarios.save(usuario.get());
 			
 			System.out.println("Logou! "+usuario);
 		} else {
@@ -176,7 +183,7 @@ public class UsuarioController {
 	}
 	@PostMapping("/configuracoes")
 	public String atualizarUsuario(Model model, @ModelAttribute Usuario usuario) {
-		this.usuarioRep.save(usuario);
+		this.usuarios.save(usuario);
 		model.addAttribute("msgSucesso", "Configurações salvas!");
 		return "/configuracoes";
 	}
@@ -238,6 +245,93 @@ public class UsuarioController {
 		
 		ra.addFlashAttribute("msgSucesso", "Cofre excluído!");
 		return "redirect:/cofres";
+	}
+	
+	// ====================== Testes ======================
+	/*
+	 * Transações
+	 */
+	@GetMapping("/testes/transacao/adicionar/{usuarioId}/{tipo}/{categoriaId}/{descricao}/{valor}")
+	public String testeAdicionarCategoria(@PathVariable int usuarioId, @PathVariable int categoriaId, 
+			@PathVariable TiposTransacoes tipo, @PathVariable String descricao, @PathVariable double valor) 
+	{
+		this.transacoes.save(new Transacao(
+				this.usuarios.getOne(usuarioId), 
+				tipo, 
+				this.categorias.getOne(categoriaId), 
+				descricao, 
+				valor, 
+				LocalDateTime.now()
+				));
+		
+		return "redirect:/testes/cofres/"+usuarioId;
+	}
+	
+	/*
+	 * Cofres
+	 */
+	@GetMapping("/testes/cofres/{usuarioId}")
+	public ModelAndView testeCofres(@PathVariable int usuarioId) {
+		ModelAndView mv = new ModelAndView("/testes/cofres");
+		
+		List<Cofre> cofres = new ArrayList<>();
+		List<Transacao> transacoesComTipoCofre = this.transacoes.findAllByTipo(TiposTransacoes.COFRE);
+		List<Transacao> transacoesDoUsuarioComTipoCofre = this.transacoes.findAllByUsuarioAndTipo(
+				this.usuarios.getOne(usuarioId), TiposTransacoes.COFRE);
+		
+		for (Transacao transacao : transacoesDoUsuarioComTipoCofre) {
+			Cofre cofreAtual = new Cofre(transacao.getDescricao(), transacao.getValor(), transacao.getCategoria(), transacao.getData());
+			if (cofres.contains(cofreAtual)) {
+				int indexOfCofreAtual = cofres.indexOf(cofreAtual);
+				
+				Cofre cofreExistente = cofres.get(indexOfCofreAtual);
+				cofreExistente.setTotalAcumulado(cofreExistente.getTotalAcumulado() + transacao.getValor());
+				
+				cofres.set(indexOfCofreAtual, cofreExistente);
+			} else {
+				cofres.add(cofreAtual);
+			}
+		}
+		
+		mv.addObject("extratoCofres", transacoesComTipoCofre);
+		mv.addObject("extratoCofresDoUsuario", transacoesDoUsuarioComTipoCofre);
+		mv.addObject("cofres", cofres);
+		
+		return mv;
+	}
+	
+	/*
+	 * Categorias
+	 */
+	@GetMapping("/testes/categorias/{usuarioId}")
+	public ModelAndView testeCategorias(@PathVariable int usuarioId) {
+		ModelAndView mv = new ModelAndView("/testes/categorias");
+		mv.addObject("categorias", categorias.findAll());
+		mv.addObject("categoriasDoUsuario", categorias.findAllByUsuario(this.usuarios.getOne(usuarioId)));
+		return mv;
+	}
+	@GetMapping("/testes/categorias/adicionar/{usuarioId}/{tipoTransacao}/{nome}")
+	public String testeAdicionarCategoria(@PathVariable int usuarioId, 
+			@PathVariable TiposTransacoes tipoTransacao, 
+			@PathVariable String nome, 
+			HttpServletRequest request) 
+	{
+		TiposLogs tipoLog = null;
+		if (tipoTransacao.equals(TiposTransacoes.RECEITA)) {
+			tipoLog = TiposLogs.CADASTRO_CATEGORIA_RECEITA;
+		} else if (tipoTransacao.equals(TiposTransacoes.DESPESA)) {
+			tipoLog = TiposLogs.CADASTRO_CATEGORIA_DESPESA;
+		} else if (tipoTransacao.equals(TiposTransacoes.COFRE)) {
+			tipoLog = TiposLogs.CADASTRO_CATEGORIA_COFRE;
+		}
+		
+		Categoria categoria = new Categoria(this.usuarios.getOne(usuarioId), tipoTransacao, nome, LocalDateTime.now());
+		Log log = new Log(this.usuarios.getOne(usuarioId), tipoLog, LocalDateTime.now(), this.getUserIp(request));
+		
+		this.categorias.save(categoria);
+		this.logs.save(log);
+		
+		return "redirect:/testes/categorias/"+usuarioId;
 	}
 	
 }

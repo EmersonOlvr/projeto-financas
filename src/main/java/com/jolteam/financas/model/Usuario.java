@@ -1,5 +1,7 @@
 package com.jolteam.financas.model;
 
+import java.time.LocalDateTime;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -24,15 +26,13 @@ public class Usuario {
 	@Column(length=50, nullable=false)
 	@NotBlank(message="Insira um nome.", groups=NomeNotBlankGroup.class)
 	@Pattern(regexp="^[A-zÀ-ú ]*$", message="Nome inválido: somente letras e espaços são permitidos.", groups=NomePatternGroup.class)
-	@Size(min=2, message="Nome inválido: mínimo de {min} letras.", groups=NomeSizeMinGroup.class)
-	@Size(max=50, message="Nome inválido: máximo de {max} letras.", groups=NomeSizeMaxGroup.class)
+	@Size(min=2, max=50, message="Nome inválido: mínimo {min} e máximo de {max} letras.", groups=NomeSizeGroup.class)
 	private String nome;
 	
 	@Column(length=50, nullable=false)
 	@NotBlank(message="Insira um sobrenome.", groups=SobrenomeNotBlankGroup.class)
 	@Pattern(regexp="^[A-zÀ-ú ]*$", message="Sobrenome inválido: somente letras e espaços são permitidos.", groups=SobrenomePatternGroup.class)
-	@Size(min=2, message="Sobrenome inválido: mínimo de {min} letras.", groups=SobrenomeSizeMinGroup.class)
-	@Size(max=50, message="Sobrenome inválido: máximo de {max} letras.", groups=SobrenomeSizeMaxGroup.class)
+	@Size(min=2, max=50, message="Sobrenome inválido: mínimo {min} e máximo de {max} letras.", groups=SobrenomeSizeGroup.class)
 	private String sobrenome;
 	
 	@Column(length=64, unique=true, nullable=false)
@@ -42,16 +42,7 @@ public class Usuario {
 	private String email;
 	
 	@Column(columnDefinition="bit(1)", nullable=false)
-	private Boolean emailAtivado;
-	
-	@Column(length=64)
-	private String emailPendente;
-	
-	@Column(length=4)
-	private String codEmail;
-	
-	@Column(length=4)
-	private String codEmailPendente;
+	private Boolean contaAtivada;
 	
 	@Column(nullable=false)
 	@Size(min=6, message="Senha muito curta. Mínimo de 6 caracteres.", groups=SenhaSizeMinGroup.class)
@@ -63,21 +54,37 @@ public class Usuario {
 	@NotBlank(message="Por favor, repita a senha.", groups=SenhaRepetidaNotBlankGroup.class)
 	private String senhaRepetida;
 	
-	@Column(columnDefinition="tinyint(1)", nullable=false)
-	private Integer permissao;
+	@Column(nullable = false)
+	private Short permissao;
 	
-	@Column(columnDefinition="datetime", nullable=false)
-	private String registroData;
+	@Column(nullable=false, columnDefinition = "datetime")
+	private LocalDateTime registroData;
 	
-	@Column(length=72)
+	@Column(length=72, nullable=false)
 	private String registroIp;
 	
-	@Column(columnDefinition="datetime")
-	private String ultimoAcesso;
 	
-	@Column(length=72)
-	private String ultimoIp;
-
+	// construtores
+	public Usuario() {}
+	public Usuario(@NotBlank(message = "Insira um nome.", groups = NomeNotBlankGroup.class) @Pattern(regexp = "^[A-zÀ-ú ]*$", message = "Nome inválido: somente letras e espaços são permitidos.", groups = NomePatternGroup.class) @Size(min = 2, max = 50, message = "Nome inválido: mínimo {min} e máximo de {max} letras.", groups = NomeSizeGroup.class) String nome,
+			@NotBlank(message = "Insira um sobrenome.", groups = SobrenomeNotBlankGroup.class) @Pattern(regexp = "^[A-zÀ-ú ]*$", message = "Sobrenome inválido: somente letras e espaços são permitidos.", groups = SobrenomePatternGroup.class) @Size(min = 2, max = 50, message = "Sobrenome inválido: mínimo {min} e máximo de {max} letras.", groups = SobrenomeSizeGroup.class) String sobrenome,
+			@NotBlank(message = "Insira um e-mail.", groups = EmailNotBlankGroup.class) @Pattern(regexp = "^[\\w-\\+]+(\\.[\\w]+)*@[\\w-]+(\\.[\\w]+)*(\\.[A-z]{2,})$", message = "E-mail em formato inválido.", groups = EmailPatternGroup.class) @Size(max = 64, message = "E-mail inválido: máximo de {max} caracteres.", groups = EmailSizeMaxGroup.class) String email,
+			Boolean contaAtivada,
+			@Size(min = 6, message = "Senha muito curta. Mínimo de 6 caracteres.", groups = SenhaSizeMinGroup.class) @NotBlank(message = "A senha não pode conter apenas espaços.", groups = SenhaNotBlankGroup.class) @Size(max = 255, message = "Senha muito grande. Máximo de 255 caracteres.", groups = SenhaSizeMaxGroup.class) String senha,
+			@NotBlank(message = "Por favor, repita a senha.", groups = SenhaRepetidaNotBlankGroup.class) String senhaRepetida,
+			Short permissao, LocalDateTime registroData, String registroIp) {
+		this.nome = nome;
+		this.sobrenome = sobrenome;
+		this.email = email;
+		this.contaAtivada = contaAtivada;
+		this.senha = senha;
+		this.senhaRepetida = senhaRepetida;
+		this.permissao = permissao;
+		this.registroData = registroData;
+		this.registroIp = registroIp;
+	}
+	
+	
 	// getters e setters
 	public Integer getId() {
 		return id;
@@ -103,29 +110,11 @@ public class Usuario {
 	public void setEmail(String email) {
 		this.email = email;
 	}
-	public Boolean getEmailAtivado() {
-		return emailAtivado;
+	public Boolean isContaAtivada() {
+		return contaAtivada;
 	}
-	public void setEmailAtivado(Boolean emailAtivado) {
-		this.emailAtivado = emailAtivado;
-	}
-	public String getEmailPendente() {
-		return emailPendente;
-	}
-	public void setEmailPendente(String emailPendente) {
-		this.emailPendente = emailPendente;
-	}
-	public String getCodEmail() {
-		return codEmail;
-	}
-	public void setCodEmail(String codEmail) {
-		this.codEmail = codEmail;
-	}
-	public String getCodEmailPendente() {
-		return codEmailPendente;
-	}
-	public void setCodEmailPendente(String codEmailPendente) {
-		this.codEmailPendente = codEmailPendente;
+	public void setContaAtivada(Boolean ativado) {
+		this.contaAtivada = ativado;
 	}
 	public String getSenha() {
 		return senha;
@@ -139,16 +128,16 @@ public class Usuario {
 	public void setSenhaRepetida(String senhaRepetida) {
 		this.senhaRepetida = senhaRepetida;
 	}
-	public Integer getPermissao() {
+	public Short getPermissao() {
 		return permissao;
 	}
-	public void setPermissao(Integer permissao) {
+	public void setPermissao(Short permissao) {
 		this.permissao = permissao;
 	}
-	public String getRegistroData() {
+	public LocalDateTime getRegistroData() {
 		return registroData;
 	}
-	public void setRegistroData(String registroData) {
+	public void setRegistroData(LocalDateTime registroData) {
 		this.registroData = registroData;
 	}
 	public String getRegistroIp() {
@@ -157,26 +146,13 @@ public class Usuario {
 	public void setRegistroIp(String registroIp) {
 		this.registroIp = registroIp;
 	}
-	public String getUltimoAcesso() {
-		return ultimoAcesso;
-	}
-	public void setUltimoAcesso(String ultimoAcesso) {
-		this.ultimoAcesso = ultimoAcesso;
-	}
-	public String getUltimoIp() {
-		return ultimoIp;
-	}
-	public void setUltimoIp(String ultimoIp) {
-		this.ultimoIp = ultimoIp;
-	}
+	
 	
 	@Override
 	public String toString() {
 		return "Usuario [id=" + id + ", nome=" + nome + ", sobrenome=" + sobrenome + ", email=" + email
-				+ ", emailAtivado=" + emailAtivado + ", emailPendente=" + emailPendente + ", codEmail=" + codEmail
-				+ ", codEmailPendente=" + codEmailPendente + ", senha=" + senha + ", senhaRepetida=" + senhaRepetida
-				+ ", permissao=" + permissao + ", registroData=" + registroData + ", registroIp=" + registroIp
-				+ ", ultimoAcesso=" + ultimoAcesso + ", ultimoIp=" + ultimoIp + "]";
+				+ ", contaAtivada=" + contaAtivada + ", senha=" + senha + ", senhaRepetida=" + senhaRepetida
+				+ ", permissao=" + permissao + ", registroData=" + registroData + ", registroIp=" + registroIp + "]";
 	}
 	
 }
