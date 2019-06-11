@@ -1,8 +1,6 @@
 package com.jolteam.financas.controller;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Optional;
 
 import javax.servlet.http.HttpServletRequest;
@@ -22,17 +20,11 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import com.jolteam.financas.dao.CategoriaDAO;
 import com.jolteam.financas.dao.LogDAO;
-import com.jolteam.financas.dao.TransacaoDAO;
 import com.jolteam.financas.dao.UsuarioDAO;
 import com.jolteam.financas.errorgroups.usuario.UsuarioValidationSequence;
-import com.jolteam.financas.model.Categoria;
-import com.jolteam.financas.model.Cofre;
 import com.jolteam.financas.model.Log;
 import com.jolteam.financas.model.TiposLogs;
-import com.jolteam.financas.model.TiposTransacoes;
-import com.jolteam.financas.model.Transacao;
 import com.jolteam.financas.model.Usuario;
 
 @Controller
@@ -40,17 +32,6 @@ public class UsuarioController {
 
 	@Autowired private UsuarioDAO usuarios;
 	@Autowired private LogDAO logs;
-	@Autowired private TransacaoDAO transacoes;
-	@Autowired private CategoriaDAO categorias;
-	
-	// método para obter o IP do usuário
-	private String getUserIp(HttpServletRequest request) {
-		String ipAddress = request.getHeader("X-FORWARDED-FOR");
-		if (ipAddress == null) {
-			ipAddress = request.getRemoteAddr();
-		}
-		return ipAddress;
-	}
 
 	@GetMapping("/")
 	public String viewIndex() {
@@ -106,7 +87,7 @@ public class UsuarioController {
 				usuario.setContaAtivada(false);
 				usuario.setPermissao((short) 1);
 				usuario.setRegistroData(LocalDateTime.now());
-				usuario.setRegistroIp(this.getUserIp(request));
+				usuario.setRegistroIp(request.getRemoteAddr());
 				
 				// tenta...
 				try {
@@ -143,15 +124,17 @@ public class UsuarioController {
 		
 		if (usuario.isPresent() && BCrypt.checkpw(senha, usuario.get().getSenha())) {
 			// insere um novo log de login no banco
-			String ip = this.getUserIp(request);
-			logs.save(new Log(usuario.get(), TiposLogs.LOGIN, LocalDateTime.now(), ip));
+			String ip = request.getRemoteAddr();
+			LocalDateTime dataAtual = LocalDateTime.now();
+			System.out.println(dataAtual);
+			logs.save(new Log(usuario.get(), TiposLogs.LOGIN, dataAtual, ip));
 			
 			// atualiza o usuário no banco
 			this.usuarios.save(usuario.get());
 			
 			System.out.println("Logou! "+usuario);
 		} else {
-			model.addAttribute("msgErro", "E-mail ou senha inválidos.");
+			model.addAttribute("msgErro", "E-mail e/ou senha inválidos.");
 		}
 		
 		return "/deslogado/entrar";
@@ -245,93 +228,6 @@ public class UsuarioController {
 		
 		ra.addFlashAttribute("msgSucesso", "Cofre excluído!");
 		return "redirect:/cofres";
-	}
-	
-	// ====================== Testes ======================
-	/*
-	 * Transações
-	 */
-	@GetMapping("/testes/transacao/adicionar/{usuarioId}/{tipo}/{categoriaId}/{descricao}/{valor}")
-	public String testeAdicionarCategoria(@PathVariable int usuarioId, @PathVariable int categoriaId, 
-			@PathVariable TiposTransacoes tipo, @PathVariable String descricao, @PathVariable double valor) 
-	{
-		this.transacoes.save(new Transacao(
-				this.usuarios.getOne(usuarioId), 
-				tipo, 
-				this.categorias.getOne(categoriaId), 
-				descricao, 
-				valor, 
-				LocalDateTime.now()
-				));
-		
-		return "redirect:/testes/cofres/"+usuarioId;
-	}
-	
-	/*
-	 * Cofres
-	 */
-	@GetMapping("/testes/cofres/{usuarioId}")
-	public ModelAndView testeCofres(@PathVariable int usuarioId) {
-		ModelAndView mv = new ModelAndView("/testes/cofres");
-		
-		List<Cofre> cofres = new ArrayList<>();
-		List<Transacao> transacoesComTipoCofre = this.transacoes.findAllByTipo(TiposTransacoes.COFRE);
-		List<Transacao> transacoesDoUsuarioComTipoCofre = this.transacoes.findAllByUsuarioAndTipo(
-				this.usuarios.getOne(usuarioId), TiposTransacoes.COFRE);
-		
-		for (Transacao transacao : transacoesDoUsuarioComTipoCofre) {
-			Cofre cofreAtual = new Cofre(transacao.getDescricao(), transacao.getValor(), transacao.getCategoria(), transacao.getData());
-			if (cofres.contains(cofreAtual)) {
-				int indexOfCofreAtual = cofres.indexOf(cofreAtual);
-				
-				Cofre cofreExistente = cofres.get(indexOfCofreAtual);
-				cofreExistente.setTotalAcumulado(cofreExistente.getTotalAcumulado() + transacao.getValor());
-				
-				cofres.set(indexOfCofreAtual, cofreExistente);
-			} else {
-				cofres.add(cofreAtual);
-			}
-		}
-		
-		mv.addObject("extratoCofres", transacoesComTipoCofre);
-		mv.addObject("extratoCofresDoUsuario", transacoesDoUsuarioComTipoCofre);
-		mv.addObject("cofres", cofres);
-		
-		return mv;
-	}
-	
-	/*
-	 * Categorias
-	 */
-	@GetMapping("/testes/categorias/{usuarioId}")
-	public ModelAndView testeCategorias(@PathVariable int usuarioId) {
-		ModelAndView mv = new ModelAndView("/testes/categorias");
-		mv.addObject("categorias", categorias.findAll());
-		mv.addObject("categoriasDoUsuario", categorias.findAllByUsuario(this.usuarios.getOne(usuarioId)));
-		return mv;
-	}
-	@GetMapping("/testes/categorias/adicionar/{usuarioId}/{tipoTransacao}/{nome}")
-	public String testeAdicionarCategoria(@PathVariable int usuarioId, 
-			@PathVariable TiposTransacoes tipoTransacao, 
-			@PathVariable String nome, 
-			HttpServletRequest request) 
-	{
-		TiposLogs tipoLog = null;
-		if (tipoTransacao.equals(TiposTransacoes.RECEITA)) {
-			tipoLog = TiposLogs.CADASTRO_CATEGORIA_RECEITA;
-		} else if (tipoTransacao.equals(TiposTransacoes.DESPESA)) {
-			tipoLog = TiposLogs.CADASTRO_CATEGORIA_DESPESA;
-		} else if (tipoTransacao.equals(TiposTransacoes.COFRE)) {
-			tipoLog = TiposLogs.CADASTRO_CATEGORIA_COFRE;
-		}
-		
-		Categoria categoria = new Categoria(this.usuarios.getOne(usuarioId), tipoTransacao, nome, LocalDateTime.now());
-		Log log = new Log(this.usuarios.getOne(usuarioId), tipoLog, LocalDateTime.now(), this.getUserIp(request));
-		
-		this.categorias.save(categoria);
-		this.logs.save(log);
-		
-		return "redirect:/testes/categorias/"+usuarioId;
 	}
 	
 }
