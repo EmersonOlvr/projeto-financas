@@ -3,14 +3,18 @@ package com.jolteam.financas.controller;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.jolteam.financas.dao.CategoriaDAO;
@@ -23,6 +27,7 @@ import com.jolteam.financas.model.Log;
 import com.jolteam.financas.model.TiposLogs;
 import com.jolteam.financas.model.TiposTransacoes;
 import com.jolteam.financas.model.Transacao;
+import com.jolteam.financas.model.Usuario;
 
 @Controller
 @RequestMapping("/testes")
@@ -38,7 +43,7 @@ public class TesteController {
 	 * Transações
 	 */
 	@GetMapping("/transacao/adicionar/{usuarioId}/{tipo}/{categoriaId}/{descricao}/{valor}")
-	public String testeAdicionarCategoria(@PathVariable int usuarioId, @PathVariable int categoriaId, 
+	public String testeAdicionarTransacao(@PathVariable int usuarioId, @PathVariable int categoriaId, 
 			@PathVariable TiposTransacoes tipo, @PathVariable String descricao, @PathVariable double valor) 
 	{
 		this.transacoes.save(new Transacao(
@@ -46,8 +51,7 @@ public class TesteController {
 				tipo, 
 				this.categorias.getOne(categoriaId), 
 				descricao, 
-				valor, 
-				LocalDateTime.now()
+				valor
 				));
 		
 		return "redirect:/testes/cofres/"+usuarioId;
@@ -133,6 +137,31 @@ public class TesteController {
 		ModelAndView mv = new ModelAndView("/testes/ip");
 		mv.addObject("userIP", request.getRemoteAddr());
 		return mv;
+	}
+	/*
+	 * Adicionar Transação
+	 */
+	@GetMapping("/add-transacao/{usuarioId}")
+	public ModelAndView testeViewAdicionarTransacao(@PathVariable int usuarioId) {
+		ModelAndView mv = new ModelAndView("/testes/add-transacao");
+		Optional<Usuario> usuario = this.usuarios.findById(usuarioId);
+		
+		if (usuario.isPresent()) {
+			mv.addObject("categorias", this.categorias.findAllByUsuario(usuario.get()));
+		} else {
+			List<Categoria> listaCategorias = this.categorias.findAll();
+			mv.addObject("categorias", listaCategorias);
+		}
+		
+		return mv;
+	}
+	@PostMapping("/add-transacao/{usuarioId}")
+	public String testeAddTransacao(@PathVariable int usuarioId, @RequestParam int categoria_id, @RequestParam TiposTransacoes tipo, 
+			@RequestParam String descricao, @RequestParam Double valor) 
+	{
+		Transacao transacao = new Transacao(this.usuarios.getOne(usuarioId), tipo, this.categorias.getOne(categoria_id), descricao, valor);
+		this.transacoes.save(transacao);
+		return "redirect:/testes/add-transacao/"+usuarioId;
 	}
 	
 }

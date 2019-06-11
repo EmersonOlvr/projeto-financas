@@ -41,13 +41,13 @@ public class Transacao {
 	// construtores
 	public Transacao() {}
 	public Transacao(Usuario usuario, TiposTransacoes tipo, Categoria categoria, String descricao,
-			Double valor, LocalDateTime data) {
+			Double valor) {
 		this.usuario = usuario;
 		this.tipo = tipo;
 		this.categoria = categoria;
 		this.descricao = descricao;
 		this.valor = valor;
-		this.data = data;
+		this.data = LocalDateTime.now();
 	}
 	
 	
