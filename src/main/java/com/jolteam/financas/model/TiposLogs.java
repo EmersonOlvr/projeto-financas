@@ -18,7 +18,15 @@ public enum TiposLogs {
 	
 	EXLUSAO_CATEGORIA_RECEITA("Exclusão de Categoria de Receita"), 
 	EXCLUSAO_CATEGORIA_DESPESA("Exclusão de Categoria de Despesa"), 
-	EXCLUSAO_CATEGORIA_COFRE("Exclusão de Categoria de Cofre");
+	EXCLUSAO_CATEGORIA_COFRE("Exclusão de Categoria de Cofre"),
+	
+	ERRO_CADASTRO_RECEITA("Erro no Cadastro de Receita"),
+	ERRO_CADASTRO_DESPESA("Erro no Cadastro de Despesa"),
+	ERRO_CADASTRO_COFRE("Erro no Cadastro de Cofre"),
+	
+	ERRO_CADASTRO_CATEGORIA_RECEITA("Erro no Cadastro de Categoria de Receita"),
+	ERRO_CADASTRO_CATEGORIA_DESPESA("Erro no Cadastro de Categoria de Despesa"),
+	ERRO_CADASTRO_CATEGORIA_COFRE("Erro no Cadastro de Categoria de Cofre");
 	
 	public String valor;
 	TiposLogs(String valor) {

@@ -1,5 +1,6 @@
 package com.jolteam.financas.model;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 import javax.persistence.Column;
@@ -32,7 +33,7 @@ public class Transacao {
 	private String descricao;
 	
 	@Column(nullable = false)
-	private Double valor;
+	private BigDecimal valor;
 	
 	@Column(nullable = false, columnDefinition = "datetime")
 	private LocalDateTime data;
@@ -41,7 +42,7 @@ public class Transacao {
 	// construtores
 	public Transacao() {}
 	public Transacao(Usuario usuario, TiposTransacoes tipo, Categoria categoria, String descricao,
-			Double valor) {
+			BigDecimal valor) {
 		this.usuario = usuario;
 		this.tipo = tipo;
 		this.categoria = categoria;
@@ -82,10 +83,10 @@ public class Transacao {
 	public void setDescricao(String descricao) {
 		this.descricao = descricao;
 	}
-	public Double getValor() {
+	public BigDecimal getValor() {
 		return valor;
 	}
-	public void setValor(Double valor) {
+	public void setValor(BigDecimal valor) {
 		this.valor = valor;
 	}
 	public LocalDateTime getData() {

@@ -75,4 +75,11 @@ public class Categoria {
 		this.dataCriacao = dataCriacao;
 	}
 	
+	
+	@Override
+	public String toString() {
+		return "Categoria [id=" + id + ", usuario=" + usuario + ", tipoTransacao=" + tipoTransacao + ", nome=" + nome
+				+ ", dataCriacao=" + dataCriacao + "]";
+	}
+	
 }

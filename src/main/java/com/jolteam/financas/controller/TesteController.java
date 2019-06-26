@@ -1,5 +1,6 @@
 package com.jolteam.financas.controller;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -43,7 +44,7 @@ public class TesteController {
 	 */
 	@GetMapping("/transacao/adicionar/{usuarioId}/{tipo}/{categoriaId}/{descricao}/{valor}")
 	public String testeAdicionarTransacao(@PathVariable int usuarioId, @PathVariable int categoriaId, 
-			@PathVariable TiposTransacoes tipo, @PathVariable String descricao, @PathVariable double valor) 
+			@PathVariable TiposTransacoes tipo, @PathVariable String descricao, @PathVariable BigDecimal valor) 
 	{
 		this.transacoes.save(new Transacao(
 				this.usuarios.getOne(usuarioId), 
@@ -74,7 +75,7 @@ public class TesteController {
 				int indexOfCofreAtual = cofres.indexOf(cofreAtual);
 				
 				Cofre cofreExistente = cofres.get(indexOfCofreAtual);
-				cofreExistente.setTotalAcumulado(cofreExistente.getTotalAcumulado() + transacao.getValor());
+				cofreExistente.setTotalAcumulado(cofreExistente.getTotalAcumulado().add(transacao.getValor()));
 				
 				cofres.set(indexOfCofreAtual, cofreExistente);
 			} else {
@@ -156,7 +157,7 @@ public class TesteController {
 	}
 	@PostMapping("/add-transacao/{usuarioId}")
 	public String testeAddTransacao(@PathVariable int usuarioId, @RequestParam int categoria_id, @RequestParam TiposTransacoes tipo, 
-			@RequestParam String descricao, @RequestParam Double valor) 
+			@RequestParam String descricao, @RequestParam BigDecimal valor) 
 	{
 		Transacao transacao = new Transacao(this.usuarios.getOne(usuarioId), tipo, this.categorias.getOne(categoria_id), descricao, valor);
 		this.transacoes.save(transacao);

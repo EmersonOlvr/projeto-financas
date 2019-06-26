@@ -6,4 +6,6 @@ import com.jolteam.financas.model.Log;
 
 public interface LogDAO extends JpaRepository<Log, Integer> {
 
+	
+	
 }

@@ -1,18 +1,19 @@
 package com.jolteam.financas.model;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 public class Cofre {
 
 	private String descricao;
-	private double totalAcumulado;
+	private BigDecimal totalAcumulado;
 	private Categoria categoria;
 	private LocalDateTime dataCriacao;
 	
 	
 	// construtores
 	public Cofre() {}
-	public Cofre(String descricao, double totalAcumulado, Categoria categoria, LocalDateTime dataCriacao) {
+	public Cofre(String descricao, BigDecimal totalAcumulado, Categoria categoria, LocalDateTime dataCriacao) {
 		this.descricao = descricao;
 		this.totalAcumulado = totalAcumulado;
 		this.categoria = categoria;
@@ -27,10 +28,10 @@ public class Cofre {
 	public void setDescricao(String descricao) {
 		this.descricao = descricao;
 	}
-	public double getTotalAcumulado() {
+	public BigDecimal getTotalAcumulado() {
 		return totalAcumulado;
 	}
-	public void setTotalAcumulado(double totalAcumulado) {
+	public void setTotalAcumulado(BigDecimal totalAcumulado) {
 		this.totalAcumulado = totalAcumulado;
 	}
 	public Categoria getCategoria() {

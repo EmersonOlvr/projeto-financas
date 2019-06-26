@@ -14,11 +14,9 @@ import org.springframework.validation.ObjectError;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
-import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.jolteam.financas.dao.LogDAO;
 import com.jolteam.financas.dao.UsuarioDAO;
@@ -179,55 +177,6 @@ public class UsuarioController {
 	@GetMapping("/movimentos")
 	public String viewMovimentos() {
 		return "/movimentos";
-	}
-	
-	@GetMapping("/receitas/adicionar")
-	public String viewAdicionarReceitas() {
-		return "/receitas-adicionar";
-	}
-	
-	@GetMapping("/receitas/categorias")
-	public String viewCategoriasReceita() {
-		return "/receitas-categorias";
-	}
-	
-	@GetMapping("/receitas/historico")
-	public String viewHistoricoReceitas() {
-		return "/receitas-historico";
-	}
-	
-	@GetMapping("/despesas/adicionar")
-	public String viewAdicionarDespesas() {
-		return "/despesas-adicionar";
-	}
-	
-	@GetMapping("/despesas/categorias")
-	public String viewCategoriasDespesa() {
-		return "/despesas-categorias";
-	}
-	
-	@GetMapping("/despesas/historico")
-	public String viewHistoricoDespesas() {
-		return "/despesas-historico";
-	}
-	
-	@GetMapping("/cofres")
-	public String viewCofres(Model model) {
-		return "/cofres";
-	}
-	
-	@GetMapping("/cofres/editar/{id}")
-	public String viewEditarCofre(@PathVariable Integer id) {
-		System.out.println("Editando o cofre: "+id+".");
-		return "/cofres-editar";
-	}
-	
-	@GetMapping("/cofres/excluir/{id}")
-	public String excluirCofre(@PathVariable Integer id, RedirectAttributes ra) {
-		System.out.println("Excluindo o cofre: "+id+"...");
-		
-		ra.addFlashAttribute("msgSucesso", "Cofre excluído!");
-		return "redirect:/cofres";
 	}
 	
 }
