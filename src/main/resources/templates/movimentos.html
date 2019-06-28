@@ -1,0 +1,133 @@
+<!doctype html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width,initial-scale=1,shrink-to-fit=no">
+	<link rel="icon" href="/img/favicon.ico">
+
+	<title>Lista de Movimentos</title>
+
+	<th:block th:insert="/includes/include.html :: #head"></th:block>
+</head>
+<body class="app">
+	<div id="loader">
+		<div class="spinner"></div>
+	</div>
+	<script>
+		window.addEventListener('load', function load() {
+			const loader = document.getElementById('loader');
+			setTimeout(function() {
+				loader.classList.add('fadeOut');
+			}, 300);
+		});
+	</script>
+	<div>
+		<th:block th:insert="/includes/include.html :: menuLateral"></th:block>
+		<div class="page-container">
+			<th:block th:insert="/includes/include.html :: menuSuperior"></th:block>
+			
+			
+			
+			<main class="main-content bgc-grey-100">
+				<div id="mainContent">
+					<div class="bgc-light-green-500 c-white p-20">
+						<div class="peers ai-c jc-sb">
+							<div class="peer peer-greed">
+								<h5>Março 2017</h5>
+								<p class="mB-0">Movimentos</p>
+							</div>
+							<div class="peer">
+								<h3 class="text-right">R$ 600,00</h3>
+							</div>
+						</div>
+					</div>
+					<div class="table-responsive">
+						<table class="table table-hover table-bordered bgc-white">
+							<thead>
+								<tr>
+									<th class="bdwT-0">Tipo (Receita/Despesa)</th>
+									<th class="bdwT-0">Categoria</th>
+									<th class="bdwT-0">Mês</th>
+									<th class="bdwT-0">Valor</th>
+								</tr>
+							</thead>
+							<tbody>
+								<tr>
+									<td class="fw-600">Despesa</td>
+									<td>
+										<span class="badge bgc-red-50 p-10 lh-0 tt-c badge-pill">Alimentação</span>
+									</td>
+									<td>Março</td>
+									<td>
+										<span class="text-danger">-R$ 20,80</span>
+									</td>
+								</tr>
+								<tr>
+									<td class="fw-600">Despesa</td>
+									<td>
+										<span class="badge bgc-red-50 p-10 lh-0 tt-c badge-pill">Saúde</span>
+									</td>
+									<td>Março</td>
+									<td>
+										<span class="text-danger">-R$ 17,75</span>
+									</td>
+								</tr>
+								<tr>
+									<td class="fw-600">Despesa</td>
+									<td>
+										<span class="badge bgc-red-50 p-10 lh-0 tt-c badge-pill">Transporte</span>
+									</td>
+									<td>Março</td>
+									<td>
+										<span class="text-danger">-R$ 86,00</span>
+									</td>
+								</tr>
+								<tr>
+									<td class="fw-600">Receita</td>
+									<td>
+										<span class="badge bgc-green-50  p-10 lh-0 tt-c badge-pill">Salário</span>
+									</td>
+									<td>Março</td>
+									<td>
+										<span class="text-success">R$ 500,00</span>
+									</td>
+								</tr>
+								<tr>
+									<td class="fw-600">Receita</td>
+									<td>
+										<span class="badge bgc-green-50  p-10 lh-0 tt-c badge-pill">Cheque</span>
+									</td>
+									<td>Março</td>
+									<td>
+										<span class="text-success">R$ 100,00</span>
+									</td>
+								</tr>
+							</tbody>
+						</table>
+						<div class="bd bgc-white c-black p-20">
+							<div class="peers ai-c jc-sb ">
+								<div class="peer peer-greed">
+									<p class="mb-0">Receitas</p>
+									<p>Despesas</p>
+									<h6 class="mb-0">Saldo Atual</h6>
+								</div>
+								<div class="peer">
+									<p class="text-success mb-0">R$ 600,00</p>
+									<p class="text-danger">R$ 124,55</p>
+									<p class="text-info mb-0">R$ 445,45</p>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</main>
+			
+			
+			
+			<th:block th:insert="/includes/include.html :: footer"></th:block>
+		</div>
+	</div>
+
+	<th:block th:insert="/includes/include.html :: scripts"></th:block>
+</body>
+</html>

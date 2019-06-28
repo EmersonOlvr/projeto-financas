@@ -1,0 +1,92 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+	<meta name="description" content="">
+	<meta name="author" content="">
+	<link rel="icon" href="/img/favicon.ico">
+
+	<title>Ativação da Conta | Projeto Finanças</title>
+
+	<link rel="canonical" href="http://localhost">
+
+	<th:block th:insert="/includes/include.html :: #headDeslogado"></th:block>
+
+	<style type="text/css">
+		.col-8 {
+			padding-right: 0px;
+		}
+		.col-4 {
+			padding-left: 0px;
+		}
+		#inputCodigoConfirmacao {
+			border-top-right-radius: 0; border-bottom-right-radius: 0;
+		}
+		#btnValidar {
+			border-top-left-radius: 0; border-bottom-left-radius: 0;
+			height: 50px;
+		}
+	</style>
+
+	<script src="/js/jquery-3.3.1.slim.min.js"></script>
+	<script src="/js/popper.min.js"></script>
+	<script src="/js/bootstrap.min.js"></script>
+</head>
+
+<body style="flex-direction: column">
+	<a class="mb-2" style="color: #0bce00; text-decoration: none" href="/">
+		<h3><img src="/img/logo_40x40.png" style="margin-top: -6px;"> Finanças</h3>
+	</a>
+
+	<div class="box mb-5">
+		<div class="text-center mb-4">
+			<h1 class="h3 font-weight-normal">Ativação da Conta</h1>
+		</div>
+
+		<p class="text-center">
+			Olá Marcos, enviamos um <a href="#" data-toggle="modal" data-target="#modalCodigo">código de confirmação</a> para <b>marcos@email.com</b>, insira-o abaixo para ativar sua conta.
+			<br>
+			<button class="btn btn-outline-primary mt-2" onclick="location.href='reenviar-codigo-confirmacao'">
+				Reenviar código de confirmação
+			</button>
+		</p>
+
+		<form method="post">
+			<div class="row">
+				<div class="col-8">
+					<div class="form-label-group">
+						<input type="text" id="inputCodigoConfirmacao" name="codigoConfirmacao" class="form-control" minlength="6" maxlength="6" placeholder="Código de confirmação" required autofocus>
+						<label for="inputCodigoConfirmacao">Código de confirmação</label>
+					</div>
+				</div>
+				<div class="col-4">
+					<input type="submit" id="btnValidar" class="btn btn-lg btn-success btn-block" value="Validar">
+				</div>
+			</div>
+		</form>
+
+		<p class="mt-1 text-muted text-left">ou <a href="sair?token=xxx">Sair</a></p>
+	</div>
+
+	<!-- Modal -->
+	<div class="modal fade" id="modalCodigo" tabindex="-1" role="dialog" aria-labelledby="modalCodigo" aria-hidden="true">
+		<div class="modal-dialog" role="document">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h5 class="modal-title" id="modalCodigo">Código de confirmação</h5>
+					<button type="button" class="close" data-dismiss="modal" aria-label="Fechar">
+						<span aria-hidden="true">&times;</span>
+					</button>
+				</div>
+				<div class="modal-body">
+					Um código de confirmação é um número de 6 dígitos enviado para o e-mail que você usou para se cadastrar.
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-secondary" data-dismiss="modal">Fechar</button>
+				</div>
+			</div>
+		</div>
+	</div>
+</body>
+</html>

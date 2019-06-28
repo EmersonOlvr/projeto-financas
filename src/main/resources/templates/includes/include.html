@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="UTF-8">
+	
+	<th:block id="headDeslogado"><link href="/css/bootstrap.min.css" rel="stylesheet">
+	<link href="/css/floating-labels.css" rel="stylesheet">
+	<link href="/css/style.css" rel="stylesheet"></th:block>
+	
+	
+	
+	<th:block id="head"><link rel="stylesheet" type="text/css" href="/css/main.css?2"></th:block>
+</head>
+<body>
+	<th:block th:fragment="siteTitulo">Projeto Finanças</th:block>
+	
+	
+	
+			<div class="header navbar" th:fragment="menuSuperior">
+				<div class="header-container">
+					<ul class="nav-left">
+						<li>
+							<a id="sidebar-toggle" class="sidebar-toggle" href="javascript:void(0);">
+								<i class="ti-menu"></i>
+							</a>
+						</li>
+					</ul>
+					<ul class="nav-right">
+						<li class="notifications dropdown">
+							<span class="counter bgc-red">3</span>
+							<a href="" class="dropdown-toggle no-after" data-toggle="dropdown">
+								<i class="ti-bell"></i>
+							</a>
+							<ul class="dropdown-menu">
+								<li class="pX-20 pY-15 bdB">
+									<i class="ti-bell pR-10"></i>
+									<span class="fsz-sm fw-600 c-grey-900">Notificações</span>
+								</li>
+								<li>
+									<ul class="ovY-a pos-r scrollable lis-n p-0 m-0 fsz-sm">
+										<li>
+											<a href="" class="peers fxw-nw td-n p-20 bdB c-grey-800 cH-blue bgcH-grey-100">
+												<div class="peer mR-15">
+													<img class="w-3r bdrs-50p" src="/img/logo.png" alt="">
+												</div>
+												<div class="peer peer-greed">
+													<span>
+														<span class="fw-500">Marcos</span>, <span class="c-grey-600">sua <span class="text-dark">conta de luz</span> vence hoje.</span>
+													</span>
+													<p class="m-0">
+														<small class="fsz-xs">5 min atrás</small>
+													</p>
+												</div>
+											</a>
+										</li>
+										<li>
+											<a href="" class="peers fxw-nw td-n p-20 bdB c-grey-800 cH-blue bgcH-grey-100">
+												<div class="peer mR-15">
+													<img class="w-3r bdrs-50p" src="/img/logo.png" alt="">
+												</div>
+												<div class="peer peer-greed">
+													<span>
+														<span class="fw-500">Marcos</span>, <span class="c-grey-600">sua <span class="text-dark">conta de água</span> venceu ontem.</span>
+													</span>
+													<p class="m-0">
+														<small class="fsz-xs">7 min atrás</small>
+													</p>
+												</div>
+											</a>
+										</li>
+										<li>
+											<a href="" class="peers fxw-nw td-n p-20 bdB c-grey-800 cH-blue bgcH-grey-100">
+												<div class="peer mR-15">
+													<img class="w-3r bdrs-50p" src="/img/logo.png" alt="">
+												</div>
+												<div class="peer peer-greed">
+													<span>
+														<span class="fw-500">Marcos</span>, <span class="c-grey-600">o <span class="text-dark">boleto da OI</span> vence daqui a 3 dias.</span>
+													</span>
+													<p class="m-0">
+														<small class="fsz-xs">10 min atrás</small>
+													</p>
+												</div>
+											</a>
+										</li>
+									</ul>
+								</li>
+								<li class="pX-20 pY-15 ta-c bdT">
+									<span>
+										<a href="" class="c-grey-600 cH-blue fsz-sm td-n">Ver todas as notificações <i class="ti-angle-right fsz-xs mL-10">
+											</i>
+										</a>
+									</span>
+								</li>
+							</ul>
+						</li>
+						<li class="dropdown">
+							<a href="" class="dropdown-toggle no-after peers fxw-nw ai-c lh-1" data-toggle="dropdown">
+								<div class="peer mR-10">
+									<img class="w-2r bdrs-50p" src="https://randomuser.me/api/portraits/men/10.jpg" alt="">
+								</div>
+								<div class="peer">
+									<span class="fsz-sm c-grey-900">NomeUsuario</span>
+								</div>
+							</a>
+							<ul class="dropdown-menu fsz-sm">
+								<li>
+									<a href="/configuracoes" class="d-b td-n pY-5 bgcH-grey-100 c-grey-700">
+										<i class="ti-settings mR-10"></i> <span>Configurações</span>
+									</a>
+								</li>
+								<li role="separator" class="divider"></li>
+								<li>
+									<a href="/sair?token=xxx" class="d-b td-n pY-5 bgcH-grey-100 c-grey-700">
+										<i class="ti-power-off mR-10"></i> <span>Sair</span>
+									</a>
+								</li>
+							</ul>
+						</li>
+					</ul>
+				</div>
+			</div>
+	
+	
+	
+		<div class="sidebar" th:fragment="menuLateral">
+			<div class="sidebar-inner">
+				<div class="sidebar-logo">
+					<div class="peers ai-c fxw-nw">
+						<div class="peer peer-greed">
+							<a class="sidebar-link td-n" href="/home">
+								<div class="peers ai-c fxw-nw">
+									<div class="peer">
+										<img src="/img/logo.png" alt="">
+									</div>
+									<div class="peer peer-greed">
+										<h5 class="lh-1 mB-0 logo-text">Finanças</h5>
+									</div>
+								</div>
+							</a>
+						</div>
+						<div class="peer">
+							<div class="mobile-toggle sidebar-toggle">
+								<a href="" class="td-n">
+									<i class="ti-arrow-circle-left"></i>
+								</a>
+							</div>
+						</div>
+					</div>
+				</div>
+				<ul class="sidebar-menu scrollable pos-r">
+					<li class="nav-item mT-30 actived">
+						<a class="sidebar-link" href="/home">
+							<span class="icon-holder">
+								<i class="c-blue-500 ti-home"></i> 
+							</span>
+							<span class="title">Home</span>
+						</a>
+					</li>
+					<li class="nav-item">
+						<a class="sidebar-link" href="/movimentos">
+							<span class="icon-holder">
+								<i class="c-teal-500 ti-view-list-alt"></i>
+							</span>
+							<span class="title">Lista de Movimentos</span>
+						</a>
+					</li>
+					<li class="nav-item dropdown">
+						<a class="dropdown-toggle" href="javascript:void(0);">
+							<span class="icon-holder">
+								<i class="c-light-green-500 ti-bar-chart"></i>
+							</span>
+							<span class="title">Receita</span>
+							<span class="arrow">
+								<i class="ti-angle-right"></i>
+							</span>
+						</a>
+						<ul class="dropdown-menu">
+							<li>
+								<a href="/receitas/adicionar">Adicionar Receita</a>
+							</li>
+							<li>
+								<a href="/receitas/categorias">Categorias de Receita</a>
+							</li>
+							<li>
+								<a href="/receitas/historico">Histórico</a>
+							</li>
+						</ul>
+					</li>
+					<li class="nav-item dropdown">
+						<a class="dropdown-toggle" href="javascript:void(0);">
+							<span class="icon-holder">
+								<i class="c-red-500 ti-bar-chart"></i>
+							</span>
+							<span class="title">Despesa</span>
+							<span class="arrow">
+								<i class="ti-angle-right"></i>
+							</span>
+						</a>
+						<ul class="dropdown-menu">
+							<li>
+								<a href="/despesas/adicionar">Adicionar Despesa</a>
+							</li>
+							<li>
+								<a href="/despesas/categorias">Categorias de Despesa</a>
+							</li>
+							<li>
+								<a href="/despesas/historico">Histórico</a>
+							</li>
+						</ul>
+					</li>
+					<li class="nav-item">
+						<a class="sidebar-link" href="/cofres">
+							<span class="icon-holder">
+								<i class="c-light-green-500 ti-money"></i>
+							</span>
+							<span class="title">Cofres</span>
+						</a>
+					</li>
+				</ul>
+			</div>
+		</div>
+	
+	
+	
+			<footer class="bdT ta-c p-30 lh-0 fsz-sm c-grey-600" th:fragment="footer">
+				<span>
+					Copyright © 2019 - Designed by <a href="https://colorlib.com" target="_blank" title="Colorlib">Colorlib</a>.
+				</span>
+			</footer>
+	
+	
+	
+	<th:block th:fragment="scripts"><script type="text/javascript" src="/js/vendor.js"></script>
+	<script type="text/javascript" src="/js/bundle.js"></script></th:block>
+</body>
+</html>

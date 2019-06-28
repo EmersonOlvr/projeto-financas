@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width,initial-scale=1,shrink-to-fit=no">
+	<link rel="icon" href="/img/favicon.ico">
+
+	<title>Histórico das Receitas</title>
+
+	<th:block th:insert="/includes/include.html :: #head"></th:block>
+</head>
+<body class="app">
+	<div id="loader">
+		<div class="spinner"></div>
+	</div>
+	<script>
+		window.addEventListener('load', function load() {
+			const loader = document.getElementById('loader');
+			setTimeout(function() {
+				loader.classList.add('fadeOut');
+			}, 300);
+		});
+	</script>
+	<!--Menu do Tema-->
+	<div>
+		<th:block th:insert="/includes/include.html :: menuLateral"></th:block>
+		<div class="page-container">
+			<th:block th:insert="/includes/include.html :: menuSuperior"></th:block>
+
+
+
+			<main class="main-content bgc-grey-100">
+				<h4 class="c-grey-900">Histórico das Receitas ordenado por Categoria</h4>
+				<div class="row">
+					<div class="col-md-12 mb-3">
+						<div class="bgc-white bd bdrs-3 p-20">
+							<h4 class="c-grey-900 mB-20">Empréstimo</h4>
+							<table class="table table-hover table-bordered">
+								<thead>
+									<tr>
+										<th scope="col">Origem</th>
+										<th scope="col">Categoria</th>
+										<th scope="col">Data</th>
+										<th scope="col">Valor</th>
+									</tr>
+								</thead>
+								<tbody>
+									<tr>
+										<td>Banco do Brasil</td>
+										<td>Empréstimo</td>
+										<td>25/03/2019</td>
+										<td>R$ 100</td>
+									</tr>
+									<tr>
+										<td>Caixa</td>
+										<td>Empréstimo</td>
+										<td>26/03/2019</td>
+										<td>R$ 150</td>
+									</tr>
+								</tbody>
+							</table>
+						</div>
+					</div>
+					<div class="col-md-12 mb-3">
+						<div class="bgc-white bd bdrs-3 p-20">
+							<h4 class="c-grey-900 mB-20">Salário</h4>
+							<table class="table table-hover table-bordered">
+								<thead>
+									<tr>
+										<th scope="col">Origem</th>
+										<th scope="col">Categoria</th>
+										<th scope="col">Data</th>
+										<th scope="col">Valor</th>
+									</tr>
+								</thead>
+								<tbody>
+									<tr>
+										<td>Google</td>
+										<td>Salário</td>
+										<td>01/03/2019</td>
+										<td>R$ 10.210,80</td>
+									</tr>
+									<tr>
+										<td>Google</td>
+										<td>Salário</td>
+										<td>01/04/2019</td>
+										<td>R$ 10.210,80</td>
+									</tr>
+								</tbody>
+							</table>
+						</div>
+					</div>
+					<div class="col-md-12 mb-3">
+						<div class="bgc-white bd bdrs-3 p-20">
+							<h4 class="c-grey-900 mB-20">Vendas</h4>
+							<table class="table table-hover table-bordered">
+								<thead>
+									<tr>
+										<th scope="col">Origem</th>
+										<th scope="col">Categoria</th>
+										<th scope="col">Data</th>
+										<th scope="col">Valor</th>
+									</tr>
+								</thead>
+								<tbody>
+									<tr>
+										<td>Playstation 4</td>
+										<td>Vendas</td>
+										<td>12/03/2019</td>
+										<td>R$ 2.000</td>
+									</tr>
+									<tr>
+										<td>TV Samsung</td>
+										<td>Vendas</td>
+										<td>30/03/2019</td>
+										<td>R$ 1.200,20</td>
+									</tr>
+								</tbody>
+							</table>
+						</div>
+					</div>
+				</div>
+			</main>
+
+
+
+			<th:block th:insert="/includes/include.html :: footer"></th:block>
+		</div>
+	</div>
+
+	<th:block th:insert="/includes/include.html :: scripts"></th:block>
+</body>
+</html>
