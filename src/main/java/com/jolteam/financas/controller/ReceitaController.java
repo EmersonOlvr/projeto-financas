@@ -37,7 +37,6 @@ public class ReceitaController {
 		mv.addObject("categorias", this.categorias.findByUsuarioAndTipoTransacao(this.usuarios.getOne(1), TiposTransacoes.RECEITA));
 		return mv;
 	}
-	
 	@PostMapping("/receitas/adicionar")
 	public ModelAndView adicionarReceita(@ModelAttribute Receita receita, HttpServletRequest request) {
 		try {

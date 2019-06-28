@@ -30,37 +30,38 @@
 				<div class="d-flex justify-content-center">
 					<div class="col-5 peer pX-40 pY-40 h-100 bgc-white scrollable pos-r bd" style="min-width:320px">
 						<h2 style="color: #2196f3" class="text-center">Adicionar Despesa</h2><br>
-						<div th:if="${!#strings.isEmpty(sucesso)}" class="alert alert-success alert-dismissible fade show" role="alert">
-							[[${sucesso}]]
-							<button type="button" class="close" data-dismiss="alert" aria-label="Close">
-								<span aria-hidden="true">&times;</span>
-							</button>
-						</div>
-						<div th:if="${!#strings.isEmpty(erro)}" class="alert alert-danger alert-dismissible fade show" role="alert">
-							[[${erro}]]
-							<button type="button" class="close" data-dismiss="alert" aria-label="Close">
-								<span aria-hidden="true">&times;</span>
-							</button>
-						</div>
-						<form id="needs-validation" th:object="${despesa}" th:action="@{/despesas/adicionar}" method="post" novalidate>
+						<form id="needs-validation" novalidate>
+							<div class="form-group">
+								<label class="text-normal text-dark">Valor</label>
+								<input type="number" class="form-control" placeholder="Valor..." required>
+								<div class="invalid-feedback">Insira um valor</div>
+							</div>
 							<div class="form-group">
 								<label class="text-normal text-dark">Categoria</label> - <a href="/despesas/categorias">Adicionar Categoria</a>
-								<select th:field="*{categoria}" class="form-control" required>
+								<select class="form-control" required>
 									<option value="">Selecione...</option>
-									<option th:if="${!#lists.isEmpty(categorias)}" th:each="categoria : ${categorias}" th:value="${categoria.id}" th:text="${categoria.nome}"></option>
+									<option value="autopista">Autopista</option>
+									<option value="bebidas">Bebidas</option>
+									<option value="diversao">Diversão</option>
+									<option value="educacao">Educação</option>
+									<option value="gasolina">Gasolina</option>
+									<option value="gorjeta">Gorjetas</option>
+									<option value="hotel">Hotel</option>
+									<option value="mascote">Mascotes</option>
+									<option value="mercadoria">Mercadoria</option>
+									<option value="pessoal">Pessoal</option>
+									<option value="restaurante">Restaurante</option>
+									<option value="roupa">Roupas</option>
+									<option value="saude">Saúde</option>
+									<option value="transporte">Transportes</option>
+									<option value="outros">Outros</option>
 								</select>
 								<div class="invalid-feedback">Selecione uma categoria</div>
 							</div>
 							<div class="form-group">
-								<div class="form-group">
 								<label class="text-normal text-dark">Descrição</label>
-								<input type="text" th:field="*{descricao}" class="form-control" placeholder="Descrição..." required>
+								<input type="text" class="form-control" placeholder="Descrição..." required>
 								<div class="invalid-feedback">Insira uma descrição</div>
-							</div>
-							<div class="form-group">
-								<label class="text-normal text-dark">Valor</label>
-								<input type="number" th:field="*{valor}" class="form-control" placeholder="Valor..." required>
-								<div class="invalid-feedback">Insira um valor</div>
 							</div>
 							<div class="form-group d-flex justify-content-center">
 								<button class="btn btn-primary">Adicionar</button>
