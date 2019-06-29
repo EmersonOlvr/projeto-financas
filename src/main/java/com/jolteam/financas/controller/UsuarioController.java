@@ -22,7 +22,7 @@ import com.jolteam.financas.dao.LogDAO;
 import com.jolteam.financas.dao.UsuarioDAO;
 import com.jolteam.financas.errorgroups.usuario.UsuarioValidationSequence;
 import com.jolteam.financas.model.Log;
-import com.jolteam.financas.model.TiposLogs;
+import com.jolteam.financas.model.TipoLog;
 import com.jolteam.financas.model.Usuario;
 
 @Controller
@@ -82,7 +82,7 @@ public class UsuarioController {
 				usuario.setSenha(senhaHash);
 				
 				// atributos que vieram do formulário nulos mas que não podem ser nulos no banco
-				usuario.setContaAtivada(false);
+				usuario.setAtivado(false);
 				usuario.setPermissao((short) 1);
 				usuario.setRegistroData(LocalDateTime.now());
 				usuario.setRegistroIp(request.getRemoteAddr());
@@ -125,7 +125,7 @@ public class UsuarioController {
 			String ip = request.getRemoteAddr();
 			LocalDateTime dataAtual = LocalDateTime.now();
 			System.out.println(dataAtual);
-			logs.save(new Log(usuario.get(), TiposLogs.LOGIN, dataAtual, ip));
+			logs.save(new Log(usuario.get(), TipoLog.LOGIN, dataAtual, ip));
 			
 			// atualiza o usuário no banco
 			this.usuarios.save(usuario.get());

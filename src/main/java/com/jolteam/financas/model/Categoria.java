@@ -13,17 +13,18 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 @Entity
-@Table(name = "usuario_categorias")
+@Table(name = "categorias")
 public class Categoria {
 
+	// atributos/colunas
 	@Id @GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Integer id;
 	
 	@ManyToOne(optional = false)
 	private Usuario usuario;
 
-	@Column(nullable = false) @Enumerated(EnumType.STRING)
-	private TiposTransacoes tipoTransacao;
+	@Column(nullable = false) @Enumerated(EnumType.ORDINAL)
+	private TipoTransacao tipo;
 	
 	@Column(length = 50, nullable = false)
 	private String nome;
@@ -34,10 +35,9 @@ public class Categoria {
 	
 	// construtores
 	public Categoria () {}
-	public Categoria(Usuario usuario, TiposTransacoes tipoTransacao, String nome,
-			LocalDateTime dataCriacao) {
+	public Categoria(Usuario usuario, TipoTransacao tipo, String nome, LocalDateTime dataCriacao) {
 		this.usuario = usuario;
-		this.tipoTransacao = tipoTransacao;
+		this.tipo = tipo;
 		this.nome = nome;
 		this.dataCriacao = dataCriacao;
 	}
@@ -56,11 +56,11 @@ public class Categoria {
 	public void setUsuario(Usuario usuario) {
 		this.usuario = usuario;
 	}
-	public TiposTransacoes getTipoTransacao() {
-		return tipoTransacao;
+	public TipoTransacao getTipo() {
+		return tipo;
 	}
-	public void setTipoTransacao(TiposTransacoes tipoTransacao) {
-		this.tipoTransacao = tipoTransacao;
+	public void setTipo(TipoTransacao tipo) {
+		this.tipo = tipo;
 	}
 	public String getNome() {
 		return nome;
@@ -78,7 +78,7 @@ public class Categoria {
 	
 	@Override
 	public String toString() {
-		return "Categoria [id=" + id + ", usuario=" + usuario + ", tipoTransacao=" + tipoTransacao + ", nome=" + nome
+		return "Categoria [id=" + id + ", usuario=" + usuario + ", tipo=" + tipo + ", nome=" + nome
 				+ ", dataCriacao=" + dataCriacao + "]";
 	}
 	

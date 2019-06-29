@@ -1,6 +1,6 @@
 package com.jolteam.financas.model;
 
-public enum TiposLogs {
+public enum TipoLog {
 	
 	LOGIN("Login"), 
 	
@@ -28,9 +28,9 @@ public enum TiposLogs {
 	ERRO_CADASTRO_CATEGORIA_DESPESA("Erro no Cadastro de Categoria de Despesa"),
 	ERRO_CADASTRO_CATEGORIA_COFRE("Erro no Cadastro de Categoria de Cofre");
 	
-	public String valor;
-	TiposLogs(String valor) {
-		this.valor = valor;
+	public String texto;
+	TipoLog(String texto) {
+		this.texto = texto;
 	}
 	
 }

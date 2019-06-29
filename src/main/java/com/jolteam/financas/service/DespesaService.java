@@ -1,21 +1,21 @@
 package com.jolteam.financas.service;
 
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.jolteam.financas.dao.TransacaoDAO;
+import com.jolteam.financas.dao.TransacaoPrincipalDAO;
 import com.jolteam.financas.dao.UsuarioDAO;
 import com.jolteam.financas.exceptions.DespesaException;
 import com.jolteam.financas.model.Despesa;
-import com.jolteam.financas.model.TiposTransacoes;
-import com.jolteam.financas.model.Transacao;
+import com.jolteam.financas.model.TransacaoPrincipal;
 
 @Service
 public class DespesaService {
 
-	@Autowired private TransacaoDAO transacoes;
+	@Autowired private TransacaoPrincipalDAO transacoes;
 	@Autowired private UsuarioDAO usuarios;
 	
 	public void salvar(Despesa despesa) throws DespesaException{
@@ -36,14 +36,14 @@ public class DespesaService {
 		}
 		//Validação do valor
 		if(despesa.getValor().compareTo(new BigDecimal("0.05"))== -1) {
-			throw new DespesaException("O valor da receita deve ser igual ou maior que 5 centavos (0.05).");
+			throw new DespesaException("O valor da despesa deve ser igual ou maior que 5 centavos (0.05).");
 		}
 		
 		//tentativa de salvar no banco
-		
 		try {
-			this.transacoes.save(new Transacao(despesa.getUsuario(), TiposTransacoes.DESPESA, despesa.getCategoria(),
-					despesa.getDescricao(), despesa.getValor()));
+			TransacaoPrincipal transacaoDespesa = new TransacaoPrincipal(despesa.getUsuario(), despesa.getCategoria(), 
+					despesa.getDescricao(), despesa.getValor(), LocalDateTime.now());
+			this.transacoes.save(transacaoDespesa);
 		}catch(Exception e){
 			throw new DespesaException("Desculpe, algo deu erro");
 		}

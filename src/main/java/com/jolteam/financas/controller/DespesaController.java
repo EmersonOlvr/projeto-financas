@@ -16,8 +16,8 @@ import com.jolteam.financas.dao.UsuarioDAO;
 import com.jolteam.financas.exceptions.DespesaException;
 import com.jolteam.financas.model.Despesa;
 import com.jolteam.financas.model.Log;
-import com.jolteam.financas.model.TiposLogs;
-import com.jolteam.financas.model.TiposTransacoes;
+import com.jolteam.financas.model.TipoLog;
+import com.jolteam.financas.model.TipoTransacao;
 import com.jolteam.financas.service.DespesaService;
 import com.jolteam.financas.service.LogService;
 
@@ -29,13 +29,11 @@ public class DespesaController {
 	@Autowired private CategoriaDAO categorias;
 	@Autowired private UsuarioDAO usuarios;
 	
-	//
-	
 	@GetMapping("/despesas/adicionar")
 	public ModelAndView viewDespesaAdicionar() {
 			ModelAndView mv=new ModelAndView("/despesas-adicionar");
 			mv.addObject("despesa", new Despesa());
-			mv.addObject("categorias", this.categorias.findByUsuarioAndTipoTransacao(this.usuarios.getOne(1), TiposTransacoes.DESPESA));
+			mv.addObject("categorias", this.categorias.findByUsuarioAndTipo(this.usuarios.getOne(1), TipoTransacao.DESPESA));
 			return mv;
 	}
 	@PostMapping("/despesas/adicionar")
@@ -44,14 +42,14 @@ public class DespesaController {
 			this.despesaService.salvar(despesa);
 			try {
 				// salva um log de sucesso no banco
-				this.logService.salvar(new Log(despesa.getUsuario(), TiposLogs.CADASTRO_DESPESA, LocalDateTime.now(), request.getRemoteAddr()));
+				this.logService.salvar(new Log(despesa.getUsuario(), TipoLog.CADASTRO_DESPESA, LocalDateTime.now(), request.getRemoteAddr()));
 			} catch (Exception e) {
 				System.out.println(e.getMessage());
 			}
 		}catch (DespesaException de) {
 			try {
 				// salva um log de erro no banco
-				this.logService.salvar(new Log(despesa.getUsuario(), TiposLogs.ERRO_CADASTRO_DESPESA, LocalDateTime.now(), request.getRemoteAddr()));
+				this.logService.salvar(new Log(despesa.getUsuario(), TipoLog.ERRO_CADASTRO_DESPESA, LocalDateTime.now(), request.getRemoteAddr()));
 			} catch (Exception e) {
 				System.out.println(e.getMessage());
 			}

@@ -42,7 +42,7 @@ public class Usuario {
 	private String email;
 	
 	@Column(columnDefinition="bit(1)", nullable=false)
-	private Boolean contaAtivada;
+	private Boolean ativado;
 	
 	@Column(nullable=false)
 	@Size(min=6, message="Senha muito curta. Mínimo de 6 caracteres.", groups=SenhaSizeMinGroup.class)
@@ -66,17 +66,13 @@ public class Usuario {
 	
 	// construtores
 	public Usuario() {}
-	public Usuario(@NotBlank(message = "Insira um nome.", groups = NomeNotBlankGroup.class) @Pattern(regexp = "^[A-zÀ-ú ]*$", message = "Nome inválido: somente letras e espaços são permitidos.", groups = NomePatternGroup.class) @Size(min = 2, max = 50, message = "Nome inválido: mínimo {min} e máximo de {max} letras.", groups = NomeSizeGroup.class) String nome,
-			@NotBlank(message = "Insira um sobrenome.", groups = SobrenomeNotBlankGroup.class) @Pattern(regexp = "^[A-zÀ-ú ]*$", message = "Sobrenome inválido: somente letras e espaços são permitidos.", groups = SobrenomePatternGroup.class) @Size(min = 2, max = 50, message = "Sobrenome inválido: mínimo {min} e máximo de {max} letras.", groups = SobrenomeSizeGroup.class) String sobrenome,
-			@NotBlank(message = "Insira um e-mail.", groups = EmailNotBlankGroup.class) @Pattern(regexp = "^[\\w-\\+]+(\\.[\\w]+)*@[\\w-]+(\\.[\\w]+)*(\\.[A-z]{2,})$", message = "E-mail em formato inválido.", groups = EmailPatternGroup.class) @Size(max = 64, message = "E-mail inválido: máximo de {max} caracteres.", groups = EmailSizeMaxGroup.class) String email,
-			Boolean contaAtivada,
-			@Size(min = 6, message = "Senha muito curta. Mínimo de 6 caracteres.", groups = SenhaSizeMinGroup.class) @NotBlank(message = "A senha não pode conter apenas espaços.", groups = SenhaNotBlankGroup.class) @Size(max = 255, message = "Senha muito grande. Máximo de 255 caracteres.", groups = SenhaSizeMaxGroup.class) String senha,
-			@NotBlank(message = "Por favor, repita a senha.", groups = SenhaRepetidaNotBlankGroup.class) String senhaRepetida,
-			Short permissao, LocalDateTime registroData, String registroIp) {
+	public Usuario(String nome, String sobrenome, String email, Boolean contaAtivada, String senha, String senhaRepetida,
+			Short permissao, LocalDateTime registroData, String registroIp) 
+	{
 		this.nome = nome;
 		this.sobrenome = sobrenome;
 		this.email = email;
-		this.contaAtivada = contaAtivada;
+		this.ativado = contaAtivada;
 		this.senha = senha;
 		this.senhaRepetida = senhaRepetida;
 		this.permissao = permissao;
@@ -110,11 +106,11 @@ public class Usuario {
 	public void setEmail(String email) {
 		this.email = email;
 	}
-	public Boolean isContaAtivada() {
-		return contaAtivada;
+	public Boolean isAtivado() {
+		return ativado;
 	}
-	public void setContaAtivada(Boolean ativado) {
-		this.contaAtivada = ativado;
+	public void setAtivado(Boolean ativado) {
+		this.ativado = ativado;
 	}
 	public String getSenha() {
 		return senha;
@@ -151,8 +147,19 @@ public class Usuario {
 	@Override
 	public String toString() {
 		return "Usuario [id=" + id + ", nome=" + nome + ", sobrenome=" + sobrenome + ", email=" + email
-				+ ", contaAtivada=" + contaAtivada + ", senha=" + senha + ", senhaRepetida=" + senhaRepetida
+				+ ", ativado=" + ativado + ", senha=" + senha + ", senhaRepetida=" + senhaRepetida
 				+ ", permissao=" + permissao + ", registroData=" + registroData + ", registroIp=" + registroIp + "]";
+	}
+	
+	
+	@Override
+	public boolean equals(Object outro) {
+		if (outro instanceof Usuario) {
+			if (this.email.equals(((Usuario) outro).getEmail())) {
+				return true;
+			}
+		}
+		return false;
 	}
 	
 }
