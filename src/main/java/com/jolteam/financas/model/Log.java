@@ -12,6 +12,8 @@ import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
+import com.jolteam.financas.enums.TiposLogs;
+
 @Entity
 @Table(name = "logs")
 public class Log {
@@ -23,8 +25,8 @@ public class Log {
 	@ManyToOne(optional = false)
 	private Usuario usuario;
 
-	@Column(nullable = false) @Enumerated(EnumType.ORDINAL)
-	private TipoLog tipo;
+	@Column(nullable = false) @Enumerated(EnumType.STRING)
+	private TiposLogs tipo;
 	
 	@Column(nullable=false, columnDefinition = "datetime")
 	private LocalDateTime data;
@@ -35,7 +37,7 @@ public class Log {
 	
 	// construtores
 	public Log() {}
-	public Log(Usuario usuario, TipoLog tipo, LocalDateTime data, String ip) {
+	public Log(Usuario usuario, TiposLogs tipo, LocalDateTime data, String ip) {
 		this.usuario = usuario;
 		this.tipo = tipo;
 		this.data = data;
@@ -56,10 +58,10 @@ public class Log {
 	public void setUsuario(Usuario usuario) {
 		this.usuario = usuario;
 	}
-	public TipoLog getTipo() {
+	public TiposLogs getTipo() {
 		return tipo;
 	}
-	public void setTipo(TipoLog tipo) {
+	public void setTipo(TiposLogs tipo) {
 		this.tipo = tipo;
 	}
 	public LocalDateTime getData() {
@@ -73,12 +75,6 @@ public class Log {
 	}
 	public void setIp(String ip) {
 		this.ip = ip;
-	}
-	
-	
-	@Override
-	public String toString() {
-		return "Log [id=" + id + ", usuario=" + usuario + ", tipo=" + tipo + ", data=" + data + ", ip=" + ip + "]";
 	}
 	
 }

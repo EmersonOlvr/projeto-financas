@@ -13,11 +13,11 @@ import org.springframework.web.servlet.ModelAndView;
 
 import com.jolteam.financas.dao.CategoriaDAO;
 import com.jolteam.financas.dao.UsuarioDAO;
+import com.jolteam.financas.enums.TiposLogs;
+import com.jolteam.financas.enums.TiposTransacoes;
 import com.jolteam.financas.exceptions.ReceitaException;
 import com.jolteam.financas.model.Log;
 import com.jolteam.financas.model.Receita;
-import com.jolteam.financas.model.TipoLog;
-import com.jolteam.financas.model.TipoTransacao;
 import com.jolteam.financas.service.LogService;
 import com.jolteam.financas.service.ReceitaService;
 
@@ -34,7 +34,7 @@ public class ReceitaController {
 	public ModelAndView viewAdicionarReceita() {
 		ModelAndView mv = new ModelAndView("/receitas-adicionar");
 		mv.addObject("receita", new Receita());
-		mv.addObject("categorias", this.categorias.findByUsuarioAndTipo(this.usuarios.getOne(1), TipoTransacao.RECEITA));
+		mv.addObject("categorias", this.categorias.findByUsuarioAndTipoTransacao(this.usuarios.getOne(1), TiposTransacoes.RECEITA));
 		return mv;
 	}
 	@PostMapping("/receitas/adicionar")
@@ -44,14 +44,14 @@ public class ReceitaController {
 			
 			try {
 				// salva um log de sucesso no banco
-				this.logService.salvar(new Log(receita.getUsuario(), TipoLog.CADASTRO_RECEITA, LocalDateTime.now(), request.getRemoteAddr()));
+				this.logService.save(new Log(receita.getUsuario(), TiposLogs.CADASTRO_RECEITA, LocalDateTime.now(), request.getRemoteAddr()));
 			} catch (Exception e) {
 				System.out.println(e.getMessage());
 			}
 		} catch (ReceitaException re) {
 			try {
 				// salva um log de erro no banco
-				this.logService.salvar(new Log(receita.getUsuario(), TipoLog.ERRO_CADASTRO_RECEITA, LocalDateTime.now(), request.getRemoteAddr()));
+				this.logService.save(new Log(receita.getUsuario(), TiposLogs.ERRO_CADASTRO_RECEITA, LocalDateTime.now(), request.getRemoteAddr()));
 			} catch (Exception e) {
 				System.out.println(e.getMessage());
 			}

@@ -66,14 +66,21 @@
 			<span class="separator__text">ou</span>
 			<span class="separator__line"></span>
 		</div>
+		
+		<div th:if="${!#strings.isEmpty(msgErro)}" class="alert alert-danger">
+			[[${msgErro}]]
+		</div>
+		<div th:if="${!#strings.isEmpty(msgSucesso)}" class="alert alert-success">
+			[[${msgSucesso}]]
+		</div>
 			
 		<form method="post">
 			<div class="form-label-group">
-				<input type="email" id="email" name="email" class="form-control" placeholder="E-mail" required autofocus>
+				<input type="email" id="email" name="email" class="form-control" placeholder="E-mail" autofocus>
 				<label for="email">E-mail</label>
 			</div>
 			<div class="form-label-group">
-				<input type="password" id="senha" name="senha" class="form-control" placeholder="Senha" required>
+				<input type="password" id="senha" name="senha" class="form-control" placeholder="Senha">
 				<label for="senha">Senha</label>
 			</div>
 

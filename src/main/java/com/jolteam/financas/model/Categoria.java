@@ -12,19 +12,20 @@ import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
+import com.jolteam.financas.enums.TiposTransacoes;
+
 @Entity
 @Table(name = "categorias")
 public class Categoria {
 
-	// atributos/colunas
 	@Id @GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Integer id;
 	
 	@ManyToOne(optional = false)
 	private Usuario usuario;
 
-	@Column(nullable = false) @Enumerated(EnumType.ORDINAL)
-	private TipoTransacao tipo;
+	@Column(nullable = false) @Enumerated(EnumType.STRING)
+	private TiposTransacoes tipoTransacao;
 	
 	@Column(length = 50, nullable = false)
 	private String nome;
@@ -35,9 +36,10 @@ public class Categoria {
 	
 	// construtores
 	public Categoria () {}
-	public Categoria(Usuario usuario, TipoTransacao tipo, String nome, LocalDateTime dataCriacao) {
+	public Categoria(Usuario usuario, TiposTransacoes tipoTransacao, String nome,
+			LocalDateTime dataCriacao) {
 		this.usuario = usuario;
-		this.tipo = tipo;
+		this.tipoTransacao = tipoTransacao;
 		this.nome = nome;
 		this.dataCriacao = dataCriacao;
 	}
@@ -56,11 +58,11 @@ public class Categoria {
 	public void setUsuario(Usuario usuario) {
 		this.usuario = usuario;
 	}
-	public TipoTransacao getTipo() {
-		return tipo;
+	public TiposTransacoes getTipoTransacao() {
+		return tipoTransacao;
 	}
-	public void setTipo(TipoTransacao tipo) {
-		this.tipo = tipo;
+	public void setTipoTransacao(TiposTransacoes tipoTransacao) {
+		this.tipoTransacao = tipoTransacao;
 	}
 	public String getNome() {
 		return nome;
@@ -78,7 +80,7 @@ public class Categoria {
 	
 	@Override
 	public String toString() {
-		return "Categoria [id=" + id + ", usuario=" + usuario + ", tipo=" + tipo + ", nome=" + nome
+		return "Categoria [id=" + id + ", usuario=" + usuario + ", tipoTransacao=" + tipoTransacao + ", nome=" + nome
 				+ ", dataCriacao=" + dataCriacao + "]";
 	}
 	

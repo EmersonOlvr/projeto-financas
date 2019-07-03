@@ -1,17 +1,14 @@
 package com.jolteam.financas.controller;
 
 import java.time.LocalDateTime;
-import java.util.Optional;
 
 import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.crypto.bcrypt.BCrypt;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.ObjectError;
-import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -19,17 +16,20 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.jolteam.financas.dao.LogDAO;
-import com.jolteam.financas.dao.UsuarioDAO;
-import com.jolteam.financas.errorgroups.usuario.UsuarioValidationSequence;
+import com.jolteam.financas.enums.TiposCodigos;
+import com.jolteam.financas.enums.TiposLogs;
+import com.jolteam.financas.exceptions.UsuarioInexistenteException;
+import com.jolteam.financas.exceptions.UsuarioInvalidoException;
 import com.jolteam.financas.model.Log;
-import com.jolteam.financas.model.TipoLog;
 import com.jolteam.financas.model.Usuario;
+import com.jolteam.financas.service.UsuarioService;
 
 @Controller
 public class UsuarioController {
-
-	@Autowired private UsuarioDAO usuarios;
+	
 	@Autowired private LogDAO logs;
+	
+	@Autowired private UsuarioService usuarioService;
 
 	@GetMapping("/")
 	public String viewIndex() {
@@ -52,57 +52,29 @@ public class UsuarioController {
 	
 	@PostMapping("/cadastrar")
 	public ModelAndView cadastrarUsuario(HttpServletRequest request, Model model, 
-								   @ModelAttribute @Validated(UsuarioValidationSequence.class) Usuario usuario, 
+								   @ModelAttribute Usuario usuario, 
 								   BindingResult result) 
 	{
+		usuario.setRegistroData(LocalDateTime.now());
+		usuario.setRegistroIp(request.getRemoteAddr());
 		
-		// checa se houve algum erro na validação dos campos do usuário
-		if (!result.hasFieldErrors()) {
-			if (!usuario.getSenha().equals(usuario.getSenhaRepetida())) {
-				result.addError(new ObjectError("senhasNaoConferem", "As senhas não conferem."));
-			} else if (usuarios.findByEmail(usuario.getEmail()).isPresent()) {
-				result.addError(new ObjectError("emailEmUso", "O e-mail inserido já está em uso."));
-			} else {
-				// remove os espaços do começo e do final do nome e do sobrenome
-				usuario.setNome(usuario.getNome().trim());
-				usuario.setSobrenome(usuario.getSobrenome().trim());
-				
-				// remove os espaços duplicados do nome e do sobrenome
-				// \s é uma expressão regular (regex) que corresponde a espaços, tabs e quebras de linhas
-				// o + corresponde a 1 ou mais caracteres da expressão precedente
-				usuario.setNome(usuario.getNome().replaceAll("\\s+", " "));
-				usuario.setSobrenome(usuario.getSobrenome().replaceAll("\\s+", " "));
-
-				// coloca o email em letras minúsculas
-				usuario.setEmail(usuario.getEmail().toLowerCase());
-				
-				// criptografa a senha do usuário
-				int complexidade = 10; // vai de 4 à 31 (o padrão do gensalt() é 10)
-				String senhaHash = BCrypt.hashpw(usuario.getSenha(), BCrypt.gensalt(complexidade));
-				usuario.setSenha(senhaHash);
-				
-				// atributos que vieram do formulário nulos mas que não podem ser nulos no banco
-				usuario.setAtivado(false);
-				usuario.setPermissao((short) 1);
-				usuario.setRegistroData(LocalDateTime.now());
-				usuario.setRegistroIp(request.getRemoteAddr());
-				
-				// tenta...
-				try {
-					// ...salvar o usuário no banco de dados
-					this.usuarios.save(usuario);
-					
-					// adiciona o atributo "msgSucesso" na view
-					model.addAttribute("msgSucesso", "Registrado com sucesso!");
-					
-					System.out.println("Novo registro: "+usuario+".");
-					
-					// adiciona um novo objeto Usuario na variável 'usuario' que será jogada de volta no formulário
-					usuario = new Usuario();
-				} catch (Exception e) {
-					result.addError(new ObjectError("algoDeuErrado", "Desculpe, algo deu errado."));
-				}
-			}
+		try {
+			// valida o usuário
+			usuarioService.validar(usuario);
+			
+			// salva o usuário no banco de dados
+			this.usuarioService.save(usuario);
+			
+			// envia o código de ativação para o e-mail do usuário
+			this.usuarioService.enviarCodigo(usuario, TiposCodigos.ATIVACAO_CONTA);
+			
+			// adiciona a mensagem de sucesso na view
+			model.addAttribute("msgSucesso", "Registrado com sucesso!");
+			
+			// adiciona um novo objeto Usuario na variável 'usuario' que será jogada de volta no formulário
+			usuario = new Usuario();
+		} catch (UsuarioInvalidoException e) {
+			result.addError(new ObjectError("erroValidacao", e.getMessage()));
 		}
 
 		return new ModelAndView("/deslogado/cadastrar").addObject("usuario", usuario);
@@ -113,26 +85,21 @@ public class UsuarioController {
 		ModelAndView mv = new ModelAndView("/deslogado/entrar");
 		return mv;
 	}
-	
 	@PostMapping("/entrar")
 	public String autenticarUsuario(Model model, @RequestParam String email, String senha, HttpServletRequest request) {
-		// busca no banco o usuário com o e-mail fornecido
-		// se não existir nenhum, retorna null
-		Optional<Usuario> usuario = this.usuarios.findByEmail(email);
-		
-		if (usuario.isPresent() && BCrypt.checkpw(senha, usuario.get().getSenha())) {
-			// insere um novo log de login no banco
-			String ip = request.getRemoteAddr();
-			LocalDateTime dataAtual = LocalDateTime.now();
-			System.out.println(dataAtual);
-			logs.save(new Log(usuario.get(), TipoLog.LOGIN, dataAtual, ip));
+		try {
+			Usuario usuario = this.usuarioService.entrar(email, senha);
 			
-			// atualiza o usuário no banco
-			this.usuarios.save(usuario.get());
+			// aqui salva o usuário na sessão
 			
-			System.out.println("Logou! "+usuario);
-		} else {
-			model.addAttribute("msgErro", "E-mail e/ou senha inválidos.");
+			// salva um log de login no banco
+			this.logs.save(new Log(usuario, TiposLogs.LOGIN, LocalDateTime.now(), request.getRemoteAddr()));
+			
+			model.addAttribute("msgSucesso", "Logado com sucesso!");
+		} catch (UsuarioInexistenteException ui) {
+			model.addAttribute("msgErro", ui.getMessage());
+		} catch (UsuarioInvalidoException ue) {
+			model.addAttribute("msgErro", ue.getMessage());
 		}
 		
 		return "/deslogado/entrar";
@@ -164,7 +131,7 @@ public class UsuarioController {
 	}
 	@PostMapping("/configuracoes")
 	public String atualizarUsuario(Model model, @ModelAttribute Usuario usuario) {
-		this.usuarios.save(usuario);
+		this.usuarioService.save(usuario);
 		model.addAttribute("msgSucesso", "Configurações salvas!");
 		return "/configuracoes";
 	}
@@ -172,11 +139,6 @@ public class UsuarioController {
 	@GetMapping("/home")
 	public String viewHome() {
 		return "/home";
-	}
-	
-	@GetMapping("/movimentos")
-	public String viewMovimentos() {
-		return "/movimentos";
 	}
 	
 }

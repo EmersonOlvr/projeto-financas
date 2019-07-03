@@ -80,34 +80,41 @@
 				<span class="separator__line"></span>
 			</div>
 
+			<div class="alert alert-danger" th:if="${#fields.hasErrors()}">
+				<th:block th:each="erro : ${#fields.allErrors()}">[[${erro}]]<br></th:block>
+			</div>
+			<div class="alert alert-success" th:if="${!#strings.isEmpty(msgSucesso)}">
+				<th:block>[[${msgSucesso}]]<br></th:block>
+			</div>
+
 			<div class="row">
 				<div class="col-6">
 					<div class="form-label-group">
-						<input type="text" id="nome" th:field="*{nome}" class="form-control" placeholder="Nome" required autofocus>
+						<input type="text" id="nome" th:field="*{nome}" class="form-control" placeholder="Nome" autofocus>
 						<label for="nome">Nome</label>
 					</div>
 				</div>
 				<div class="col-6">
 					<div class="form-label-group">
-						<input type="text" id="sobrenome" th:field="*{sobrenome}" class="form-control" placeholder="Sobrenome" required autofocus>
+						<input type="text" id="sobrenome" th:field="*{sobrenome}" class="form-control" placeholder="Sobrenome" autofocus>
 						<label for="sobrenome">Sobrenome</label>
 					</div>
 				</div>
 			</div>
 			<div class="form-label-group">
-				<input type="email" id="email" th:field="*{email}" class="form-control" placeholder="E-mail" required autofocus>
+				<input type="email" id="email" th:field="*{email}" class="form-control" placeholder="E-mail" autofocus>
 				<label for="email">E-mail</label>
 			</div>
 			<div class="row">
 				<div class="col-6">
 					<div class="form-label-group">
-						<input type="password" id="senha" th:field="*{senha}" class="form-control" placeholder="Senha" required>
+						<input type="password" id="senha" th:field="*{senha}" class="form-control" placeholder="Senha">
 						<label for="senha">Senha</label>
 					</div>
 				</div>
 				<div class="col-6">
 					<div class="form-label-group">
-						<input type="password" id="senha_repetida" th:field="*{senhaRepetida}" class="form-control" placeholder="Senha (repita)" required>
+						<input type="password" id="senha_repetida" th:field="*{senhaRepetida}" class="form-control" placeholder="Senha (repita)">
 						<label for="senha_repetida">Senha (repita)</label>
 					</div>
 				</div>

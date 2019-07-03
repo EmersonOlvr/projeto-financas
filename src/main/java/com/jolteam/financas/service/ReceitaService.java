@@ -1,21 +1,21 @@
 package com.jolteam.financas.service;
 
 import java.math.BigDecimal;
-import java.time.LocalDateTime;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.jolteam.financas.dao.TransacaoPrincipalDAO;
+import com.jolteam.financas.dao.TransacaoDAO;
 import com.jolteam.financas.dao.UsuarioDAO;
+import com.jolteam.financas.enums.TiposTransacoes;
 import com.jolteam.financas.exceptions.ReceitaException;
 import com.jolteam.financas.model.Receita;
-import com.jolteam.financas.model.TransacaoPrincipal;
+import com.jolteam.financas.model.Transacao;
 
 @Service
 public class ReceitaService {
 
-	@Autowired private TransacaoPrincipalDAO transacoes;
+	@Autowired private TransacaoDAO transacoes;
 	@Autowired private UsuarioDAO usuarios;
 
 	public void salvar(Receita receita) throws ReceitaException {
@@ -38,9 +38,8 @@ public class ReceitaService {
 
 		// tenta salvar no banco...
 		try {
-			TransacaoPrincipal transacaoReceita = new TransacaoPrincipal(receita.getUsuario(), receita.getCategoria(), 
-					receita.getDescricao(), receita.getValor(), LocalDateTime.now());
-			this.transacoes.save(transacaoReceita);
+			this.transacoes.save(new Transacao(receita.getUsuario(), TiposTransacoes.RECEITA, receita.getCategoria(),
+					receita.getDescricao(), receita.getValor()));
 		} catch (Exception e) {
 			throw new ReceitaException("Desculpe, algo deu errado.");
 		}

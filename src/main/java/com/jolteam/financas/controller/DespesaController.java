@@ -12,14 +12,14 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.jolteam.financas.dao.CategoriaDAO;
-import com.jolteam.financas.dao.UsuarioDAO;
+import com.jolteam.financas.enums.TiposLogs;
+import com.jolteam.financas.enums.TiposTransacoes;
 import com.jolteam.financas.exceptions.DespesaException;
 import com.jolteam.financas.model.Despesa;
 import com.jolteam.financas.model.Log;
-import com.jolteam.financas.model.TipoLog;
-import com.jolteam.financas.model.TipoTransacao;
 import com.jolteam.financas.service.DespesaService;
 import com.jolteam.financas.service.LogService;
+import com.jolteam.financas.service.UsuarioService;
 
 @Controller
 public class DespesaController {
@@ -27,32 +27,26 @@ public class DespesaController {
 	@Autowired private DespesaService despesaService;
 	@Autowired private LogService logService;
 	@Autowired private CategoriaDAO categorias;
-	@Autowired private UsuarioDAO usuarios;
+	@Autowired private UsuarioService usuarioService;
 	
 	@GetMapping("/despesas/adicionar")
 	public ModelAndView viewDespesaAdicionar() {
 			ModelAndView mv=new ModelAndView("/despesas-adicionar");
 			mv.addObject("despesa", new Despesa());
-			mv.addObject("categorias", this.categorias.findByUsuarioAndTipo(this.usuarios.getOne(1), TipoTransacao.DESPESA));
+			mv.addObject("categorias", this.categorias.findByUsuarioAndTipoTransacao(this.usuarioService.getOne(1), TiposTransacoes.DESPESA));
 			return mv;
 	}
 	@PostMapping("/despesas/adicionar")
 	public ModelAndView adicionarDespesa(@ModelAttribute Despesa despesa,HttpServletRequest request) {
 		try {
 			this.despesaService.salvar(despesa);
-			try {
-				// salva um log de sucesso no banco
-				this.logService.salvar(new Log(despesa.getUsuario(), TipoLog.CADASTRO_DESPESA, LocalDateTime.now(), request.getRemoteAddr()));
-			} catch (Exception e) {
-				System.out.println(e.getMessage());
-			}
-		}catch (DespesaException de) {
-			try {
-				// salva um log de erro no banco
-				this.logService.salvar(new Log(despesa.getUsuario(), TipoLog.ERRO_CADASTRO_DESPESA, LocalDateTime.now(), request.getRemoteAddr()));
-			} catch (Exception e) {
-				System.out.println(e.getMessage());
-			}
+			
+			// salva um log de sucesso no banco
+			this.logService.save(new Log(despesa.getUsuario(), TiposLogs.CADASTRO_DESPESA, LocalDateTime.now(), request.getRemoteAddr()));
+		} catch (DespesaException de) {
+			// salva um log de erro no banco
+			this.logService.save(new Log(despesa.getUsuario(), TiposLogs.ERRO_CADASTRO_DESPESA, LocalDateTime.now(), request.getRemoteAddr()));
+			
 			return this.viewDespesaAdicionar().addObject("erro", de.getMessage());
 		}
 		return this.viewDespesaAdicionar().addObject("sucesso", "Despesa salva com sucesso.");

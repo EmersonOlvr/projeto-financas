@@ -11,12 +11,8 @@ public class LogService {
 
 	@Autowired private LogDAO logs;
 	
-	public void salvar(Log log) throws Exception {
-		try {
-			this.logs.save(log);
-		} catch (Exception e) {
-			throw new Exception("Erro ao salvar log no banco.");
-		}
+	public Log save(Log log) {
+		return this.logs.save(log);
 	}
 	
 }

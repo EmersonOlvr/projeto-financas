@@ -9,11 +9,6 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 import javax.persistence.Transient;
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.Pattern;
-import javax.validation.constraints.Size;
-
-import com.jolteam.financas.errorgroups.usuario.*;
 
 @Entity
 @Table(name="usuarios")
@@ -24,34 +19,21 @@ public class Usuario {
 	private Integer id;
 	
 	@Column(length=50, nullable=false)
-	@NotBlank(message="Insira um nome.", groups=NomeNotBlankGroup.class)
-	@Pattern(regexp="^[A-zÀ-ú ]*$", message="Nome inválido: somente letras e espaços são permitidos.", groups=NomePatternGroup.class)
-	@Size(min=2, max=50, message="Nome inválido: mínimo {min} e máximo de {max} letras.", groups=NomeSizeGroup.class)
 	private String nome;
 	
 	@Column(length=50, nullable=false)
-	@NotBlank(message="Insira um sobrenome.", groups=SobrenomeNotBlankGroup.class)
-	@Pattern(regexp="^[A-zÀ-ú ]*$", message="Sobrenome inválido: somente letras e espaços são permitidos.", groups=SobrenomePatternGroup.class)
-	@Size(min=2, max=50, message="Sobrenome inválido: mínimo {min} e máximo de {max} letras.", groups=SobrenomeSizeGroup.class)
 	private String sobrenome;
 	
 	@Column(length=64, unique=true, nullable=false)
-	@NotBlank(message="Insira um e-mail.", groups=EmailNotBlankGroup.class)
-	@Pattern(regexp="^[\\w-\\+]+(\\.[\\w]+)*@[\\w-]+(\\.[\\w]+)*(\\.[A-z]{2,})$", message="E-mail em formato inválido.", groups=EmailPatternGroup.class)
-	@Size(max=64, message="E-mail inválido: máximo de {max} caracteres.", groups=EmailSizeMaxGroup.class)
 	private String email;
 	
 	@Column(columnDefinition="bit(1)", nullable=false)
-	private Boolean ativado;
+	private Boolean contaAtivada;
 	
-	@Column(nullable=false)
-	@Size(min=6, message="Senha muito curta. Mínimo de 6 caracteres.", groups=SenhaSizeMinGroup.class)
-	@NotBlank(message="A senha não pode conter apenas espaços.", groups=SenhaNotBlankGroup.class)
-	@Size(max=255, message="Senha muito grande. Máximo de 255 caracteres.", groups=SenhaSizeMaxGroup.class)
+	@Column(nullable=false, length = 70)
 	private String senha;
 	
 	@Transient
-	@NotBlank(message="Por favor, repita a senha.", groups=SenhaRepetidaNotBlankGroup.class)
 	private String senhaRepetida;
 	
 	@Column(nullable = false)
@@ -66,13 +48,12 @@ public class Usuario {
 	
 	// construtores
 	public Usuario() {}
-	public Usuario(String nome, String sobrenome, String email, Boolean contaAtivada, String senha, String senhaRepetida,
-			Short permissao, LocalDateTime registroData, String registroIp) 
-	{
+	public Usuario(String nome, String sobrenome, String email, Boolean contaAtivada, 
+			String senha, String senhaRepetida, Short permissao, LocalDateTime registroData, String registroIp) {
 		this.nome = nome;
 		this.sobrenome = sobrenome;
 		this.email = email;
-		this.ativado = contaAtivada;
+		this.contaAtivada = contaAtivada;
 		this.senha = senha;
 		this.senhaRepetida = senhaRepetida;
 		this.permissao = permissao;
@@ -106,11 +87,11 @@ public class Usuario {
 	public void setEmail(String email) {
 		this.email = email;
 	}
-	public Boolean isAtivado() {
-		return ativado;
+	public Boolean isContaAtivada() {
+		return contaAtivada;
 	}
-	public void setAtivado(Boolean ativado) {
-		this.ativado = ativado;
+	public void setContaAtivada(Boolean ativado) {
+		this.contaAtivada = ativado;
 	}
 	public String getSenha() {
 		return senha;
@@ -147,19 +128,8 @@ public class Usuario {
 	@Override
 	public String toString() {
 		return "Usuario [id=" + id + ", nome=" + nome + ", sobrenome=" + sobrenome + ", email=" + email
-				+ ", ativado=" + ativado + ", senha=" + senha + ", senhaRepetida=" + senhaRepetida
+				+ ", contaAtivada=" + contaAtivada + ", senha=" + senha + ", senhaRepetida=" + senhaRepetida
 				+ ", permissao=" + permissao + ", registroData=" + registroData + ", registroIp=" + registroIp + "]";
-	}
-	
-	
-	@Override
-	public boolean equals(Object outro) {
-		if (outro instanceof Usuario) {
-			if (this.email.equals(((Usuario) outro).getEmail())) {
-				return true;
-			}
-		}
-		return false;
 	}
 	
 }
