@@ -1,14 +1,18 @@
 package com.jolteam.financas.service;
 
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
 
+import org.apache.logging.log4j.util.Strings;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.jolteam.financas.dao.CategoriaDAO;
 import com.jolteam.financas.dao.TransacaoDAO;
 import com.jolteam.financas.dao.UsuarioDAO;
 import com.jolteam.financas.enums.TiposTransacoes;
 import com.jolteam.financas.exceptions.DespesaException;
+import com.jolteam.financas.model.Categoria;
 import com.jolteam.financas.model.Despesa;
 import com.jolteam.financas.model.Transacao;
 
@@ -17,6 +21,7 @@ public class DespesaService {
 
 	@Autowired private TransacaoDAO transacoes;
 	@Autowired private UsuarioDAO usuarios;
+	@Autowired private CategoriaDAO categorias;
 	
 	public void salvar(Despesa despesa) throws DespesaException{
 		
@@ -27,7 +32,7 @@ public class DespesaService {
 		if(despesa.getCategoria() == null) {
 			throw new DespesaException("Selecione uma categoria.");
 		}
-		//Validação da descrição
+		//Validação da descrição 
 		despesa.setDescricao(despesa.getDescricao().trim());
 		if(despesa.getDescricao().isEmpty()) {
 			throw new DespesaException("Insira uma descrição.");
@@ -47,5 +52,29 @@ public class DespesaService {
 		}catch(Exception e){
 			throw new DespesaException("Desculpe, algo deu erro");
 		}
+	}
+	
+	public void salvarCategoriaDespesa(Categoria catDespesa) throws DespesaException {
+		//pegar usuario que esta na sessão
+		catDespesa.setUsuario(usuarios.getOne(1));
+		//define data de criação
+		catDespesa.setDataCriacao(LocalDateTime.now());
+		
+		//define tipo de transação da categoria 
+		catDespesa.setTipoTransacao(TiposTransacoes.DESPESA);
+		
+		//Validação nome e tratamento de dados
+		
+		if(Strings.isBlank(catDespesa.getNome())) {
+			throw new DespesaException("Insira nome da categoria");
+		}
+		catDespesa.setNome(catDespesa.getNome().trim());
+		if(catDespesa.getNome().length()<2) {
+			throw new DespesaException("O nome precisa ter no mínimo 2 caracteres");
+		}
+		catDespesa.setNome(catDespesa.getNome().replaceAll("\\s+", " "));
+		
+		this.categorias.save(catDespesa);
+		
 	}
 }

@@ -5,10 +5,11 @@ import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+
+import org.hibernate.annotations.GenericGenerator;
 
 import com.jolteam.financas.enums.TiposCodigos;
 
@@ -16,8 +17,10 @@ import com.jolteam.financas.enums.TiposCodigos;
 @Table(name = "codigos")
 public class Codigo {
 
-	@Id @GeneratedValue(strategy = GenerationType.IDENTITY)
-	private Integer id;
+	@Id
+	@GeneratedValue(generator = "uuid2")
+	@GenericGenerator(name = "uuid2", strategy = "uuid2")
+	private String codigo;
 	
 	@ManyToOne(optional = false)
 	private Usuario usuario;
@@ -26,24 +29,14 @@ public class Codigo {
 	@Enumerated(EnumType.STRING)
 	private TiposCodigos tipo;
 	
-	@Column(nullable = false, length = 7)
-	private int codigo;
-	
 	
 	public Codigo() {}
-	public Codigo(Usuario usuario, TiposCodigos tipo, int codigo) {
+	public Codigo(Usuario usuario, TiposCodigos tipo) {
 		this.usuario = usuario;
 		this.tipo = tipo;
-		this.codigo = codigo;
 	}
 	
 	
-	public Integer getId() {
-		return id;
-	}
-	public void setId(Integer id) {
-		this.id = id;
-	}
 	public Usuario getUsuario() {
 		return usuario;
 	}
@@ -56,10 +49,10 @@ public class Codigo {
 	public void setTipo(TiposCodigos tipo) {
 		this.tipo = tipo;
 	}
-	public int getCodigo() {
+	public String getCodigo() {
 		return codigo;
 	}
-	public void setCodigo(int codigo) {
+	public void setCodigo(String codigo) {
 		this.codigo = codigo;
 	}
 	

@@ -28,7 +28,7 @@ public class Usuario {
 	private String email;
 	
 	@Column(columnDefinition="bit(1)", nullable=false)
-	private Boolean contaAtivada;
+	private Boolean ativado;
 	
 	@Column(nullable=false, length = 70)
 	private String senha;
@@ -53,7 +53,7 @@ public class Usuario {
 		this.nome = nome;
 		this.sobrenome = sobrenome;
 		this.email = email;
-		this.contaAtivada = contaAtivada;
+		this.ativado = contaAtivada;
 		this.senha = senha;
 		this.senhaRepetida = senhaRepetida;
 		this.permissao = permissao;
@@ -87,11 +87,11 @@ public class Usuario {
 	public void setEmail(String email) {
 		this.email = email;
 	}
-	public Boolean isContaAtivada() {
-		return contaAtivada;
+	public Boolean isAtivado() {
+		return ativado;
 	}
-	public void setContaAtivada(Boolean ativado) {
-		this.contaAtivada = ativado;
+	public void setAtivado(Boolean ativado) {
+		this.ativado = ativado;
 	}
 	public String getSenha() {
 		return senha;
@@ -128,7 +128,7 @@ public class Usuario {
 	@Override
 	public String toString() {
 		return "Usuario [id=" + id + ", nome=" + nome + ", sobrenome=" + sobrenome + ", email=" + email
-				+ ", contaAtivada=" + contaAtivada + ", senha=" + senha + ", senhaRepetida=" + senhaRepetida
+				+ ", contaAtivada=" + ativado + ", senha=" + senha + ", senhaRepetida=" + senhaRepetida
 				+ ", permissao=" + permissao + ", registroData=" + registroData + ", registroIp=" + registroIp + "]";
 	}
 	

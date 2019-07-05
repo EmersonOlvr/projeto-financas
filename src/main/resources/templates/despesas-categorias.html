@@ -41,25 +41,10 @@
 									</tr>
 								</thead>
 								<tbody>
-									<tr>
-										<th scope="row">1</th>
-										<td>Autopista</td>
-										<td><button class="btn btn-outline-danger">Excluir</button></td>
-									</tr>
-									<tr>
-										<th scope="row">2</th>
-										<td>Bebidas</td>
-										<td><button class="btn btn-outline-danger">Excluir</button></td>
-									</tr>
-									<tr>
-										<th scope="row">3</th>
-										<td>Diversão</td>
-										<td><button class="btn btn-outline-danger">Excluir</button></td>
-									</tr>
-									<tr>
-										<th scope="row">4</th>
-										<td>Educação</td>
-										<td><button class="btn btn-outline-danger">Excluir</button></td>
+									<tr th:each="catDesp : ${listacatDespesa}">
+										<th th:text="${catDesp.id}" >1</th>
+										<td th:text="${catDesp.nome}" >Autopista</td>
+										<td><a th:href="@{/despesas/categorias/excluir(id=${catDesp.id})}" ><button class="btn btn-outline-danger">Excluir</button></td>
 									</tr>
 								</tbody>
 							</table>
@@ -69,10 +54,24 @@
 						<div class="bgc-white bd bdrs-3 p-20">
 							<h6 class="c-grey-900 mB-20">Adicionar Categoria</h6>
 							<div class="mT-30">
-								<form id="needs-validation" novalidate>
+							<div th:if="${!#strings.isEmpty(sucesso)}" class="alert alert-success alert-dismissible fade show" role="alert">
+							[[${sucesso}]]
+							<button type="button" class="close" data-dismiss="alert" aria-label="Close">
+								<span aria-hidden="true">&times;</span>
+							</button>
+						</div>
+						<div th:if="${!#strings.isEmpty(erro)}" class="alert alert-danger alert-dismissible fade show" role="alert">
+							[[${erro}]]
+							<button type="button" class="close" data-dismiss="alert" aria-label="Close">
+								<span aria-hidden="true">&times;</span>
+							</button>
+						</div>
+								<form id="needs-validation" novalidate th:object="${catDespesa}" th:action="@{/despesas/categorias/adicionar}" method="post">
 									<label for="validationCustom01">Nome da Categoria</label>
 									<div class="input-group mb-3">
-										<input type="text" class="form-control" id="validationCustom01" placeholder="Nome da Categoria..." aria-label="Nome da Categoria..." required>
+										<input type="hidden" th:field="*{id}">
+									
+										<input type="text" class="form-control" th:field="*{nome}" id="validationCustom01" placeholder="Nome da Categoria..." aria-label="Nome da Categoria..." required>
 										<div class="input-group-append">
 											<button class="btn btn-outline-primary" type="submit">Adicionar</button>
 										</div>

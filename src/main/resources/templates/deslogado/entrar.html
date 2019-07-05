@@ -22,7 +22,23 @@
 		.btn-danger {
 			min-width: 250px;
 		}
+		.icon-size {
+			font-size: 8pt;
+			margin-left: 4px;
+			margin-right: 2px;
+		}
 	</style>
+
+	<script src="/js/jquery-3.3.1.slim.min.js"></script>
+	<script src="/js/popper.min.js"></script>
+	<script src="/js/bootstrap.min.js"></script>
+	<script src="/js/fontawesome-all.min.js"></script>
+		
+	<script type="text/javascript">
+		function desativar(field) {
+			field.disabled = true;
+		}
+	</script>
 </head>
 
 <body style="flex-direction: column">
@@ -73,14 +89,17 @@
 		<div th:if="${!#strings.isEmpty(msgSucesso)}" class="alert alert-success">
 			[[${msgSucesso}]]
 		</div>
+		<div th:if="${isDesativado == true || reenviado == true}" class="alert alert-warning">
+			Verifique seu e-mail para <a href="#" data-toggle="modal" data-target="#modalAtivacao"><sup><span class="icon-size"><i class="fas fa-info"></i></span></sup>ativar sua conta</a>.
+		</div>
 			
 		<form method="post">
 			<div class="form-label-group">
-				<input type="email" id="email" name="email" class="form-control" placeholder="E-mail" autofocus>
+				<input type="email" id="email" name="email" class="form-control" placeholder="E-mail" required autofocus>
 				<label for="email">E-mail</label>
 			</div>
 			<div class="form-label-group">
-				<input type="password" id="senha" name="senha" class="form-control" placeholder="Senha">
+				<input type="password" id="senha" name="senha" class="form-control" placeholder="Senha" required>
 				<label for="senha">Senha</label>
 			</div>
 
@@ -101,6 +120,30 @@
 		</form>
 
 		<p class="mt-4 text-muted text-center">Ainda não tem uma conta? <a href="/cadastrar">Crie uma agora mesmo</a>.</p>
+	</div>
+	
+	
+	<!-- Modal -->
+	<div th:if="${isDesativado == true || reenviado == true}" class="modal fade bd-example-modal-lg" id="modalAtivacao" tabindex="-1" role="dialog" aria-labelledby="modalAtivacao" aria-hidden="true">
+		<div class="modal-dialog modal-lg" role="document">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h5 class="modal-title" id="modalAtivacao">Ativação da Conta</h5>
+					<button type="button" class="close" data-dismiss="modal" aria-label="Fechar">
+						<span aria-hidden="true">&times;</span>
+					</button>
+				</div>
+				<div class="modal-body">
+					Enviamos um link de ativação para <b>[[${email}]]</b>. Caso não ache, por favor, verifique sua caixa de spam.
+				</div>
+				<div class="modal-footer">
+					<form action="/reenviar-link-ativacao" method="post" onsubmit="desativar(this.btnReenviar)">
+						<button type="submit" class="btn btn-primary" name="btnReenviar">Reenviar link de ativação</button>
+					</form>
+					<button type="button" class="btn btn-secondary" data-dismiss="modal">Fechar</button>
+				</div>
+			</div>
+		</div>
 	</div>
 </body>
 </html>
