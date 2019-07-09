@@ -1,21 +1,20 @@
 package com.jolteam.financas.controller;
 
 import java.time.LocalDateTime;
-
 import javax.servlet.http.HttpServletRequest;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
-
 import com.jolteam.financas.dao.CategoriaDAO;
 import com.jolteam.financas.dao.UsuarioDAO;
 import com.jolteam.financas.enums.TiposLogs;
 import com.jolteam.financas.enums.TiposTransacoes;
 import com.jolteam.financas.exceptions.ReceitaException;
+import com.jolteam.financas.model.Categoria;
 import com.jolteam.financas.model.Log;
 import com.jolteam.financas.model.Receita;
 import com.jolteam.financas.service.LogService;
@@ -62,10 +61,39 @@ public class ReceitaController {
 		return this.viewAdicionarReceita().addObject("sucesso", "Receita salva com sucesso.");
 	}
 	
+	
+	
+	
 	@GetMapping("/receitas/categorias")
-	public String viewCategoriasReceitas() {
-		return "/receitas-categorias";
+	public ModelAndView viewCategoriasReceitas() {
+		ModelAndView mv= new ModelAndView("receitas-categorias");
+		mv.addObject("catReceita", new Categoria());
+		mv.addObject("listacatReceita", this.categorias.findAllByTipoTransacao(TiposTransacoes.RECEITA));
+		return mv;
 	}
+	
+	@PostMapping("/receitas/categorias/adicionar")
+	public ModelAndView adicionarCatReceita(@ModelAttribute Categoria catReceita,HttpServletRequest request) {
+		
+		try {
+			this.receitaService.salvarCategoriaReceita(catReceita);
+			
+			this.logService.save(new Log(catReceita.getUsuario(),TiposLogs.CADASTRO_CATEGORIA_RECEITA,LocalDateTime.now(),request.getRemoteAddr()));
+		} catch (ReceitaException de) {
+			this.logService.save(new Log(catReceita.getUsuario(), TiposLogs.ERRO_CADASTRO_CATEGORIA_RECEITA, LocalDateTime.now(), request.getRemoteAddr()));
+			
+			return this.viewCategoriasReceitas().addObject("erro", de.getMessage());
+
+		}
+		return this.viewCategoriasReceitas().addObject("sucesso", "Categoria salva com sucesso.");
+	}
+	@GetMapping("/receitas/categorias/excluir")
+	public String excluirCatReceita(@RequestParam Integer id) {
+		this.categorias.deleteById(id);
+		return "redirect:/receitas/categorias";
+	}
+	
+	
 	
 	@GetMapping("/receitas/historico")
 	public String viewHistoricoReceitas() {

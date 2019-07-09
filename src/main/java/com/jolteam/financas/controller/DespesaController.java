@@ -59,7 +59,7 @@ public class DespesaController {
 	public ModelAndView viewCategoriasDespesas() {
 		ModelAndView mv= new ModelAndView("despesas-categorias");
 		mv.addObject("catDespesa", new Categoria());
-		mv.addObject("listacatDespesa", this.categorias.findAll());
+		mv.addObject("listacatDespesa", this.categorias.findAllByTipoTransacao(TiposTransacoes.DESPESA));
 		return mv;
 	}
 	
