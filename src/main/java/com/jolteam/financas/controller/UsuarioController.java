@@ -124,7 +124,7 @@ public class UsuarioController {
 
 	@GetMapping("/ativarConta")
 	public String ativarConta(@RequestParam(required = false) Integer id, @RequestParam(required = false) String codigo,
-			Model model) {
+			Model model, HttpSession session) {
 		String msgErro = "Este link é inválido ou já foi usado antes.";
 		if (id == null || Strings.isEmpty(codigo)) {
 			return "redirect:/";
@@ -140,6 +140,10 @@ public class UsuarioController {
 						
 						// exclui o código que foi usado do banco
 						this.codigoService.delete(codigoExistente.get());
+						
+						// remove o id do usuário da sessão 
+						// (estava sendo usado para o sistema saber para qual usuário reenviar o código)
+						session.removeAttribute("usuarioId");
 						
 						model.addAttribute("sucesso", true);
 					} else {
