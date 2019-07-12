@@ -37,7 +37,7 @@ public class ReceitaService {
 			throw new ReceitaException("A descrição deve ter no mínimo 2 caracteres.");
 		}
 		if (receita.getValor().compareTo(new BigDecimal("0.05")) == -1) {
-			throw new ReceitaException("O valor da receita deve ser igual ou maior que 5 centavos (0.05)");
+			throw new ReceitaException("O valor da receita deve ser igual ou maior que 5 centavos (0.05).");
 		}
 
 		// tenta salvar no banco...
@@ -58,11 +58,11 @@ public class ReceitaService {
 		//Validação nome e tratamento de dados
 		
 		if(Strings.isBlank(catReceitas.getNome())) {
-			throw new ReceitaException("Insira nome da categoria");
+			throw new ReceitaException("Insira nome da categoria.");
 		}
 		catReceitas.setNome(catReceitas.getNome().trim());
 		if(catReceitas.getNome().length()<2) {
-			throw new ReceitaException("O nome precisa ter no mínimo 2 caracteres");
+			throw new ReceitaException("O nome precisa ter no mínimo 2 caracteres.");
 		}
 		catReceitas.setNome(catReceitas.getNome().replaceAll("\\s+", " "));
 		

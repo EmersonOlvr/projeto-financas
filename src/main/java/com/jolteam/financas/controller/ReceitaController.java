@@ -87,10 +87,10 @@ public class ReceitaController {
 		} catch (ReceitaException de) {
 			this.logService.save(new Log(catReceita.getUsuario(), TiposLogs.ERRO_CADASTRO_CATEGORIA_RECEITA, LocalDateTime.now(), request.getRemoteAddr()));
 			
-			return this.viewCategoriasReceitas(session).addObject("erro", de.getMessage());
+			return this.viewCategoriasReceitas(session).addObject("msgErroAdd", de.getMessage());
 
 		}
-		return this.viewCategoriasReceitas(session).addObject("sucesso", "Categoria salva com sucesso.");
+		return this.viewCategoriasReceitas(session).addObject("msgSucessoAdd", "Categoria salva com sucesso.");
 	}
 	
 	@GetMapping("/receitas/categorias/excluir")
@@ -99,9 +99,9 @@ public class ReceitaController {
 			Categoria catExistente = this.categorias.findById(id).orElseThrow(() -> new Exception("Categoria inexistente."));
 			
 			if (this.receitaService.existsByCategoria(catExistente)) {
-				ra.addFlashAttribute("msgErro", "A categoria selecionada contém vínculos com outras informações.");
+				ra.addFlashAttribute("msgErroListagem", "A categoria selecionada contém vínculos com outras informações.");
 			} else {
-				ra.addFlashAttribute("msgSucesso", "Categoria excluída com sucesso!");
+				ra.addFlashAttribute("msgSucessoListagem", "Categoria excluída com sucesso!");
 				this.categorias.deleteById(id);
 			}
 		} catch (Exception e) {

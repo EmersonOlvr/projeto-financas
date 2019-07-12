@@ -39,7 +39,7 @@ public class DespesaService {
 		}
 		//Validação do valor
 		if(despesa.getValor().compareTo(new BigDecimal("0.05"))== -1) {
-			throw new DespesaException("O valor da receita deve ser igual ou maior que 5 centavos (0.05).");
+			throw new DespesaException("O valor da despesa deve ser igual ou maior que 5 centavos (0.05).");
 		}
 		
 		//tentativa de salvar no banco
@@ -47,8 +47,8 @@ public class DespesaService {
 		try {
 			this.transacoes.save(new Transacao(despesa.getUsuario(), TiposTransacoes.DESPESA, despesa.getCategoria(),
 					despesa.getDescricao(), despesa.getValor()));
-		}catch(Exception e){
-			throw new DespesaException("Desculpe, algo deu erro");
+		} catch (Exception e){
+			throw new DespesaException("Desculpe, algo deu errado.");
 		}
 	}
 	
@@ -62,11 +62,11 @@ public class DespesaService {
 		//Validação nome e tratamento de dados
 		
 		if(Strings.isBlank(catDespesa.getNome())) {
-			throw new DespesaException("Insira nome da categoria");
+			throw new DespesaException("Insira nome da categoria.");
 		}
 		catDespesa.setNome(catDespesa.getNome().trim());
 		if(catDespesa.getNome().length()<2) {
-			throw new DespesaException("O nome precisa ter no mínimo 2 caracteres");
+			throw new DespesaException("O nome precisa ter no mínimo 2 caracteres.");
 		}
 		catDespesa.setNome(catDespesa.getNome().replaceAll("\\s+", " "));
 		
