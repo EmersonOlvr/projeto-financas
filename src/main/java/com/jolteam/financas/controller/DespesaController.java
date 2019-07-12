@@ -91,6 +91,7 @@ public class DespesaController {
 			if (this.despesaService.existsByCategoria(catExistente)) {
 				ra.addFlashAttribute("msgErro", "A categoria selecionada contém vínculos com outras informações.");
 			} else {
+				ra.addFlashAttribute("msgSucesso", "Categoria excluída com sucesso!");
 				this.categorias.deleteById(id);
 			}
 		} catch (Exception e) {

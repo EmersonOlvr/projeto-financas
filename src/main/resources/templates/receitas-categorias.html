@@ -1,5 +1,5 @@
 <!doctype html>
-<html>
+<html xmlns:th="http://www.thymeleaf.org">
 <head>
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width,initial-scale=1,shrink-to-fit=no">
@@ -38,6 +38,12 @@
 									<span aria-hidden="true">&times;</span>
 								</button>
 							</div>
+							<div th:if="${!#strings.isEmpty(msgSucesso)}" class="alert alert-success alert-dismissible fade show" role="alert">
+								[[${msgSucesso}]]
+								<button type="button" class="close" data-dismiss="alert" aria-label="Close">
+									<span aria-hidden="true">&times;</span>
+								</button>
+							</div>
 							<table class="mT-30 table table-hover table-bordered">
 								<thead>
 									<tr>
@@ -48,7 +54,7 @@
 								<tbody>
 									<tr th:if="${listaCatReceita.size() > 0}" th:each="catReceita : ${listaCatReceita}">
 										<td th:text="${catReceita.nome}" ></td>
-										<td><a th:href="@{/receitas/categorias/excluir(id=${catReceita.id})}"><button class="btn btn-outline-danger">Excluir</button></td>
+										<td><a th:href="@{/receitas/categorias/excluir(id=${catReceita.id})}" class="btn btn-outline-danger">Excluir</a></td>
 									</tr>
 									<tr th:if="${listaCatReceita.size() == 0}" class="font-italic">
 										<td colspan="2">Nenhuma categoria encontrada</td>
