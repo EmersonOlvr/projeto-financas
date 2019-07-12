@@ -14,6 +14,7 @@ public interface CategoriaDAO extends JpaRepository<Categoria, Integer> {
 
 	List<Categoria> findAllByUsuario(Usuario usuario);
 	List<Categoria> findByUsuarioAndTipoTransacao(Usuario usuario, TiposTransacoes tipoTransacao);
+	List<Categoria> findByUsuarioAndTipoTransacaoOrderByDataCriacaoDesc(Usuario usuario, TiposTransacoes tipoTransacao);
 	List<Categoria> findAllByTipoTransacao(TiposTransacoes transacao);
 	
 	

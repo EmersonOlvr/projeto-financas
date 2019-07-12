@@ -98,17 +98,24 @@ public class IndexController {
 	}
 
 	@PostMapping("/entrar")
-	public String autenticarUsuario(Model model, @RequestParam String email, @RequestParam String senha,
-			HttpServletRequest request, HttpSession session) {
+	public String autenticarUsuario(Model model, @RequestParam String email, @RequestParam String senha, 
+			@RequestParam(required = false) String destino, HttpServletRequest request, HttpSession session) {
 		try {
 			Usuario usuario = this.usuarioService.entrar(email, senha);
 
-			// aqui salva o usuário na sessão
+			// salva o usuário na sessão
+			session.setAttribute("usuarioLogado", usuario);
 
 			// salva um log de login no banco
 			this.logs.save(new Log(usuario, TiposLogs.LOGIN, LocalDateTime.now(), request.getRemoteAddr()));
-
-			model.addAttribute("msgSucesso", "Logado com sucesso!");
+			
+			if (!Strings.isBlank(destino)) {
+				System.out.println("Redirecionando para "+destino+"...");
+				return "redirect:"+destino;
+			} else {
+				System.out.println("Redirecionando para /home...");
+				return "redirect:/home";
+			}
 		} catch (UsuarioInexistenteException e) {
 			model.addAttribute("msgErro", e.getMessage());
 		} catch (UsuarioInvalidoException e) {

@@ -9,7 +9,6 @@ import org.springframework.stereotype.Service;
 
 import com.jolteam.financas.dao.CategoriaDAO;
 import com.jolteam.financas.dao.TransacaoDAO;
-import com.jolteam.financas.dao.UsuarioDAO;
 import com.jolteam.financas.enums.TiposTransacoes;
 import com.jolteam.financas.exceptions.ReceitaException;
 import com.jolteam.financas.model.Categoria;
@@ -20,14 +19,13 @@ import com.jolteam.financas.model.Transacao;
 public class ReceitaService {
 
 	@Autowired private TransacaoDAO transacoes;
-	@Autowired private UsuarioDAO usuarios;
 	@Autowired private CategoriaDAO categorias;
 
+	public boolean existsByCategoria(Categoria categoria) {
+		return this.transacoes.existsByCategoria(categoria);
+	}
 
 	public void salvar(Receita receita) throws ReceitaException {
-		// usuário que está na sessão
-		receita.setUsuario(usuarios.getOne(1));
-		
 		// validações
 		if (receita.getCategoria() == null) {
 			throw new ReceitaException("Selecione uma categoria.");
@@ -51,8 +49,6 @@ public class ReceitaService {
 		}
 	}
 	public void salvarCategoriaReceita(Categoria catReceitas) throws ReceitaException {
-		//pegar usuario que esta na sessão
-		catReceitas.setUsuario(usuarios.getOne(1));
 		//define data de criação
 		catReceitas.setDataCriacao(LocalDateTime.now());
 		
