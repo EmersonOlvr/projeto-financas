@@ -167,9 +167,11 @@ public class UsuarioService {
 		Codigo codigo = cod.isPresent() ? cod.get() : null;
 		codigo = codigo != null ? codigo : this.codigosConfirmacao.save(new Codigo(usuario, TiposCodigos.ATIVACAO_CONTA));
 		
+		String codigoConfirmacao = codigo.getCodigo().replaceAll("[\\-]+", "");
+		
 		String assunto = "Ativação da Conta";
 		String destinatario = usuario.getEmail();
-		String botaoCorpo = "<a href='http://localhost:8090/ativarConta?id="+usuario.getId()+"&codigo="+codigo.getCodigo()+"' target='_blank'><button>Ativar Conta</button></a>";
+		String botaoCorpo = "<a href='http://localhost:8090/ativarConta?id="+usuario.getId()+"&codigo="+codigoConfirmacao+"' target='_blank'><button>Ativar Conta</button></a>";
 		String corpo = "<div style=\"color: black\">Olá "+ usuario.getNome()+", bem-vindo(a) ao Projeto Finanças, "
 				+ "é um prazer ter você conosco!</div> <br> <div style=\"color: black\">Clique no botão a seguir para ativar sua conta: "
 				+ botaoCorpo + "</div>";
