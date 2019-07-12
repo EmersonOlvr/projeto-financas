@@ -9,7 +9,6 @@ import org.springframework.stereotype.Service;
 
 import com.jolteam.financas.dao.CategoriaDAO;
 import com.jolteam.financas.dao.TransacaoDAO;
-import com.jolteam.financas.dao.UsuarioDAO;
 import com.jolteam.financas.enums.TiposTransacoes;
 import com.jolteam.financas.exceptions.DespesaException;
 import com.jolteam.financas.model.Categoria;
@@ -20,14 +19,13 @@ import com.jolteam.financas.model.Transacao;
 public class DespesaService {
 
 	@Autowired private TransacaoDAO transacoes;
-	@Autowired private UsuarioDAO usuarios;
 	@Autowired private CategoriaDAO categorias;
 	
+	public boolean existsByCategoria(Categoria categoria) {
+		return this.transacoes.existsByCategoria(categoria);
+	}
+	
 	public void salvar(Despesa despesa) throws DespesaException{
-		
-		// pegar usuário que está na sessãos
-		despesa.setUsuario(usuarios.getOne(1));
-		
 		//Validação de categoria
 		if(despesa.getCategoria() == null) {
 			throw new DespesaException("Selecione uma categoria.");
@@ -55,8 +53,6 @@ public class DespesaService {
 	}
 	
 	public void salvarCategoriaDespesa(Categoria catDespesa) throws DespesaException {
-		//pegar usuario que esta na sessão
-		catDespesa.setUsuario(usuarios.getOne(1));
 		//define data de criação
 		catDespesa.setDataCriacao(LocalDateTime.now());
 		

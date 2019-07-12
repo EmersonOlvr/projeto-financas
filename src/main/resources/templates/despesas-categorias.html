@@ -1,5 +1,5 @@
 <!doctype html>
-<html>
+<html xmlns:th="http://www.thymeleaf.org">
 <head>
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width,initial-scale=1,shrink-to-fit=no">
@@ -32,19 +32,26 @@
 					<div class="col-md-6 mb-3">
 						<div class="bgc-white bd bdrs-3 p-20">
 							<h6 class="c-grey-900">Todas as Categorias</h6>
+							<div th:if="${!#strings.isEmpty(msgErro)}" class="alert alert-danger alert-dismissible fade show" role="alert">
+								[[${msgErro}]]
+								<button type="button" class="close" data-dismiss="alert" aria-label="Close">
+									<span aria-hidden="true">&times;</span>
+								</button>
+							</div>
 							<table class="mT-30 table table-hover table-bordered">
 								<thead>
 									<tr>
-										<th scope="col">#</th>
 										<th scope="col">Nome</th>
 										<th scope="col">Ações</th>
 									</tr>
 								</thead>
 								<tbody>
-									<tr th:each="catDesp : ${listacatDespesa}">
-										<th th:text="${catDesp.id}" >1</th>
+									<tr th:if="${listaCatDespesa.size() > 0}" th:each="catDesp : ${listaCatDespesa}">
 										<td th:text="${catDesp.nome}" >Autopista</td>
-										<td><a th:href="@{/despesas/categorias/excluir(id=${catDesp.id})}" ><button class="btn btn-outline-danger">Excluir</button></td>
+										<td><a th:href="@{/despesas/categorias/excluir(id=${catDesp.id})}"><button class="btn btn-outline-danger">Excluir</button></td>
+									</tr>
+									<tr th:if="${listaCatDespesa.size() == 0}" class="font-italic">
+										<td colspan="2">Nenhuma categoria encontrada</td>
 									</tr>
 								</tbody>
 							</table>
@@ -54,23 +61,21 @@
 						<div class="bgc-white bd bdrs-3 p-20">
 							<h6 class="c-grey-900 mB-20">Adicionar Categoria</h6>
 							<div class="mT-30">
-							<div th:if="${!#strings.isEmpty(sucesso)}" class="alert alert-success alert-dismissible fade show" role="alert">
-							[[${sucesso}]]
-							<button type="button" class="close" data-dismiss="alert" aria-label="Close">
-								<span aria-hidden="true">&times;</span>
-							</button>
-						</div>
-						<div th:if="${!#strings.isEmpty(erro)}" class="alert alert-danger alert-dismissible fade show" role="alert">
-							[[${erro}]]
-							<button type="button" class="close" data-dismiss="alert" aria-label="Close">
-								<span aria-hidden="true">&times;</span>
-							</button>
-						</div>
-								<form id="needs-validation" novalidate th:object="${catDespesa}" th:action="@{/despesas/categorias/adicionar}" method="post">
+								<div th:if="${!#strings.isEmpty(sucesso)}" class="alert alert-success alert-dismissible fade show" role="alert">
+									[[${sucesso}]]
+									<button type="button" class="close" data-dismiss="alert" aria-label="Close">
+										<span aria-hidden="true">&times;</span>
+									</button>
+								</div>
+								<div th:if="${!#strings.isEmpty(erro)}" class="alert alert-danger alert-dismissible fade show" role="alert">
+									[[${erro}]]
+									<button type="button" class="close" data-dismiss="alert" aria-label="Close">
+										<span aria-hidden="true">&times;</span>
+									</button>
+								</div>
+								<form id="needs-validation" novalidate th:object="${catDespesa}" method="post">
 									<label for="validationCustom01">Nome da Categoria</label>
 									<div class="input-group mb-3">
-										<input type="hidden" th:field="*{id}">
-									
 										<input type="text" class="form-control" th:field="*{nome}" id="validationCustom01" placeholder="Nome da Categoria..." aria-label="Nome da Categoria..." required>
 										<div class="input-group-append">
 											<button class="btn btn-outline-primary" type="submit">Adicionar</button>

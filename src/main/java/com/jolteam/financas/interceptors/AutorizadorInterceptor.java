@@ -12,14 +12,14 @@ public class AutorizadorInterceptor implements HandlerInterceptor {
 	private final boolean CONTROLAR_ACESSO = true;
 	
 	private final String[] PAGINAS_ESTATICAS = {"/css/", "/js/", "/img/", "/fonts/", "/util/"};
-	private final String[] PAGINAS_DESLOGADO = {"/", "/cadastrar", "/entrar", 
+	private final String[] PAGINAS_DESLOGADO = {"/", "/cadastrar", "/entrar", "/teste",  
 												"/ativarConta", "/reenviar-link-ativacao", "/ativacao-conta", 
 												"/recuperar-senha", "/recuperar-senha/2", "/redefinir-senha"};
-	private final String[] PAGINAS_LOGADO = {"/home", "/configuracoes", "/movimentos", 
+	private final String[] PAGINAS_LOGADO = {"/home", "/configuracoes", "/sair", "/movimentos", 
 											 "/receitas/adicionar", "/receitas/historico", 
-											 "/receitas/categorias", "/receitas/categorias/adicionar", "/receitas/categorias/excluir", 
+											 "/receitas/categorias", "/receitas/categorias/excluir", 
 											 "/despesas/adicionar", "/despesas/historico", 
-											 "/despesas/categorias", "/despesas/categorias/adicionar", "/despesas/categorias/excluir", 
+											 "/despesas/categorias", "/despesas/categorias/excluir", 
 											 "/cofres", "/cofres/editar", "/cofres/excluir"};
 	
 	@Override
@@ -31,7 +31,7 @@ public class AutorizadorInterceptor implements HandlerInterceptor {
 		boolean estaLogado = usuarioLogado != null ? true : false;
 		
 		if (!CONTROLAR_ACESSO) {
-			return true;
+			return false;
 		}
 		
 		for (String paginaLogado : PAGINAS_LOGADO) {
@@ -41,7 +41,11 @@ public class AutorizadorInterceptor implements HandlerInterceptor {
 					return true;
 				} else {
 					System.out.println("Negado (deslogado): "+urlRequisitada);
-					response.sendRedirect("/entrar");
+					if (!urlRequisitada.equals("/home") && !urlRequisitada.equals("/sair")) {
+						response.sendRedirect("/entrar?destino="+urlRequisitada);
+					} else {
+						response.sendRedirect("/entrar");
+					}
 					return false;
 				}
 			}
@@ -65,6 +69,8 @@ public class AutorizadorInterceptor implements HandlerInterceptor {
 			}
 		}
 		
+		System.out.println("Negado: "+urlRequisitada);
+		response.sendRedirect("/");
 		return false;
 	}
 	
