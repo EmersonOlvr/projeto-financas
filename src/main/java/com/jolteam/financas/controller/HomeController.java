@@ -19,24 +19,24 @@ public class HomeController {
 	
 	@GetMapping("/home")
 	public String viewHome() {
-		return "/home";
+		return "home";
 	}
 	
 	@GetMapping("/configuracoes")
 	public String viewConfiguracoes() {
-		return "/configuracoes";
+		return "configuracoes";
 	}
 
 	@PostMapping("/configuracoes")
 	public String atualizarUsuario(Model model, @ModelAttribute Usuario usuario) {
 		this.usuarioService.save(usuario);
 		model.addAttribute("msgSucesso", "Configurações salvas!");
-		return "/configuracoes";
+		return "configuracoes";
 	}
 	
 	@GetMapping("/movimentos")
 	public String viewMovimentos() {
-		return "/movimentos";
+		return "movimentos";
 	}
 	
 	@GetMapping("/sair")

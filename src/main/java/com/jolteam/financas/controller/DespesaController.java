@@ -34,7 +34,7 @@ public class DespesaController {
 	
 	@GetMapping("/despesas/adicionar")
 	public ModelAndView viewDespesaAdicionar(HttpSession session) {
-			ModelAndView mv=new ModelAndView("/despesas-adicionar");
+			ModelAndView mv=new ModelAndView("despesas-adicionar");
 			mv.addObject("despesa", new Despesa());
 			mv.addObject("categorias", this.categorias.findByUsuarioAndTipoTransacaoOrderByDataCriacaoDesc((Usuario) session.getAttribute("usuarioLogado"), TiposTransacoes.DESPESA));
 			return mv;
@@ -106,7 +106,7 @@ public class DespesaController {
 	
 	@GetMapping("/despesas/historico")
 	public String viewHistoricoDespesas() {
-		return "/despesas-historico";
+		return "despesas-historico";
 	}
 	
 }

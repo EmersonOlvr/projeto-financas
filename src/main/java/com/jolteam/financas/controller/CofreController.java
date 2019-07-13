@@ -2,7 +2,6 @@ package com.jolteam.financas.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
@@ -33,7 +32,7 @@ public class CofreController {
 	@GetMapping("/cofres/editar")
 	public String viewEditarCofre(@RequestParam Integer id) {
 		System.out.println("Editando o cofre: "+id+".");
-		return "/cofres-editar";
+		return "cofres-editar";
 	}
 	@GetMapping("/cofres/excluir")
 	public String excluirCofre(@RequestParam Integer id, RedirectAttributes ra) {

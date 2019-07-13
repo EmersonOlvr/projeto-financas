@@ -35,7 +35,7 @@ public class ReceitaController {
 	
 	@GetMapping("/receitas/adicionar")
 	public ModelAndView viewAdicionarReceita(HttpSession session) {
-		ModelAndView mv = new ModelAndView("/receitas-adicionar");
+		ModelAndView mv = new ModelAndView("receitas-adicionar");
 		mv.addObject("receita", new Receita());
 		mv.addObject("categorias", this.categorias.findByUsuarioAndTipoTransacaoOrderByDataCriacaoDesc((Usuario) session.getAttribute("usuarioLogado"), TiposTransacoes.RECEITA));
 		return mv;
@@ -115,7 +115,7 @@ public class ReceitaController {
 	
 	@GetMapping("/receitas/historico")
 	public String viewHistoricoReceitas() {
-		return "/receitas-historico";
+		return "receitas-historico";
 	}
 	
 }

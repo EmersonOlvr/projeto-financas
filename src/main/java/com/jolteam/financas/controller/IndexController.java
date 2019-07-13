@@ -40,12 +40,12 @@ public class IndexController {
 
 	@GetMapping("/")
 	public String viewIndex() {
-		return "/deslogado/index";
+		return "deslogado/index";
 	}
 
 	@GetMapping("/cadastrar")
 	public ModelAndView viewCadastrar(Model model) {
-		ModelAndView mv = new ModelAndView("/deslogado/cadastrar");
+		ModelAndView mv = new ModelAndView("deslogado/cadastrar");
 		mv.addObject("usuario", new Usuario());
 
 		return mv;
@@ -76,12 +76,12 @@ public class IndexController {
 			result.addError(new ObjectError("erroValidacao", e.getMessage()));
 		}
 
-		return new ModelAndView("/deslogado/cadastrar").addObject("usuario", usuario);
+		return new ModelAndView("deslogado/cadastrar").addObject("usuario", usuario);
 	}
 
 	@GetMapping("/entrar")
 	public ModelAndView viewEntrar() {
-		ModelAndView mv = new ModelAndView("/deslogado/entrar");
+		ModelAndView mv = new ModelAndView("deslogado/entrar");
 		return mv;
 	}
 
@@ -113,7 +113,7 @@ public class IndexController {
 			model.addAttribute("isDesativado", true);
 		}
 
-		return "/deslogado/entrar";
+		return "deslogado/entrar";
 	}
 
 	@GetMapping("/ativarConta")
@@ -152,7 +152,7 @@ public class IndexController {
 			}
 		}
 		
-		return "/deslogado/ativacao-conta";
+		return "deslogado/ativacao-conta";
 	}
 	
 	@PostMapping("/reenviar-link-ativacao")
@@ -174,22 +174,22 @@ public class IndexController {
 
 	@GetMapping("/ativacao-conta")
 	public String viewAtivacaoConta() {
-		return "/deslogado/ativacao-conta";
+		return "deslogado/ativacao-conta";
 	}
 
 	@GetMapping("/recuperar-senha")
 	public String viewRecuperarSenha() {
-		return "/deslogado/recuperar-senha";
+		return "deslogado/recuperar-senha";
 	}
 
 	@GetMapping("recuperar-senha/2")
 	public String viewRecuperarSenhaMsg() {
-		return "/deslogado/recuperar-senha-2";
+		return "deslogado/recuperar-senha-2";
 	}
 
 	@GetMapping("/redefinir-senha")
 	public String viewRedefinirSenha() {
-		return "/deslogado/redefinir-senha";
+		return "deslogado/redefinir-senha";
 	}
 	
 	@GetMapping("/teste")
