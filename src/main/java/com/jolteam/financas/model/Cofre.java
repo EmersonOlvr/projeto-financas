@@ -24,25 +24,21 @@ public class Cofre {
 	@Column(nullable = false,length = 150)
 	private String descricao;
 	
-	@ManyToOne(optional = false)
-	private Categoria categoria;
-	
 	@Column(nullable = false,columnDefinition="datetime")
 	private LocalDateTime dataCriacao;
 	
-	
-	private BigDecimal valorInicial;
+	@Column(nullable=false)
+	private BigDecimal totalDesejado;
 	
 	public Cofre() {}
 	
-	public Cofre(Integer id, Usuario usuario, String descricao, Categoria categoria, LocalDateTime dataCriacao,BigDecimal valorInicial) {
+	public Cofre(Integer id, Usuario usuario, String descricao, LocalDateTime dataCriacao,BigDecimal totalDesejado) {
 		super();
 		this.id = id;
 		this.usuario = usuario;
 		this.descricao = descricao;
-		this.categoria = categoria;
 		this.dataCriacao = dataCriacao;
-		this.valorInicial= valorInicial;
+		this.totalDesejado= totalDesejado;
 	}
 	
 	public Integer getId() {
@@ -63,24 +59,18 @@ public class Cofre {
 	public void setDescricao(String descricao) {
 		this.descricao = descricao;
 	}
-	public Categoria getCategoria() {
-		return categoria;
-	}
-	public void setCategoria(Categoria categoria) {
-		this.categoria = categoria;
-	}
 	public LocalDateTime getDataCriacao() {
 		return dataCriacao;
 	}
 	public void setDataCriacao(LocalDateTime dataCriacao) {
 		this.dataCriacao = dataCriacao;
 	}
-	public BigDecimal getValorInicial() {
-		return valorInicial;
+	public BigDecimal getTotalDesejado() {
+		return totalDesejado;
 	}
 
-	public void setValorInicial(BigDecimal valorInicial) {
-		this.valorInicial = valorInicial;
+	public void setTotalDesejado(BigDecimal totalDesejado) {
+		this.totalDesejado = totalDesejado;
 	}
 
 	@Override
@@ -92,8 +82,6 @@ public class Cofre {
 		}
 		return false;
 	}
-
-	
 
 	
 	

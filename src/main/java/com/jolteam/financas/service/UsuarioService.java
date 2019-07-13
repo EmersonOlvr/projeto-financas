@@ -160,7 +160,7 @@ public class UsuarioService {
 //		return r.nextInt((max - min) + 1) + min;
 //	}
 
-	public void enviarCodigoAtivacao(Usuario usuario) {
+	 public void enviarCodigoAtivacao(Usuario usuario) {
 		// obtém o código do banco, se existir
 		Optional<Codigo> cod = this.codigosConfirmacao.findByUsuarioAndTipo(usuario, TiposCodigos.ATIVACAO_CONTA);
 		Codigo codigo = cod.isPresent() ? cod.get() : null;
