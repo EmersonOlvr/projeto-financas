@@ -32,14 +32,14 @@
 					<div class="col-md-6 mb-3">
 						<div class="bgc-white bd bdrs-3 p-20">
 							<h6 class="c-grey-900">Todas as Categorias</h6>
-							<div th:if="${!#strings.isEmpty(msgErroListagem)}" class="alert alert-danger alert-dismissible fade show" role="alert">
-								[[${msgErroListagem}]]
+							<div th:if="${!#strings.isEmpty(msgErroExcluir)}" class="alert alert-danger alert-dismissible fade show" role="alert">
+								[[${msgErroExcluir}]]
 								<button type="button" class="close" data-dismiss="alert" aria-label="Close">
 									<span aria-hidden="true">&times;</span>
 								</button>
 							</div>
-							<div th:if="${!#strings.isEmpty(msgSucessoListagem)}" class="alert alert-success alert-dismissible fade show" role="alert">
-								[[${msgSucessoListagem}]]
+							<div th:if="${!#strings.isEmpty(msgSucessoExcluir)}" class="alert alert-success alert-dismissible fade show" role="alert">
+								[[${msgSucessoExcluir}]]
 								<button type="button" class="close" data-dismiss="alert" aria-label="Close">
 									<span aria-hidden="true">&times;</span>
 								</button>

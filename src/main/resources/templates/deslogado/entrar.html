@@ -89,7 +89,7 @@
 		<div th:if="${!#strings.isEmpty(msgSucesso)}" class="alert alert-success">
 			[[${msgSucesso}]]
 		</div>
-		<div th:if="${isDesativado == true || reenviado == true}" class="alert alert-warning">
+		<div th:if="${isDesativado}" class="alert alert-warning">
 			Verifique seu e-mail para <a href="#" data-toggle="modal" data-target="#modalAtivacao"><sup><span class="icon-size"><i class="fas fa-info"></i></span></sup>ativar sua conta</a>.
 		</div>
 			
@@ -134,7 +134,7 @@
 					</button>
 				</div>
 				<div class="modal-body">
-					Enviamos um link de ativação para <b>[[${email}]]</b>. Caso não ache, por favor, verifique sua caixa de spam.
+					Enviamos um link de ativação para o seu e-mail. Caso não ache, por favor, verifique sua caixa de spam.
 				</div>
 				<div class="modal-footer">
 					<form action="/reenviar-link-ativacao" method="post" onsubmit="desativar(this.btnReenviar)">

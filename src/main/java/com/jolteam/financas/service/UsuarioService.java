@@ -12,7 +12,6 @@ import com.jolteam.financas.dao.CodigoDAO;
 import com.jolteam.financas.dao.UsuarioDAO;
 import com.jolteam.financas.enums.TiposCodigos;
 import com.jolteam.financas.enums.TiposEmails;
-import com.jolteam.financas.exceptions.EmailException;
 import com.jolteam.financas.exceptions.UsuarioDesativadoException;
 import com.jolteam.financas.exceptions.UsuarioInexistenteException;
 import com.jolteam.financas.exceptions.UsuarioInvalidoException;
@@ -176,12 +175,8 @@ public class UsuarioService {
 				+ "é um prazer ter você conosco!</div> <br> <div style=\"color: black\">Clique no botão a seguir para ativar sua conta: "
 				+ botaoCorpo + "</div>";
 		
-		try {
-			// envia o código para o e-mail do usuário
-			this.emailService.enviar(destinatario, assunto, corpo, TiposEmails.HTML);
-		} catch (EmailException e) {
-			System.out.println(e.getMessage());
-		}
+		// envia o código para o e-mail do usuário
+		this.emailService.enviar(destinatario, assunto, corpo, TiposEmails.HTML);
 	}
 
 }

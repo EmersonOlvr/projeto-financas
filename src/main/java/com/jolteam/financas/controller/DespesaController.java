@@ -53,9 +53,10 @@ public class DespesaController {
 			// salva um log de erro no banco
 			this.logService.save(new Log(despesa.getUsuario(), TiposLogs.ERRO_CADASTRO_DESPESA, LocalDateTime.now(), request.getRemoteAddr()));
 			
-			return this.viewDespesaAdicionar(session).addObject("erro", de.getMessage());
+			return this.viewDespesaAdicionar(session).addObject("msgErroAdd", de.getMessage());
 		}
-		return this.viewDespesaAdicionar(session).addObject("sucesso", "Despesa salva com sucesso.");
+		
+		return this.viewDespesaAdicionar(session).addObject("msgSucessoAdd", "Despesa salva com sucesso.");
 	}
 	
 	@GetMapping("/despesas/categorias")
@@ -78,8 +79,8 @@ public class DespesaController {
 			this.logService.save(new Log(catDespesa.getUsuario(), TiposLogs.ERRO_CADASTRO_CATEGORIA_DESPESA, LocalDateTime.now(), request.getRemoteAddr()));
 			
 			return this.viewCategoriasDespesas(session).addObject("msgErroAdd", de.getMessage());
-
 		}
+		
 		return this.viewCategoriasDespesas(session).addObject("msgSucessoAdd", "Categoria salva com sucesso.");
 	}
 	
@@ -89,9 +90,9 @@ public class DespesaController {
 			Categoria catExistente = this.categorias.findById(id).orElseThrow(() -> new Exception("Categoria inexistente."));
 			
 			if (this.despesaService.existsByCategoria(catExistente)) {
-				ra.addFlashAttribute("msgErroListagem", "A categoria selecionada contém vínculos com outras informações.");
+				ra.addFlashAttribute("msgErroExcluir", "A categoria selecionada contém vínculos com outras informações.");
 			} else {
-				ra.addFlashAttribute("msgSucessoListagem", "Categoria excluída com sucesso!");
+				ra.addFlashAttribute("msgSucessoExcluir", "Categoria excluída com sucesso!");
 				this.categorias.deleteById(id);
 			}
 		} catch (Exception e) {

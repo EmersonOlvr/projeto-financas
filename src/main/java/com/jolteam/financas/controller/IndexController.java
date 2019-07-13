@@ -46,17 +46,7 @@ public class IndexController {
 	@GetMapping("/cadastrar")
 	public ModelAndView viewCadastrar(Model model) {
 		ModelAndView mv = new ModelAndView("/deslogado/cadastrar");
-
-		// se receber (através do método addFlashAttribute do RedirectAttributes) o
-		// objeto usuario (com os atributos que foram
-		// preenchidos pelo usuário), ele é adicionado na view senão, é adicionado um
-		// objeto com atributos vazios.
-		// isso serve pra quando ocorrer erros no cadastro o usuário não ter que digitar
-		// todos os dados de novo,
-		// bastando apenas ele corrigir o que está errado e submeter de novo o
-		// formulário
-		Usuario usuario = model.asMap().get("usuario") != null ? (Usuario) model.asMap().get("usuario") : new Usuario();
-		mv.addObject("usuario", usuario);
+		mv.addObject("usuario", new Usuario());
 
 		return mv;
 	}
@@ -72,12 +62,10 @@ public class IndexController {
 			usuarioService.validar(usuario);
 
 			// salva o usuário no banco de dados
-			Usuario usuario2 = this.usuarioService.save(usuario);
-
-			System.out.println(usuario2.getId());
+			Usuario usuarioSalvo = this.usuarioService.save(usuario);
 
 			// envia o código de ativação para o e-mail do usuário
-			this.usuarioService.enviarCodigoAtivacao(usuario2);
+			this.usuarioService.enviarCodigoAtivacao(usuarioSalvo);
 
 			// adiciona a mensagem de sucesso na view
 			model.addAttribute("msgSucesso", "Cadastrado! Verifique seu e-mail para ativar sua conta.");
@@ -123,7 +111,6 @@ public class IndexController {
 		} catch (UsuarioDesativadoException e) {
 			session.setAttribute("usuarioId", this.usuarioService.findByEmail(email).get().getId());
 			model.addAttribute("isDesativado", true);
-			model.addAttribute("email", email);
 		}
 
 		return "/deslogado/entrar";
@@ -175,7 +162,7 @@ public class IndexController {
 			Optional<Usuario> usuario = this.usuarioService.findById(id);
 			if (usuario.isPresent() && !usuario.get().isAtivado()) {
 				this.usuarioService.enviarCodigoAtivacao(usuario.get());
-				ra.addFlashAttribute("reenviado", true);
+				ra.addFlashAttribute("msgSucesso", "Link de ativação reenviado para o seu e-mail.");
 				return "redirect:/entrar";
 			} else {
 				return "redirect:/";
@@ -203,6 +190,12 @@ public class IndexController {
 	@GetMapping("/redefinir-senha")
 	public String viewRedefinirSenha() {
 		return "/deslogado/redefinir-senha";
+	}
+	
+	@GetMapping("/teste")
+	public String teste(HttpSession session) {
+		System.out.println((Integer) session.getAttribute("usuarioId"));
+		return "redirect:/entrar";
 	}
 
 }
