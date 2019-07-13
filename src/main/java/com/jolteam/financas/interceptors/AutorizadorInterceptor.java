@@ -20,7 +20,7 @@ public class AutorizadorInterceptor implements HandlerInterceptor {
 											 "/receitas/categorias", "/receitas/categorias/excluir", 
 											 "/despesas/adicionar", "/despesas/historico", 
 											 "/despesas/categorias", "/despesas/categorias/excluir", 
-											 "/cofres", "/cofres/editar", "/cofres/excluir"};
+											 "/cofres", "/cofres/editar", "/cofres/cadastrar","/cofres/excluir"};
 	
 	@Override
 	public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler)

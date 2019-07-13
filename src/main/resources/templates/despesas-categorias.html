@@ -53,7 +53,7 @@
 								</thead>
 								<tbody>
 									<tr th:if="${listaCatDespesa.size() > 0}" th:each="catDesp : ${listaCatDespesa}">
-										<td th:text="${catDesp.nome}" >Autopista</td>
+										<td th:text="${catDesp.nome}" ></td>
 										<td><a th:href="@{/despesas/categorias/excluir(id=${catDesp.id})}" class="btn btn-sm btn-outline-danger">Excluir</a></td>
 									</tr>
 									<tr th:if="${listaCatDespesa.size() == 0}" class="font-italic">
