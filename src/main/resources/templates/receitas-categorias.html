@@ -54,7 +54,7 @@
 								<tbody>
 									<tr th:if="${listaCatReceita.size() > 0}" th:each="catReceita : ${listaCatReceita}">
 										<td th:text="${catReceita.nome}" ></td>
-										<td><a th:href="@{/receitas/categorias/excluir(id=${catReceita.id})}" class="btn btn-outline-danger">Excluir</a></td>
+										<td><a th:href="@{/receitas/categorias/excluir(id=${catReceita.id})}" class="btn btn-sm btn-outline-danger">Excluir</a></td>
 									</tr>
 									<tr th:if="${listaCatReceita.size() == 0}" class="font-italic">
 										<td colspan="2">Nenhuma categoria encontrada</td>

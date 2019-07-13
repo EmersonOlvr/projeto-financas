@@ -85,9 +85,11 @@ public class DespesaController {
 	}
 	
 	@GetMapping("/despesas/categorias/excluir")
-	public String excluirCatDespesa(@RequestParam Integer id, RedirectAttributes ra) {
+	public String excluirCatDespesa(@RequestParam Integer id, HttpSession session, RedirectAttributes ra) {
 		try {
-			Categoria catExistente = this.categorias.findById(id).orElseThrow(() -> new Exception("Categoria inexistente."));
+			Usuario usuario = (Usuario) session.getAttribute("usuarioLogado");
+			Categoria catExistente = this.categorias.findByIdAndUsuarioAndTipoTransacao(id, usuario, TiposTransacoes.DESPESA)
+													.orElseThrow(() -> new Exception("Categoria inexistente."));
 			
 			if (this.despesaService.existsByCategoria(catExistente)) {
 				ra.addFlashAttribute("msgErroExcluir", "A categoria selecionada contém vínculos com outras informações.");
