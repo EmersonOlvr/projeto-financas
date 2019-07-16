@@ -10,6 +10,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 
 @Entity
 @Table(name="cofres")
@@ -22,25 +23,26 @@ public class Cofre {
 	private Usuario usuario;
 	
 	@Column(nullable = false,length = 150)
-	private String descricao;
-	
-	@Column(nullable = false,columnDefinition="datetime")
-	private LocalDateTime dataCriacao;
+	private String finalidade;
 	
 	@Column(nullable=false)
 	private BigDecimal totalDesejado;
 	
-	public Cofre() {}
+	@Transient
+	private BigDecimal totalAcumulado;
 	
-	public Cofre(Integer id, Usuario usuario, String descricao, LocalDateTime dataCriacao,BigDecimal totalDesejado) {
-		super();
-		this.id = id;
+	@Column(nullable = false,columnDefinition="datetime")
+	private LocalDateTime dataCriacao;
+	
+	public Cofre() {}
+	public Cofre(Usuario usuario, String finalidade, BigDecimal totalDesejado, LocalDateTime dataCriacao) {
 		this.usuario = usuario;
-		this.descricao = descricao;
+		this.finalidade = finalidade;
+		this.totalDesejado = totalDesejado;
 		this.dataCriacao = dataCriacao;
-		this.totalDesejado= totalDesejado;
 	}
 	
+
 	public Integer getId() {
 		return id;
 	}
@@ -53,11 +55,23 @@ public class Cofre {
 	public void setUsuario(Usuario usuario) {
 		this.usuario = usuario;
 	}
-	public String getDescricao() {
-		return descricao;
+	public String getFinalidade() {
+		return finalidade;
 	}
-	public void setDescricao(String descricao) {
-		this.descricao = descricao;
+	public void setFinalidade(String finalidade) {
+		this.finalidade = finalidade;
+	}
+	public BigDecimal getTotalDesejado() {
+		return totalDesejado;
+	}
+	public void setTotalDesejado(BigDecimal totalDesejado) {
+		this.totalDesejado = totalDesejado;
+	}
+	public BigDecimal getTotalAcumulado() {
+		return totalAcumulado;
+	}
+	public void setTotalAcumulado(BigDecimal totalAcumulado) {
+		this.totalAcumulado = totalAcumulado;
 	}
 	public LocalDateTime getDataCriacao() {
 		return dataCriacao;
@@ -65,24 +79,24 @@ public class Cofre {
 	public void setDataCriacao(LocalDateTime dataCriacao) {
 		this.dataCriacao = dataCriacao;
 	}
-	public BigDecimal getTotalDesejado() {
-		return totalDesejado;
-	}
-
-	public void setTotalDesejado(BigDecimal totalDesejado) {
-		this.totalDesejado = totalDesejado;
-	}
-
+	
+	
 	@Override
 	public boolean equals(Object outro) {
 		if (outro instanceof Cofre) {
-			if (this.descricao.equals(((Cofre) outro).getDescricao())) {
+			if (this.finalidade.equals(((Cofre) outro).getFinalidade())) {
 				return true;
 			}
 		}
 		return false;
 	}
-
 	
+	
+	@Override
+	public String toString() {
+		return "Cofre [id=" + id + ", usuario=" + (usuario != null ? usuario.getId() : null) 
+				+ ", finalidade=" + finalidade + ", totalDesejado=" + totalDesejado 
+				+ ", totalAcumulado=" + totalAcumulado + ", dataCriacao=" + dataCriacao + "]";
+	}
 	
 }

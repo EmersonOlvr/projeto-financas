@@ -5,15 +5,11 @@ import java.time.LocalDateTime;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
-
-import com.jolteam.financas.enums.TiposTransacoes;
 
 @Entity
 @Table(name="cofre_transacao")
@@ -25,29 +21,17 @@ public class CofreTransacao {
 	@ManyToOne(optional = false)
 	private Cofre cofre;
 	
-	@Column(nullable=false) @Enumerated(EnumType.STRING)
-	private TiposTransacoes tipoTransacoes;
-	
 	@Column(nullable = false)
 	private BigDecimal valor;
 	
 	@Column(nullable = false, columnDefinition = "datetime")
-	private LocalDateTime dataCriacao;
-	
-	@Column(nullable = false,length = 150)
-	private String descricao;
+	private LocalDateTime data;
 
 	public CofreTransacao() {}
-	
-	public CofreTransacao(Integer id, Cofre cofre, TiposTransacoes tipoTransacoes, BigDecimal valor,
-			LocalDateTime dataCriacao, String descricao) {
-		super();
-		this.id = id;
+	public CofreTransacao(Cofre cofre, BigDecimal valor, LocalDateTime data) {
 		this.cofre = cofre;
-		this.tipoTransacoes = tipoTransacoes;
 		this.valor = valor;
-		this.dataCriacao = dataCriacao;
-		this.descricao = descricao;
+		this.data = data;
 	}
 
 	public Integer getId() {
@@ -66,14 +50,6 @@ public class CofreTransacao {
 		this.cofre = cofre;
 	}
 
-	public TiposTransacoes getTipoTransacoes() {
-		return tipoTransacoes;
-	}
-
-	public void setTipoTransacoes(TiposTransacoes tipoTransacoes) {
-		this.tipoTransacoes = tipoTransacoes;
-	}
-
 	public BigDecimal getValor() {
 		return valor;
 	}
@@ -82,26 +58,18 @@ public class CofreTransacao {
 		this.valor = valor;
 	}
 
-	public LocalDateTime getDataCriacao() {
-		return dataCriacao;
+	public LocalDateTime getData() {
+		return data;
 	}
 
-	public void setDataCriacao(LocalDateTime dataCriacao) {
-		this.dataCriacao = dataCriacao;
-	}
-
-	public String getDescricao() {
-		return descricao;
-	}
-
-	public void setDescricao(String descricao) {
-		this.descricao = descricao;
+	public void setData(LocalDateTime dataCriacao) {
+		this.data = dataCriacao;
 	}
 
 	@Override
 	public String toString() {
-		return "CofreTransacao [id=" + id + ", cofre=" + cofre + ", tipoTransacoes=" + tipoTransacoes + ", valor="
-				+ valor + ", dataCriacao=" + dataCriacao + ", descricao=" + descricao + "]";
+		return "CofreTransacao [id=" + id + ", cofre=" + cofre + ", valor="
+				+ valor + ", data=" + data + "]";
 	}
 	
 	

@@ -37,10 +37,10 @@ public class AutorizadorInterceptor implements HandlerInterceptor {
 		for (String paginaLogado : PAGINAS_LOGADO) {
 			if (urlRequisitada.equals(paginaLogado)) {
 				if (estaLogado) {
-					System.out.println("Permitido (logado): "+urlRequisitada);
+					//System.out.println("Permitido (logado): "+urlRequisitada);
 					return true;
 				} else {
-					System.out.println("Negado (deslogado): "+urlRequisitada);
+					//System.out.println("Negado (deslogado): "+urlRequisitada);
 					if (!urlRequisitada.equals("/home") && !urlRequisitada.equals("/sair")) {
 						response.sendRedirect("/entrar?destino="+urlRequisitada);
 					} else {
@@ -53,10 +53,10 @@ public class AutorizadorInterceptor implements HandlerInterceptor {
 		for (String paginaDeslogado : PAGINAS_DESLOGADO) {
 			if (urlRequisitada.equals(paginaDeslogado)) {
 				if (!estaLogado) {
-					System.out.println("Permitido (deslogado): "+urlRequisitada);
+					//System.out.println("Permitido (deslogado): "+urlRequisitada);
 					return true;
 				} else {
-					System.out.println("Negado (logado): "+urlRequisitada);
+					//System.out.println("Negado (logado): "+urlRequisitada);
 					response.sendRedirect("/home");
 					return false;
 				}
@@ -64,12 +64,12 @@ public class AutorizadorInterceptor implements HandlerInterceptor {
 		}
 		for (String paginaEstatica : PAGINAS_ESTATICAS) {
 			if (urlRequisitada.contains(paginaEstatica)) {
-				System.out.println("Permitido (estática): "+urlRequisitada);
+				//System.out.println("Permitido (estática): "+urlRequisitada);
 				return true;
 			}
 		}
 		
-		System.out.println("Negado: "+urlRequisitada);
+		//System.out.println("Negado: "+urlRequisitada);
 		response.sendRedirect("/");
 		return false;
 	}

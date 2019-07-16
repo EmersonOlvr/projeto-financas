@@ -29,34 +29,74 @@
 			
 			
 			<main class="main-content bgc-grey-100">
-<div id="mainContent">
-<div class="row gap-20 masonry pos-r">
-<div class="masonry-sizer col-md-6">
-</div>
+				<div id="mainContent">
+					<div class="row gap-20 masonry pos-r">
+						<div class="masonry-sizer col-md-6">
+							Teste
+						</div>
+						
+						<div class="masonry-item col-md-12">
+							<div class="bgc-white p-20 bd">
+								<h6 class="c-grey-900">Atualizar cofre</h6>
+								<div class="mT-30">
+									<div th:if="${!#strings.isEmpty(msgSucessoEditar)}" class="alert alert-success alert-dismissible fade show" role="alert">
+											[[${msgSucessoEditar}]] [[${msgSucessoValor}]]
+										<button type="button" class="close" data-dismiss="alert" aria-label="Close">
+											<span aria-hidden="true">&times;</span>
+										</button>
+									</div>
+									<div th:if="${!#strings.isEmpty(msgErroEditar)}" class="alert alert-danger alert-dismissible fade show" role="alert">
+										[[${msgErroEditar}]]
+										<button type="button" class="close" data-dismiss="alert" aria-label="Close">
+											<span aria-hidden="true">&times;</span>
+										</button>
+									</div>
+									<form class="container" th:object="${cofre}" method="post" id="needs-validation" novalidate>
+										<div class="row">
+											<div class="col-md-6 mb-3">
+												<input type="hidden" th:field="*{id}"> <label
+													for="validationCustom01">Finalidade </label> <input
+													type="text" th:field="*{finalidade}" class="form-control"
+													id="validationCustom01" placeholder="Ex: Comprar um Carro"
+													>
+												<div class="invalid-feedback">Insira uma finalidade para o cofre</div>
+											</div>
+											<div class="col-md-6 mb-3">
+												<label for="validationCustom03">Total desejado </label> <input
+													type="number" class="form-control"
+													th:field="*{totalDesejado}" id="validationCustom03"
+													placeholder="Total desejado..." >
+												<div class="invalid-feedback">Insira o total desejado para o cofre</div>
+											</div>
+										</div>
+										<div class="row">
+											<div class="col-md-4 mb-3">
+												<label for="validationCustom02">Incrementar/decrementar valor </label> <input
+													type="number" class="form-control"
+													name="valor" id="validationCustom02"
+													placeholder="Ex: 100 ou -100" step="any" >
+											</div>
+										</div>
+										<button class="btn btn-primary" type="submit">Atualizar cofre</button>
+									</form>
+									<script>
+										!function() {
+											"use strict";
+											window.addEventListener("load", function() {
+												var e=document.getElementById("needs-validation");
+												e.addEventListener("submit", function(t) {
+													!1===e.checkValidity() && (t.preventDefault(), t.stopPropagation()), e.classList.add("was-validated")
+												}, !1)
+											}, !1)
+										}()
+									</script>
+								</div>
+							</div>
+						</div>
 
-<div class="masonry-item col-md-12">
-	<div class="bgc-white p-20 bd">
-		<h6 class="c-grey-900">Editar cofre</h6>
-		<div class="mT-30">
-			<form class="container" id="needs-validation" novalidate>
-				<div class="row">
-					<div class="col-md-6 mb-3">
-						<label for="validationCustom01">Nome do Cofre</label> <input type="text" class="form-control" id="validationCustom01" placeholder="Nome do cofre..." value="Porquinho Azul" required>
-					</div>
-					<div class="col-md-6 mb-3">
-						<label for="validationCustom02">Valor</label> <input type="number" class="form-control" id="validationCustom02" placeholder="Valor..." value="25.50">
 					</div>
 				</div>
-				<button class="btn btn-primary" type="submit">Salvar</button>
-			</form>
-			<script>!function(){"use strict";window.addEventListener("load",function(){var e=document.getElementById("needs-validation");e.addEventListener("submit",function(t){!1===e.checkValidity()&&(t.preventDefault(),t.stopPropagation()),e.classList.add("was-validated")},!1)},!1)}()</script>
-		</div>
-	</div>
-</div>
-
-</div>
-</div>
-</main>
+			</main>
 			
 			
 			

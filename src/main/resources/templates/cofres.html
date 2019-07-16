@@ -57,25 +57,30 @@
 								<table class="table table-hover table-bordered">
 									<thead>
 										<tr>
-											<th>Nome do Cofre</th>
+											<th>Finalidade</th>
 											<th>Total acumulado</th>
+											<th>Total desejado</th>
 											<th>Data de Criação</th>
 											<th scope="col" colspan="2">Ações</th>
 										</tr>
 									</thead>
 									<tbody>
-										<tr th:if="${listaCofres.size() > 0}" th:each="cofres: ${listaCofres}">
-											<td th:text="${cofres.descricao}"></td>
-											<td th:text="${cofres.totalDesejado}"></td>
-											<td
-												th:text="${#temporals.format(cofres.dataCriacao, 'dd/MM/yyyy')}"></td>
-											<td><a th:href="@{/cofres/editar(id=${cofres.id})}"
-												class="btn btn-outline-primary">Editar</a></td>
-											<td><a th:href="@{/cofres/excluir(id=${cofres.id})}"
-												class="btn btn-sm btn-outline-danger">Excluir</a></td>
+										<tr th:if="${listaCofres.size() > 0}" th:each="cofre: ${listaCofres}">
+											<td th:text="${cofre.finalidade}"></td>
+											<td th:text="|R$ ${cofre.totalAcumulado}|"></td>
+											<td th:text="|R$ ${cofre.totalDesejado}|"></td>
+											<td th:text="${#temporals.format(cofre.dataCriacao, 'dd/MM/yyyy')}"></td>
+											<td>
+												<a th:href="@{/cofres/editar(id=${cofre.id})}"
+												class="btn btn-sm btn-outline-primary">Editar</a>
+											</td>
+											<td>
+												<a th:href="@{/cofres/excluir(id=${cofre.id})}"
+												class="btn btn-sm btn-outline-danger">Excluir</a>
+											</td>
 										</tr>
 										<tr th:if="${listaCofres.size() == 0}" class="font-italic">
-											<td colspan="4">Nenhum cofre cadastrado</td>
+											<td colspan="5">Nenhum cofre encontrado</td>
 										</tr>
 									</tbody>
 								</table>
@@ -98,24 +103,29 @@
 									<span aria-hidden="true">&times;</span>
 								</button>
 							</div>
-								<form class="container" th:object="${cofre}"
-									th:action="@{/cofres/cadastrar}" method="post"
+								<form class="container" th:object="${cofre}" method="post"
 									id="needs-validation" novalidate>
 									<div class="row">
-										<div class="col-md-6 mb-3">
+										<div class="col-md-4 mb-3">
 											<input type="hidden" th:field="*{id}"> <label
-												for="validationCustom01">Nome do Cofre</label> <input
-												type="text" th:field="*{descricao}" class="form-control"
-												id="validationCustom01" placeholder="Nome do cofre..."
+												for="validationCustom01">Finalidade </label> <input
+												type="text" th:field="*{finalidade}" class="form-control"
+												id="validationCustom01" placeholder="Ex: Comprar um Carro"
 												required>
-											<div class="invalid-feedback">Insira um nome para o
-												cofre</div>
+											<div class="invalid-feedback">Insira uma finalidade para o cofre</div>
 										</div>
-										<div class="col-md-6 mb-3">
-											<label for="validationCustom02">Total Desejado </label> <input
+										<div class="col-md-4 mb-3">
+											<label for="validationCustom02">Valor inicial (opcional) </label> <input
 												type="number" class="form-control"
-												th:field="*{totalDesejado}" id="validationCustom02"
-												placeholder="Total Desejado...">
+												name="valorInicial" id="validationCustom02"
+												placeholder="Valor inicial..." step="any">
+										</div>
+										<div class="col-md-4 mb-3">
+											<label for="validationCustom03">Total desejado </label> <input
+												type="number" class="form-control"
+												th:field="*{totalDesejado}" id="validationCustom03"
+												placeholder="Total desejado..." required>
+												<div class="invalid-feedback">Insira o total desejado para o cofre</div>
 										</div>
 									</div>
 									<button class="btn btn-primary" type="submit">Adicionar

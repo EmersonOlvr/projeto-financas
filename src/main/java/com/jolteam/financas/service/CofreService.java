@@ -3,7 +3,11 @@ package com.jolteam.financas.service;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 
+import javax.transaction.Transactional;
+
+import org.apache.logging.log4j.util.Strings;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -11,59 +15,111 @@ import com.jolteam.financas.dao.CofreDAO;
 import com.jolteam.financas.dao.CofreTransacaoDAO;
 import com.jolteam.financas.exceptions.CofreException;
 import com.jolteam.financas.model.Cofre;
+import com.jolteam.financas.model.CofreTransacao;
 import com.jolteam.financas.model.Usuario;
 
 @Service
 public class CofreService {
 	
 	@Autowired private CofreDAO cofres;
-	@Autowired private CofreTransacaoDAO transacaoCofre;
+	@Autowired private CofreTransacaoDAO cofreTransacao;
 	
-	public List<Cofre> findAll(){
-		return this.cofres.findAll();
+	public Optional<Cofre> findById(Integer id) {
+		Optional<Cofre> cofre = this.cofres.findById(id);
+		if (cofre.isPresent()) {
+			cofre.get().setTotalAcumulado(this.totalAcumuladoDe(cofre.get()));
+		}
+		return cofre;
 	}
+	public Optional<Cofre> findByIdAndUsuario(Integer id,Usuario usuario){
+		Optional<Cofre> cofre = this.cofres.findByIdAndUsuario(id, usuario);
+		if (cofre.isPresent()) {
+			cofre.get().setTotalAcumulado(this.totalAcumuladoDe(cofre.get()));
+		}
+		return cofre;
+	}
+	public List<Cofre> findAllByUsuarioOrderByDataCriacaoDesc(Usuario usuario) {
+		List<Cofre> cofres = this.cofres.findAllByUsuarioOrderByDataCriacaoDesc(usuario);
+		
+		for (Cofre cofre : cofres) {
+			cofre.setTotalAcumulado(this.totalAcumuladoDe(cofre));
+		}
+		
+		return cofres;
+	}
+	public List<Cofre> findAll() {
+		List<Cofre> cofres = this.cofres.findAll();
+		
+		for (Cofre cofre : cofres) {
+			cofre.setTotalAcumulado(this.totalAcumuladoDe(cofre));
+		}
+		
+		return cofres;
+	}
+	
+	public boolean existsByDescricao(String descricao) {
+		return this.cofres.existsByFinalidade(descricao);
+	}
+	
+	
+	public Cofre salvar(Cofre cofre) throws CofreException {
+		// Validação da Finalidade
+		if (Strings.isBlank(cofre.getFinalidade())) {
+			throw new CofreException("Informe a finalidade.");
+		}
+		cofre.setFinalidade(cofre.getFinalidade().trim());
+		if (cofre.getFinalidade().length() < 2) {
+			throw new CofreException("A finalidade deve ter no mínimo 2 caracteres.");
+		}
+		cofre.setFinalidade(cofre.getFinalidade().replaceAll("\\s+", " "));
+		
+		// se o cofre ainda não estiver cadastrado
+		if (cofre.getId() == null) {
+			// valida se finalidade ja existe
+			if (this.cofres.existsByFinalidade(cofre.getFinalidade())) {
+				throw new CofreException("Já existe cofre com a finalidade informada.");
+			}
+			
+			// Definindo data criação
+			cofre.setDataCriacao(LocalDateTime.now());
+		}
+		
+		// Validação do valor
+		if (cofre.getTotalDesejado() == null || cofre.getTotalDesejado().compareTo(new BigDecimal("0.05"))== -1) {
+			throw new CofreException("O total desejado deve ser igual ou maior que 5 centavos (0.05).");
+		}
+		
+		return this.cofres.save(cofre);
+		
+	}
+	
 	public void deleteById(Integer id) {
 		this.cofres.deleteById(id);
 	}
-	public boolean existsByDescricao(String descricao) {
-		return this.cofres.existsByDescricao(descricao);
-	}
-	public List<Cofre> findByIdAndUsuario(Integer id,Usuario usuario){
-		return this.cofres.findByIdAndUsuario(id, usuario);
-	}
-	
-	public List<Cofre> findByUsuarioOrderByDataCriacaoDesc(Usuario usuario){
-		return this.cofres.findByUsuarioOrderByDataCriacaoDesc(usuario);
+	@Transactional
+	public void delete(Cofre cofre) {
+		this.cofreTransacao.deleteAllByCofre(cofre);
+		this.cofres.delete(cofre);
 	}
 	
-	public void salvaCofrer(Cofre cofre) throws CofreException {
-		//Definindo data criação
-		cofre.setDataCriacao(LocalDateTime.now());
-		//valida se descricao ja existe
-		if(this.cofres.existsByDescricao(cofre.getDescricao())) {
-			throw new CofreException("Já existe um cofre com essa descrição.");
+	public void adicionarTransacao(Cofre cofre, BigDecimal valor) {
+		if (cofre != null && cofre.getId() != null) {
+			if (valor != null) {
+				int result = valor.compareTo(new BigDecimal("0"));
+				if (result != 0) {
+					this.cofreTransacao.save(new CofreTransacao(cofre, valor, LocalDateTime.now()));
+				}
+			}
 		}
-		//Validação de Descrição
-		cofre.setDescricao(cofre.getDescricao().trim());
-		if(cofre.getDescricao().isEmpty()) {
-			throw new CofreException("Insira descrição");
-		}else if(cofre.getDescricao().length()<2) {
-			throw new CofreException("A descrição deve ter no mínimo 2 caracteres.");
+	}
+	
+	public BigDecimal totalAcumuladoDe(Cofre cofre) {
+		BigDecimal totalAcumulado = new BigDecimal("0");
+		List<CofreTransacao> transacoes = this.cofreTransacao.findAllByCofre(cofre);
+		for (CofreTransacao transacao : transacoes) {
+			totalAcumulado = totalAcumulado.add(transacao.getValor());
 		}
-		cofre.setDescricao(cofre.getDescricao().replaceAll("\\s+", " "));
-		
-		//Validação do valor
-		if(cofre.getTotalDesejado().compareTo(new BigDecimal("0.05"))== -1) {
-			throw new CofreException("O valor do cofre deve ser igual ou maior que 5 centavos (0.05).");
-		}
-		
-		try {
-			this.cofres.save(cofre);
-			
-		}catch(Exception e) {
-			throw new CofreException("Desculpe, algo deu errado.");
-		}
-		
+		return totalAcumulado;
 	}
 	
 }
