@@ -13,6 +13,7 @@ public interface CofreDAO extends JpaRepository<Cofre, Integer> {
 	public Optional<Cofre> findByIdAndUsuario(Integer id,Usuario usuario);
 	public List<Cofre> findAll();
 	public boolean existsByFinalidade(String finalidade);
+	public boolean existsByUsuarioAndFinalidade(Usuario usuario, String finalidade);
 	public List<Cofre> findAllByUsuarioOrderByDataCriacaoDesc(Usuario usuario);
 	public void deleteById(Integer id);
 

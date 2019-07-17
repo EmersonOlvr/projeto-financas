@@ -76,7 +76,7 @@ public class CofreService {
 		// se o cofre ainda não estiver cadastrado
 		if (cofre.getId() == null) {
 			// valida se finalidade ja existe
-			if (this.cofres.existsByFinalidade(cofre.getFinalidade())) {
+			if (this.cofres.existsByUsuarioAndFinalidade(cofre.getUsuario(), cofre.getFinalidade())) {
 				throw new CofreException("Já existe cofre com a finalidade informada.");
 			}
 			
@@ -86,7 +86,7 @@ public class CofreService {
 		
 		// Validação do valor
 		if (cofre.getTotalDesejado() == null || cofre.getTotalDesejado().compareTo(new BigDecimal("0.05"))== -1) {
-			throw new CofreException("O total desejado deve ser igual ou maior que 5 centavos (0.05).");
+			throw new CofreException("O total desejado deve ser igual ou maior que 5 centavos (R$ 0,05).");
 		}
 		
 		return this.cofres.save(cofre);

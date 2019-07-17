@@ -31,7 +31,7 @@ public class AutorizadorInterceptor implements HandlerInterceptor {
 		boolean estaLogado = usuarioLogado != null ? true : false;
 		
 		if (!CONTROLAR_ACESSO) {
-			return false;
+			return true;
 		}
 		
 		for (String paginaLogado : PAGINAS_LOGADO) {
