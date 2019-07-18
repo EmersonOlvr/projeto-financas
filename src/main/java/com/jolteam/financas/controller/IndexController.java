@@ -65,7 +65,7 @@ public class IndexController {
 			Usuario usuarioSalvo = this.usuarioService.save(usuario);
 
 			// envia o código de ativação para o e-mail do usuário
-			this.usuarioService.enviarCodigoAtivacao(usuarioSalvo);
+			this.usuarioService.enviarCodigoAtivacao(usuarioSalvo, request);
 
 			// adiciona a mensagem de sucesso na view
 			model.addAttribute("msgSucesso", "Cadastrado! Verifique seu e-mail para ativar sua conta.");
@@ -156,12 +156,12 @@ public class IndexController {
 	}
 	
 	@PostMapping("/reenviar-link-ativacao")
-	public String reenviarLinkAtivacao(HttpSession session, RedirectAttributes ra) {
+	public String reenviarLinkAtivacao(HttpSession session, HttpServletRequest request, RedirectAttributes ra) {
 		Integer id = (Integer) session.getAttribute("usuarioId");
 		if (id != null) {
 			Optional<Usuario> usuario = this.usuarioService.findById(id);
 			if (usuario.isPresent() && !usuario.get().isAtivado()) {
-				this.usuarioService.enviarCodigoAtivacao(usuario.get());
+				this.usuarioService.enviarCodigoAtivacao(usuario.get(), request);
 				ra.addFlashAttribute("msgSucesso", "Link de ativação reenviado para o seu e-mail.");
 				return "redirect:/entrar";
 			} else {
@@ -193,9 +193,19 @@ public class IndexController {
 	}
 	
 	@GetMapping("/teste")
-	public String teste(HttpSession session) {
-		System.out.println((Integer) session.getAttribute("usuarioId"));
-		return "redirect:/entrar";
+	public String teste(HttpServletRequest request) {
+		String host = request.getServerName();
+		String port = Integer.toString(request.getServerPort());
+		String url = "http://";
+		if (!port.equals("8090")) {
+			url = url.concat(host+":"+port+"/");
+		} else {
+			url = url.concat(host+"/");
+		}
+		System.out.println("getServerName(): "+host);
+		System.out.println("getServerPort(): "+port);
+		System.out.println("URL: "+url);
+		return "deslogado/entrar";
 	}
 
 }

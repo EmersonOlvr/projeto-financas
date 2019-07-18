@@ -3,6 +3,8 @@ package com.jolteam.financas.service;
 import java.util.List;
 import java.util.Optional;
 
+import javax.servlet.http.HttpServletRequest;
+
 import org.apache.logging.log4j.util.Strings;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCrypt;
@@ -160,7 +162,11 @@ public class UsuarioService {
 //		return r.nextInt((max - min) + 1) + min;
 //	}
 
-	 public void enviarCodigoAtivacao(Usuario usuario) {
+	public void enviarCodigoAtivacao(Usuario usuario, HttpServletRequest request) {
+		String host = request.getServerName();
+		String port = Integer.toString(request.getServerPort());
+		String url = !port.equals("80") ? "http://"+host+":"+port : "http://"+host;
+		
 		// obtém o código do banco, se existir
 		Optional<Codigo> cod = this.codigosConfirmacao.findByUsuarioAndTipo(usuario, TiposCodigos.ATIVACAO_CONTA);
 		Codigo codigo = cod.isPresent() ? cod.get() : null;
@@ -170,7 +176,7 @@ public class UsuarioService {
 		
 		String assunto = "Ativação da Conta";
 		String destinatario = usuario.getEmail();
-		String botaoCorpo = "<a href='http://localhost:8090/ativarConta?id="+usuario.getId()+"&codigo="+codigoConfirmacao+"' target='_blank'><button>Ativar Conta</button></a>";
+		String botaoCorpo = "<a href='"+url+"/ativarConta?id="+usuario.getId()+"&codigo="+codigoConfirmacao+"' target='_blank'><button>Ativar Conta</button></a>";
 		String corpo = "<div style=\"color: black\">Olá "+ usuario.getNome()+", bem-vindo(a) ao Projeto Finanças, "
 				+ "é um prazer ter você conosco!</div> <br> <div style=\"color: black\">Clique no botão a seguir para ativar sua conta: "
 				+ botaoCorpo + "</div>";

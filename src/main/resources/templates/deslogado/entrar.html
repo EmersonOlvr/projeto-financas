@@ -93,7 +93,7 @@
 			Verifique seu e-mail para <a href="#" data-toggle="modal" data-target="#modalAtivacao"><sup><span class="icon-size"><i class="fas fa-info"></i></span></sup>ativar sua conta</a>.
 		</div>
 			
-		<form method="post">
+		<form method="post" onsubmit="desativar(this.entrar)">
 			<div class="form-label-group">
 				<input type="email" id="email" name="email" class="form-control" placeholder="E-mail" required autofocus>
 				<label for="email">E-mail</label>
@@ -116,7 +116,7 @@
 				</div>
 			</div>
 			
-			<button class="btn btn-lg btn-success btn-rounded btn-block" type="submit">Entrar</button>
+			<button class="btn btn-lg btn-success btn-rounded btn-block" type="submit" name="entrar">Entrar</button>
 		</form>
 
 		<p class="mt-4 text-muted text-center">Ainda não tem uma conta? <a href="/cadastrar">Crie uma agora mesmo</a>.</p>
