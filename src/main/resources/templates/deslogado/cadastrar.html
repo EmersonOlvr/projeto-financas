@@ -27,7 +27,7 @@
 	<script src="/js/jquery-3.3.1.slim.min.js"></script>
 	<script src="/js/popper.min.js"></script>
 	<script src="/js/bootstrap.min.js"></script>
-		
+	
 	<script type="text/javascript">
 		function desativar(field) {
 			field.disabled = true;
@@ -88,31 +88,31 @@
 			<div class="row">
 				<div class="col-sm-6">
 					<div class="form-label-group">
-						<input type="text" id="nome" th:field="*{nome}" class="form-control" placeholder="Nome" autofocus>
+						<input type="text" id="nome" th:field="*{nome}" class="form-control" placeholder="Nome" required autofocus>
 						<label for="nome">Nome</label>
 					</div>
 				</div>
 				<div class="col-sm-6">
 					<div class="form-label-group">
-						<input type="text" id="sobrenome" th:field="*{sobrenome}" class="form-control" placeholder="Sobrenome" autofocus>
+						<input type="text" id="sobrenome" th:field="*{sobrenome}" class="form-control" placeholder="Sobrenome" required>
 						<label for="sobrenome">Sobrenome</label>
 					</div>
 				</div>
 			</div>
 			<div class="form-label-group">
-				<input type="email" id="email" th:field="*{email}" class="form-control" placeholder="E-mail" autofocus>
+				<input type="email" id="email" th:field="*{email}" class="form-control" placeholder="E-mail" required>
 				<label for="email">E-mail</label>
 			</div>
 			<div class="row">
 				<div class="col-sm-6">
 					<div class="form-label-group">
-						<input type="password" id="senha" th:field="*{senha}" class="form-control" placeholder="Senha">
+						<input type="password" id="senha" th:field="*{senha}" class="form-control" placeholder="Senha" required>
 						<label for="senha">Senha</label>
 					</div>
 				</div>
 				<div class="col-sm-6">
 					<div class="form-label-group">
-						<input type="password" id="senha_repetida" th:field="*{senhaRepetida}" class="form-control" placeholder="Senha (repita)">
+						<input type="password" id="senha_repetida" th:field="*{senhaRepetida}" class="form-control" placeholder="Senha (repita)" required>
 						<label for="senha_repetida">Senha (repita)</label>
 					</div>
 				</div>
