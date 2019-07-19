@@ -30,6 +30,7 @@ import com.jolteam.financas.model.Log;
 import com.jolteam.financas.model.Usuario;
 import com.jolteam.financas.service.CodigoService;
 import com.jolteam.financas.service.UsuarioService;
+import com.jolteam.financas.util.Util;
 
 @Controller
 public class IndexController {
@@ -101,7 +102,6 @@ public class IndexController {
 				System.out.println("Redirecionando para "+destino+"...");
 				return "redirect:"+destino;
 			} else {
-				System.out.println("Redirecionando para /home...");
 				return "redirect:/home";
 			}
 		} catch (UsuarioInexistenteException e) {
@@ -118,38 +118,28 @@ public class IndexController {
 
 	@GetMapping("/ativarConta")
 	public String ativarConta(@RequestParam(required = false) Integer id, @RequestParam(required = false) String codigo,
-			Model model, HttpSession session) {
-		String msgErro = "Este link é inválido ou já foi usado antes.";
+			Model model, HttpSession session) 
+	{
 		if (id == null || Strings.isEmpty(codigo)) {
 			return "redirect:/";
+		} else if (this.codigoService.isCodigoValido(id, codigo, TiposCodigos.ATIVACAO_CONTA)) {
+			Usuario usuario = this.usuarioService.findById(id).get();
+			Codigo codigoExistente = this.codigoService.findByUsuarioAndTipo(usuario, TiposCodigos.ATIVACAO_CONTA).get();
+			
+			// ativa a conta do usuário e atualiza no banco
+			usuario.setAtivado(true);
+			this.usuarioService.save(usuario);
+			
+			// exclui o código que foi usado do banco
+			this.codigoService.delete(codigoExistente);
+			
+			// excluir o id do usuário da sessão
+			// (estava sendo usado para o sistema saber para qual usuário reenviar o codigo)
+			session.removeAttribute("usuarioId");
+			
+			model.addAttribute("sucesso", true);
 		} else {
-			Optional<Usuario> usuario = this.usuarioService.findById(id);
-			if (usuario.isPresent()) {
-				Optional<Codigo> codigoExistente = this.codigoService.findByUsuarioAndTipo(usuario.get(), TiposCodigos.ATIVACAO_CONTA);
-				if (codigoExistente.isPresent()) {
-					String codigoConfirmacao = codigoExistente.get().getCodigo().replaceAll("[\\-]+", "");
-					if (codigo.equals(codigoConfirmacao)) {
-						// ativa a conta do usuário e atualiza no banco
-						usuario.get().setAtivado(true);
-						this.usuarioService.save(usuario.get());
-						
-						// exclui o código que foi usado do banco
-						this.codigoService.delete(codigoExistente.get());
-						
-						// excluir o id do usuário da sessão
-						// estava sendo usado para o sistema saber para qual usuário reenviar o codigo
-						session.removeAttribute("usuarioId");
-						
-						model.addAttribute("sucesso", true);
-					} else {
-						model.addAttribute("msgErro", msgErro);
-					}
-				} else {
-					model.addAttribute("msgErro", msgErro);
-				}
-			} else {
-				model.addAttribute("msgErro", msgErro);
-			}
+			model.addAttribute("msgErro", "Este link é inválido ou já foi usado antes.");
 		}
 		
 		return "deslogado/ativacao-conta";
@@ -172,40 +162,73 @@ public class IndexController {
 		}
 	}
 
-	@GetMapping("/ativacao-conta")
-	public String viewAtivacaoConta() {
-		return "deslogado/ativacao-conta";
-	}
-
 	@GetMapping("/recuperar-senha")
 	public String viewRecuperarSenha() {
 		return "deslogado/recuperar-senha";
 	}
 
-	@GetMapping("recuperar-senha/2")
-	public String viewRecuperarSenhaMsg() {
-		return "deslogado/recuperar-senha-2";
+	@PostMapping("recuperar-senha")
+	public ModelAndView recuperarSenha(@RequestParam String email, HttpServletRequest request) {
+		if (Strings.isBlank(email) || !Util.isEmailValido(email)) {
+			return new ModelAndView("deslogado/recuperar-senha").addObject("msgErro", "Insira um e-mail em formato válido.");
+		} else {
+			Optional<Usuario> usuario = this.usuarioService.findByEmail(email);
+			if (usuario.isPresent()) {
+				this.usuarioService.enviarLinkRedefinicaoSenha(usuario.get(), request);
+			}
+			return new ModelAndView("deslogado/recuperar-senha-2").addObject("email", email);
+		}
 	}
 
-	@GetMapping("/redefinir-senha")
-	public String viewRedefinirSenha() {
+	@GetMapping("/redefinirSenha")
+	public String viewRedefinirSenha(@RequestParam(required = false) Integer id, @RequestParam(required = false) String codigo,
+			Model model) 
+	{
+		if (id == null || Strings.isEmpty(codigo)) {
+			return "redirect:/";
+		} else if (!this.codigoService.isCodigoValido(id, codigo, TiposCodigos.REDEFINICAO_SENHA)) {
+			model.addAttribute("msgErro", "Este link é inválido ou já foi usado antes.");
+		}
+		
 		return "deslogado/redefinir-senha";
 	}
 	
-	@GetMapping("/teste")
-	public String teste(HttpServletRequest request) {
-		String host = request.getServerName();
-		String port = Integer.toString(request.getServerPort());
-		String url = "http://";
-		if (!port.equals("8090")) {
-			url = url.concat(host+":"+port+"/");
+	@PostMapping("/redefinirSenha")
+	public String redefinirSenha(@RequestParam(required = false) Integer id, @RequestParam(required = false) String codigo, 
+					@RequestParam(required = false) String novaSenha, @RequestParam(required = false) String novaSenhaRepetida, 
+					Model model) 
+	{
+		if (id == null || Strings.isEmpty(codigo)) {
+			return "redirect:/";
+		} else if (Strings.isEmpty(novaSenha)) {
+			model.addAttribute("msgErroCampos", "Insira a nova senha.");
+		} else if (novaSenha.length() < 6) {
+			model.addAttribute("msgErroCampos", "Senha muito curta. Mínimo de 6 caracteres.");
+		} else if (novaSenha.length() > 255) {
+			model.addAttribute("Senha muito grande. Máximo de 255 caracteres.");
+		} else if (Strings.isEmpty(novaSenhaRepetida)) {
+			model.addAttribute("msgErroCampos", "Por favor, repita a senha.");
+		} else if (!novaSenhaRepetida.equals(novaSenha)) {
+			model.addAttribute("msgErroCampos", "As senhas não conferem.");
 		} else {
-			url = url.concat(host+"/");
+			if (this.codigoService.isCodigoValido(id, codigo, TiposCodigos.REDEFINICAO_SENHA)) {
+				Usuario usuario = this.usuarioService.findById(id).get();
+				Codigo codigoExistente = this.codigoService.findByUsuarioAndTipo(usuario, TiposCodigos.REDEFINICAO_SENHA).get();
+				
+				// define a nova senha do usuário e atualiza no banco
+				usuario.setSenha(this.usuarioService.criptografarSenha(novaSenha));
+				this.usuarioService.save(usuario);
+				
+				// exclui o código que foi usado do banco
+				this.codigoService.delete(codigoExistente);
+				
+				model.addAttribute("sucesso", true);
+			} else {
+				model.addAttribute("msgErro", "Este link é inválido ou já foi usado antes.");
+			}
 		}
-		System.out.println("getServerName(): "+host);
-		System.out.println("getServerPort(): "+port);
-		System.out.println("URL: "+url);
-		return "deslogado/entrar";
+		
+		return "deslogado/redefinir-senha";
 	}
 
 }

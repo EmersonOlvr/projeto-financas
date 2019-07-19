@@ -37,4 +37,8 @@ public class Util {
 		return str_valor;
 	}
 	
+	public static boolean isEmailValido(String email) {
+		return email.matches("^[\\w-\\+]+(\\.[\\w]+)*@[\\w-]+(\\.[\\w]+)*(\\.[A-z]{2,})$");
+	}
+	
 }

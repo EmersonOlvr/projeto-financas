@@ -9,7 +9,7 @@ import com.jolteam.financas.model.Usuario;
 
 public class AutorizadorInterceptor implements HandlerInterceptor {
 
-	private final boolean CONTROLAR_ACESSO = true;
+	private final boolean CONTROLAR_ACESSO = false;
 	
 	private final String PAGINA_ACESSO_NEGADO = "/acesso-negado";
 	

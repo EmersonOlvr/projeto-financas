@@ -23,13 +23,13 @@ import com.jolteam.financas.model.Usuario;
 @Service
 public class UsuarioService {
 
-	@Autowired
-	private EmailService emailService;
+	@Autowired private EmailService emailService;
 
-	@Autowired
-	private UsuarioDAO usuarios;
-	@Autowired
-	private CodigoDAO codigosConfirmacao;
+	@Autowired private UsuarioDAO usuarios;
+	@Autowired private CodigoDAO codigos;
+	
+	// vai de 4 à 31 (o padrão do gensalt() é 10)
+	private static final int complexidadeSenha = 10;
 
 	public Usuario save(Usuario usuario) {
 		return this.usuarios.save(usuario);
@@ -42,19 +42,24 @@ public class UsuarioService {
 	public List<Usuario> findAll() {
 		return usuarios.findAll();
 	}
-
-	public Optional<Usuario> findById(Integer id) {
-		return this.usuarios.findById(id);
-	}
-
-	public Optional<Usuario> findByEmail(String email) {
-		return this.usuarios.findByEmail(email);
-	}
-
 	public List<Usuario> findAllByEmail(String email) {
 		return this.usuarios.findAllByEmail(email);
 	}
+	public Optional<Usuario> findById(Integer id) {
+		return this.usuarios.findById(id);
+	}
+	public Optional<Usuario> findByEmail(String email) {
+		return this.usuarios.findByEmail(email);
+	}
+	
+	public boolean existsByEmail(String email) {
+		return usuarios.existsByEmail(email);
+	}
 
+	public String criptografarSenha(String senha) {
+		return BCrypt.hashpw(senha, BCrypt.gensalt(complexidadeSenha));
+	}
+	
 	public void validar(Usuario usuario) throws UsuarioInvalidoException {
 		// ==== Validação do Nome ==== //
 		if (Strings.isBlank(usuario.getNome())) {
@@ -127,9 +132,7 @@ public class UsuarioService {
 		usuario.setEmail(usuario.getEmail().toLowerCase());
 
 		// criptografa a senha do usuário
-		int complexidade = 10; // vai de 4 à 31 (o padrão do gensalt() é 10)
-		String senhaHash = BCrypt.hashpw(usuario.getSenha(), BCrypt.gensalt(complexidade));
-		usuario.setSenha(senhaHash);
+		usuario.setSenha(this.criptografarSenha(usuario.getSenha()));
 
 		// atributos que vieram do formulário nulos mas que não podem ser nulos no banco
 		usuario.setAtivado(false);
@@ -165,28 +168,52 @@ public class UsuarioService {
 //		Random r = new Random();
 //		return r.nextInt((max - min) + 1) + min;
 //	}
-
-	public void enviarCodigoAtivacao(Usuario usuario, HttpServletRequest request) {
+	
+	private String getServerUrl(HttpServletRequest request) {
 		String host = request.getServerName();
 		String port = Integer.toString(request.getServerPort());
 		String url = !port.equals("80") ? "http://"+host+":"+port : "http://"+host;
+		return url;
+	}
+	
+	public void enviarCodigoAtivacao(Usuario usuario, HttpServletRequest request) {
+		String url = this.getServerUrl(request);
 		
-		// obtém o código do banco, se existir
-		Optional<Codigo> cod = this.codigosConfirmacao.findByUsuarioAndTipo(usuario, TiposCodigos.ATIVACAO_CONTA);
-		Codigo codigo = cod.isPresent() ? cod.get() : null;
-		codigo = codigo != null ? codigo : this.codigosConfirmacao.save(new Codigo(usuario, TiposCodigos.ATIVACAO_CONTA));
+		// obtém o código de ativação do banco, se não existir cria um novo
+		Optional<Codigo> cod = this.codigos.findByUsuarioAndTipo(usuario, TiposCodigos.ATIVACAO_CONTA);
+		Codigo codigo = cod.isPresent() ? cod.get() : this.codigos.save(new Codigo(usuario, TiposCodigos.ATIVACAO_CONTA));
 		
-		String codigoConfirmacao = codigo.getCodigo().replaceAll("[\\-]+", "");
+		String codigoAtivacao = codigo.getCodigo().replaceAll("[\\-]+", "");
 		
 		String assunto = "Ativação da Conta";
 		String destinatario = usuario.getEmail();
-		String botaoCorpo = "<a href='"+url+"/ativarConta?id="+usuario.getId()+"&codigo="+codigoConfirmacao+"' target='_blank'><button>Ativar Conta</button></a>";
-		String corpo = "<div style=\"color: black\">Olá "+ usuario.getNome()+", bem-vindo(a) ao Projeto Finanças, "
-				+ "é um prazer ter você conosco!</div> <br> <div style=\"color: black\">Clique no botão a seguir para ativar sua conta: "
-				+ botaoCorpo + "</div>";
+		String botaoCorpo = "<a href='"+url+"/ativarConta?id="+usuario.getId()+"&codigo="+codigoAtivacao+"' target='_blank'><button>Ativar Conta</button></a>";
+		String corpo = "<div style=\"color: black\">Olá "+ usuario.getNome()+", bem-vindo(a) ao Projeto Finanças, é um prazer ter você conosco!</div>"
+				+ "<br>"
+				+ "<div style=\"color: black\">Clique no botão a seguir para ativar sua conta: " + botaoCorpo + "</div>";
 		
 		// envia o código para o e-mail do usuário
 		this.emailService.enviar(destinatario, assunto, corpo, TiposEmails.HTML);
 	}
-
+	
+	public void enviarLinkRedefinicaoSenha(Usuario usuario, HttpServletRequest request) {
+		String url = this.getServerUrl(request);
+		
+		// obtém o código de ativação do banco, se não existir cria um novo
+		Optional<Codigo> cod = this.codigos.findByUsuarioAndTipo(usuario, TiposCodigos.REDEFINICAO_SENHA);
+		Codigo codigo = cod.isPresent() ? cod.get() : this.codigos.save(new Codigo(usuario, TiposCodigos.REDEFINICAO_SENHA));
+		
+		String codigoRedefinicao = codigo.getCodigo().replaceAll("[\\-]+", "");
+		
+		String assunto = "Redefinição de Senha";
+		String destinatario = usuario.getEmail();
+		String botaoCorpo = "<a href='"+url+"/redefinirSenha?id="+usuario.getId()+"&codigo="+codigoRedefinicao+"' target='_blank'><button>Redefinir Senha</button></a>";
+		String corpo = "<div style=\"color: black\">Olá "+ usuario.getNome()+", foi socilitada a redefinição de senha da sua conta.</div>"
+				+ "<br>"
+				+ "<div style=\"color: black\">Clique no botão a seguir para redefinir sua senha: " + botaoCorpo + "</div>";
+		
+		// envia o link para o e-mail do usuário
+		this.emailService.enviar(destinatario, assunto, corpo, TiposEmails.HTML);
+	}
+	
 }

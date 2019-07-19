@@ -14,6 +14,12 @@
 	<link href="/css/bootstrap.min.css" rel="stylesheet">
 	<link href="/css/floating-labels.css" rel="stylesheet">
 	<link href="/css/style.css" rel="stylesheet">
+	
+	<script type="text/javascript">
+		function desativar(field) {
+			field.disabled = true;
+		}
+	</script>
 </head>
 
 <body style="flex-direction: column">
@@ -25,29 +31,45 @@
 		<div class="text-center mb-4">
 			<h1 class="h3 font-weight-normal">Redefinir Senha</h1>
 		</div>
-
-		<p class="text-center">
-			Insira abaixo sua nova senha.
+		
+		<p class="text-center" th:if="${!#strings.isEmpty(msgErro)}">
+			[[${msgErro}]]<br><br>
+			<a href="/">« Voltar ao início</a>
 		</p>
+		
+		<p class="text-center" th:if="${sucesso}">
+			Sua senha foi redefinida com sucesso.<br><br>
+			<a href="/entrar">« Acessar conta</a>
+		</p>
+		
+		<th:block th:if="${#strings.isEmpty(msgErro) && #strings.isEmpty(sucesso)}">
+			<p class="text-center">
+				Insira abaixo sua nova senha.
+			</p>
 			
-		<form method="post">
-			<div class="row mb-3">
-				<div class="col-6">
-					<div class="form-label-group">
-						<input type="password" id="inputSenha" name="senha" class="form-control" placeholder="Nova senha" required autofocus>
-						<label for="inputSenha">Nova senha</label>
+			<p class="text-center alert alert-danger" th:if="${!#strings.isEmpty(msgErroCampos)}">
+				[[${msgErroCampos}]]
+			</p>
+			
+			<form method="post" onsubmit="desativar(this.redefinir)">
+				<div class="row mb-3">
+					<div class="col-6">
+						<div class="form-label-group">
+							<input type="password" id="inputNovaSenha" name="novaSenha" class="form-control" placeholder="Nova senha" required autofocus>
+							<label for="inputNovaSenha">Nova senha</label>
+						</div>
+					</div>
+					<div class="col-6">
+						<div class="form-label-group">
+							<input type="password" id="inputNovaSenhaRepetida" name="novaSenhaRepetida" class="form-control" placeholder="Nova senha (repita)" required>
+							<label for="inputNovaSenhaRepetida">Nova senha (repita)</label>
+						</div>
 					</div>
 				</div>
-				<div class="col-6">
-					<div class="form-label-group">
-						<input type="password" id="inputSenhaRepetida" name="senhaRepetida" class="form-control" placeholder="Nova senha (repita)" required>
-						<label for="inputSenhaRepetida">Nova senha (repita)</label>
-					</div>
-				</div>
-			</div>
-
-			<button class="btn btn-lg btn-success btn-rounded btn-block" type="submit">Alterar senha</button>
-		</form>
+	
+				<button class="btn btn-lg btn-success btn-rounded btn-block" name="redefinir" type="submit">Redefinir senha</button>
+			</form>
+		</th:block>
 	</div>
 </body>
 </html>

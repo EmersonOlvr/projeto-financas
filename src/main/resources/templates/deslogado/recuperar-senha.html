@@ -30,6 +30,12 @@
 			height: 50px;
 		}
 	</style>
+	
+	<script type="text/javascript">
+		function desativar(field) {
+			field.disabled = true;
+		}
+	</script>
 </head>
 
 <body style="flex-direction: column">
@@ -44,8 +50,12 @@
 		<p class="text-center">
 			Insira o e-mail da sua conta abaixo. Em seguida, enviaremos para ele um link para redefinição de senha.
 		</p>
-
-		<form method="get" action="recuperar-senha/2">
+		
+		<p class="text-center alert alert-danger" th:if="${!#strings.isEmpty(msgErro)}">
+			[[${msgErro}]]
+		</p>
+		
+		<form method="post" onsubmit="desativar(this.recuperar)">
 			<div class="row">
 				<div class="col-8">
 					<div class="form-label-group">
@@ -54,7 +64,7 @@
 					</div>
 				</div>
 				<div class="col-4">
-					<input type="submit" id="btnRecuperar" class="btn btn-lg btn-success btn-block" value="Recuperar">
+					<input type="submit" id="btnRecuperar" class="btn btn-lg btn-success btn-block" name="recuperar" value="Recuperar">
 				</div>
 			</div>
 
