@@ -39,6 +39,10 @@ public class UsuarioService {
 		return this.usuarios.getOne(id);
 	}
 	
+	public List<Usuario> findAll() {
+		return usuarios.findAll();
+	}
+
 	public Optional<Usuario> findById(Integer id) {
 		return this.usuarios.findById(id);
 	}

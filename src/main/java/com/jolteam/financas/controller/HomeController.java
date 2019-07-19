@@ -45,4 +45,9 @@ public class HomeController {
 		return "redirect:/";
 	}
 	
+	@GetMapping("/acesso-negado")
+	public String viewAcessoNegado() {
+		return "acesso-negado";
+	}
+	
 }

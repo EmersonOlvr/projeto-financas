@@ -11,6 +11,8 @@ public class AutorizadorInterceptor implements HandlerInterceptor {
 
 	private final boolean CONTROLAR_ACESSO = true;
 	
+	private final String PAGINA_ACESSO_NEGADO = "/acesso-negado";
+	
 	private final String[] PAGINAS_ESTATICAS = {"/css/", "/js/", "/img/", "/fonts/", "/util/"};
 	private final String[] PAGINAS_DESLOGADO = {"/", "/cadastrar", "/entrar", "/teste",  
 												"/ativarConta", "/reenviar-link-ativacao", "/ativacao-conta", 
@@ -20,7 +22,9 @@ public class AutorizadorInterceptor implements HandlerInterceptor {
 											 "/receitas/categorias", "/receitas/categorias/excluir", 
 											 "/despesas/adicionar", "/despesas/historico", 
 											 "/despesas/categorias", "/despesas/categorias/excluir", 
-											 "/cofres", "/cofres/editar", "/cofres/cadastrar","/cofres/excluir"};
+											 "/cofres/listar", "/cofres/cadastrar", "/cofres/editar", 
+											 "/cofres/excluir", "/cofres/historico",
+											 PAGINA_ACESSO_NEGADO};
 	
 	@Override
 	public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler)
@@ -30,10 +34,25 @@ public class AutorizadorInterceptor implements HandlerInterceptor {
 		Usuario usuarioLogado = (Usuario) request.getSession().getAttribute("usuarioLogado");
 		boolean estaLogado = usuarioLogado != null ? true : false;
 		
+		System.out.println("URL Requisitada: "+urlRequisitada);
+		
 		if (!CONTROLAR_ACESSO) {
 			return true;
 		}
 		
+		if (urlRequisitada.contains("/admin/")) {
+			if (estaLogado) {
+				if (usuarioLogado.getPermissao() == 2) {
+					return true;
+				} else {
+					request.getRequestDispatcher(PAGINA_ACESSO_NEGADO).forward(request, response);
+					return false;
+				}
+			} else {
+				response.sendRedirect("/entrar?destino="+urlRequisitada);
+				return false;
+			}
+		}
 		for (String paginaLogado : PAGINAS_LOGADO) {
 			if (urlRequisitada.equals(paginaLogado)) {
 				if (estaLogado) {
@@ -43,10 +62,11 @@ public class AutorizadorInterceptor implements HandlerInterceptor {
 					//System.out.println("Negado (deslogado): "+urlRequisitada);
 					if (!urlRequisitada.equals("/home") && !urlRequisitada.equals("/sair")) {
 						response.sendRedirect("/entrar?destino="+urlRequisitada);
+						return false;
 					} else {
 						response.sendRedirect("/entrar");
+						return false;
 					}
-					return false;
 				}
 			}
 		}
