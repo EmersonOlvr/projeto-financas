@@ -9,7 +9,7 @@
 	<script src="/js/jquery-3.3.1.slim.min.js" type="text/javascript"></script>
 	<script src="/js/jquery.maskMoney.js" type="text/javascript"></script>
 	
-	<title>Usuários cadastrados</title>
+	<title>Usuários Cadastrados - Admin</title>
 	
 	<th:block th:insert="includes/include.html :: #head"></th:block>
 </head>
@@ -56,9 +56,9 @@
 											<td th:text="${usuario.nome}"></td>
 											<td th:text="${usuario.sobrenome}"></td>
 											<td th:text="${usuario.email}"></td>
-											<td th:text="${usuario.ativado == 1 ? 'Sim' : 'Não'}"></td>
+											<td th:text="${usuario.ativado ? 'Sim' : 'Não'}"></td>
 											<td th:text="${usuario.permissao}"></td>
-											<td th:text="${usuario.registroData}"></td>
+											<td th:text="${#temporals.format(usuario.registroData, 'dd/MM/yyyy HH:mm:ss')}"></td>
 											<td th:text="${usuario.registroIp}"></td>
 										</tr>
 										<tr th:if="${usuarios.size() == 0}" class="font-italic">

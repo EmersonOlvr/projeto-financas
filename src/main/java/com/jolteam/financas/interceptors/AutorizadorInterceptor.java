@@ -9,21 +9,16 @@ import com.jolteam.financas.model.Usuario;
 
 public class AutorizadorInterceptor implements HandlerInterceptor {
 
-	private final boolean CONTROLAR_ACESSO = false;
+	private final boolean CONTROLAR_ACESSO = true;
 	
 	private final String PAGINA_ACESSO_NEGADO = "/acesso-negado";
 	
 	private final String[] PAGINAS_ESTATICAS = {"/css/", "/js/", "/img/", "/fonts/", "/util/"};
-	private final String[] PAGINAS_DESLOGADO = {"/", "/cadastrar", "/entrar", "/teste",  
-												"/ativarConta", "/reenviar-link-ativacao", "/ativacao-conta", 
-												"/recuperar-senha", "/recuperar-senha/2", "/redefinir-senha"};
+	private final String[] PAGINAS_DESLOGADO = {"/", "/cadastrar", "/entrar", 
+												"/reenviar-link-ativacao", "/ativarConta", 
+												"/recuperar-senha", "redefinirSenha"};
 	private final String[] PAGINAS_LOGADO = {"/home", "/configuracoes", "/sair", "/movimentos", 
-											 "/receitas/adicionar", "/receitas/historico", 
-											 "/receitas/categorias", "/receitas/categorias/excluir", 
-											 "/despesas/adicionar", "/despesas/historico", 
-											 "/despesas/categorias", "/despesas/categorias/excluir", 
-											 "/cofres/listar", "/cofres/cadastrar", "/cofres/editar", 
-											 "/cofres/excluir", "/cofres/historico",
+											 "/receitas/", "/despesas/", "/cofres/", 
 											 PAGINA_ACESSO_NEGADO};
 	
 	@Override
@@ -33,8 +28,6 @@ public class AutorizadorInterceptor implements HandlerInterceptor {
 		String urlRequisitada = request.getServletPath();
 		Usuario usuarioLogado = (Usuario) request.getSession().getAttribute("usuarioLogado");
 		boolean estaLogado = usuarioLogado != null ? true : false;
-		
-		System.out.println("URL Requisitada: "+urlRequisitada);
 		
 		if (!CONTROLAR_ACESSO) {
 			return true;
@@ -54,7 +47,7 @@ public class AutorizadorInterceptor implements HandlerInterceptor {
 			}
 		}
 		for (String paginaLogado : PAGINAS_LOGADO) {
-			if (urlRequisitada.equals(paginaLogado)) {
+			if (urlRequisitada.contains(paginaLogado)) {
 				if (estaLogado) {
 					//System.out.println("Permitido (logado): "+urlRequisitada);
 					return true;

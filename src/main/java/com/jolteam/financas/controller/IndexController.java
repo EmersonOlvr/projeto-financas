@@ -115,7 +115,25 @@ public class IndexController {
 
 		return "deslogado/entrar";
 	}
-
+	
+	// ====== Ativação da Conta ====== //
+	@PostMapping("/reenviar-link-ativacao")
+	public String reenviarLinkAtivacao(HttpSession session, HttpServletRequest request, RedirectAttributes ra) {
+		Integer id = (Integer) session.getAttribute("usuarioId");
+		if (id != null) {
+			Optional<Usuario> usuario = this.usuarioService.findById(id);
+			if (usuario.isPresent() && !usuario.get().isAtivado()) {
+				this.usuarioService.enviarCodigoAtivacao(usuario.get(), request);
+				ra.addFlashAttribute("msgSucesso", "Link de ativação reenviado para o seu e-mail.");
+				return "redirect:/entrar";
+			} else {
+				return "redirect:/";
+			}
+		} else {
+			return "redirect:/";
+		}
+	}
+	
 	@GetMapping("/ativarConta")
 	public String ativarConta(@RequestParam(required = false) Integer id, @RequestParam(required = false) String codigo,
 			Model model, HttpSession session) 
@@ -144,24 +162,9 @@ public class IndexController {
 		
 		return "deslogado/ativacao-conta";
 	}
-	
-	@PostMapping("/reenviar-link-ativacao")
-	public String reenviarLinkAtivacao(HttpSession session, HttpServletRequest request, RedirectAttributes ra) {
-		Integer id = (Integer) session.getAttribute("usuarioId");
-		if (id != null) {
-			Optional<Usuario> usuario = this.usuarioService.findById(id);
-			if (usuario.isPresent() && !usuario.get().isAtivado()) {
-				this.usuarioService.enviarCodigoAtivacao(usuario.get(), request);
-				ra.addFlashAttribute("msgSucesso", "Link de ativação reenviado para o seu e-mail.");
-				return "redirect:/entrar";
-			} else {
-				return "redirect:/";
-			}
-		} else {
-			return "redirect:/";
-		}
-	}
 
+	
+	// ====== Recuperação de Senha ====== //
 	@GetMapping("/recuperar-senha")
 	public String viewRecuperarSenha() {
 		return "deslogado/recuperar-senha";
