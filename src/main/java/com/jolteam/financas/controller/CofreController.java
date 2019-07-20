@@ -11,6 +11,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
@@ -26,20 +27,30 @@ import com.jolteam.financas.service.LogService;
 import com.jolteam.financas.util.Util;
 
 @Controller
+@RequestMapping("/cofres")
 public class CofreController {
 	
 	@Autowired private CofreService cofreService;
 	@Autowired private LogService logService;
 	
-	@GetMapping("/cofres")
+	@GetMapping("/listar")
 	public ModelAndView viewCofres(HttpSession session) {
 		ModelAndView mv=new ModelAndView("cofres");
-		mv.addObject("cofre", new Cofre());
+		
 		mv.addObject("listaCofres", this.cofreService.findAllByUsuarioOrderByDataCriacaoDesc((Usuario)session.getAttribute("usuarioLogado")));
 		return mv;
 	}
 	
-	@PostMapping("/cofres")
+	
+	
+	@GetMapping("/cadastrar")
+	public ModelAndView viewcadastrarCofre() {
+		ModelAndView mv=new ModelAndView("adicionar-cofre");
+		mv.addObject("cofre", new Cofre());
+		return mv;
+	}
+	
+	@PostMapping("/cadastrar")
 	public ModelAndView cadastrarCofre(@ModelAttribute Cofre cofre, 
 			@RequestParam String str_valorInicial, @RequestParam String str_totalDesejado, 
 			HttpServletRequest request, HttpSession session) 
@@ -80,7 +91,7 @@ public class CofreController {
 		return this.viewCofres(session).addObject("msgSucessoAdd", "Cofre cadastrado com sucesso.");
 	}
 	
-	@GetMapping("/cofres/editar")
+	@GetMapping("/editar")
 	public ModelAndView viewEditarCofre(@RequestParam Integer id) {
 		ModelAndView mv = new ModelAndView("cofres-editar");
 		
@@ -89,34 +100,28 @@ public class CofreController {
 			
 			mv.addObject("cofre", cofre);
 		} catch (CofreException ce) {
-			mv.setViewName("redirect:/cofres");
+			mv.setViewName("redirect:/cofres/listar");
 		}
 		
 		return mv;
 	}
 	
-	@PostMapping("/cofres/editar")
+	@PostMapping("/editar")
 	public String editarCofre(@ModelAttribute Cofre cofre, 
-			@RequestParam("valor") String str_valorIncrDecr, @RequestParam String str_totalDesejado, 
+			@RequestParam String str_totalDesejado, 
 			RedirectAttributes ra) {
 		try {
 			Cofre cofreExistente = this.cofreService.findById(cofre.getId()).orElseThrow(() -> new Exception("Cofre inexistente."));
 			
-			BigDecimal valorIncrDecr;
+			
 			BigDecimal totalDesejado;
-			try {
-				valorIncrDecr = Util.getBigDecimalOf(str_valorIncrDecr);
-			} catch (BigDecimalInvalidoException e) {
-				ra.addFlashAttribute("msgErroEditar", "O valor para incrementar/decrementar informado é inválido.");
-				return "redirect:/cofres/editar?id="+cofre.getId();
-			}
+			
 			try {
 				totalDesejado = Util.getBigDecimalOf(str_totalDesejado);
 			} catch (BigDecimalInvalidoException e) {
 				ra.addFlashAttribute("msgErroEditar", "O valor total desejado informado é inválido.");
 				return "redirect:/cofres/editar?id="+cofre.getId();
 			}
-			
 			
 			cofre.setUsuario(cofreExistente.getUsuario());
 			cofre.setTotalDesejado(totalDesejado);
@@ -129,21 +134,32 @@ public class CofreController {
 				ra.addFlashAttribute("msgSucessoEditar", "Cofre atualizado com sucesso!");
 			}
 			
-			int result = valorIncrDecr.compareTo(new BigDecimal("0"));
-			if (result > 0) {
-				this.cofreService.adicionarTransacao(cofre, valorIncrDecr);
-				ra.addFlashAttribute("msgSucessoValor", "R$ "+Util.getStringOf(valorIncrDecr)+" adicionado(s) ao cofre.");
-			} else if (result < 0) {
-				this.cofreService.adicionarTransacao(cofre, valorIncrDecr);
-				ra.addFlashAttribute("msgSucessoValor", "R$ "+Util.getStringOf(valorIncrDecr.negate())+" retirado(s) do cofre.");
-			}
+			
 		}  catch (CofreException ce) {
 			ra.addFlashAttribute("msgErroEditar", ce.getMessage());
 		} catch (Exception e) {
-			return "redirect:/cofres";
+			return "redirect:/cofres/listar";
 		}
 		
 		return "redirect:/cofres/editar?id="+cofre.getId();
+	}
+	
+	@GetMapping("/movimentar")
+	public ModelAndView viewMovimentos(HttpSession session) {
+		ModelAndView mv=new ModelAndView("cofre-movimento");
+		mv.addObject("listaCofres", this.cofreService.findAllByUsuarioOrderByDataCriacaoDesc((Usuario)session.getAttribute("usuarioLogado")));
+		return mv;
+	} 
+	
+	@PostMapping("/movimentar")
+	public ModelAndView cofreMovimentos(@RequestParam String str_valorIncrDecr, RedirectAttributes ra,HttpSession session) {
+	
+		BigDecimal valorIncrDecr;
+		///Converter e setar pra salvar
+		
+		
+		return this.viewMovimentos(session).addObject("msgSucessoMovimento", "Valor incrementado/decrementado com sucesso.");
+		
 	}
 	
 	@GetMapping("/cofres/excluir")
@@ -154,11 +170,11 @@ public class CofreController {
 			
 			this.cofreService.delete(cofre);
 		} catch (Exception e) {
-			return "redirect:/cofres";
+			return "redirect:/cofres/listar";
 		}
 		
 		ra.addFlashAttribute("msgSucessoExcluir", "Cofre excluído com sucesso!");
-		return "redirect:/cofres";
+		return "redirect:/cofres/listar";
 	}
 	
 	@GetMapping("/testee")

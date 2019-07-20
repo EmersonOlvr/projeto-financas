@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Optional;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 
 import org.apache.logging.log4j.util.Strings;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -55,9 +56,61 @@ public class UsuarioService {
 	public boolean existsByEmail(String email) {
 		return usuarios.existsByEmail(email);
 	}
-
+	
 	public String criptografarSenha(String senha) {
 		return BCrypt.hashpw(senha, BCrypt.gensalt(complexidadeSenha));
+	}
+	public void validarAtualizarUsuario(Usuario usuario) throws UsuarioInvalidoException {
+		
+		// ==== Validação do Nome ==== //
+		if (Strings.isBlank(usuario.getNome())) {
+			throw new UsuarioInvalidoException("Insira um nome.");
+		}
+		if (!usuario.getNome().matches("^[A-zÀ-ú ]*$")) {
+			throw new UsuarioInvalidoException("Nome inválido: somente letras e espaços são permitidos.");
+		}
+		if (usuario.getNome().length() < 2 || usuario.getNome().length() > 50) {
+			throw new UsuarioInvalidoException("Nome inválido: mínimo 2 e máximo de 50 letras.");
+		}
+
+		// ==== Validação do Sobrenome ==== //
+		if (Strings.isBlank(usuario.getSobrenome())) {
+			throw new UsuarioInvalidoException("Insira um sobrenome.");
+		}
+		if (!usuario.getSobrenome().matches("^[A-zÀ-ú ]*$")) {
+			throw new UsuarioInvalidoException("Sobrenome inválido: somente letras e espaços são permitidos.");
+		}
+		if (usuario.getSobrenome().length() < 2 || usuario.getSobrenome().length() > 50) {
+			throw new UsuarioInvalidoException("Sobrenome inválido: mínimo 2 e máximo de 50 letras.");
+		}
+
+		// ==== Validação do E-mail ==== //
+		if (Strings.isBlank(usuario.getEmail())) {
+			throw new UsuarioInvalidoException("Insira um e-mail.");
+		}
+		if (!usuario.getEmail().matches("^[\\w-\\+]+(\\.[\\w]+)*@[\\w-]+(\\.[\\w]+)*(\\.[A-z]{2,})$")) {
+			throw new UsuarioInvalidoException("E-mail em formato inválido.");
+		}
+		if (usuario.getEmail().length() > 50) {
+			throw new UsuarioInvalidoException("E-mail inválido: máximo de 50 caracteres.");
+		}
+		
+				
+				
+		// ==== Tratamento dos Dados ==== //
+		// remove os espaços do começo e do final do nome e do sobrenome
+		usuario.setNome(usuario.getNome().trim());
+		usuario.setSobrenome(usuario.getSobrenome().trim());
+
+		// remove os espaços duplicados do nome e do sobrenome
+		// \s é uma expressão regular (regex) que corresponde a espaços, tabs e quebras
+		// de linhas
+		// o + corresponde a 1 ou mais caracteres da expressão precedente
+		usuario.setNome(usuario.getNome().replaceAll("\\s+", " "));
+		usuario.setSobrenome(usuario.getSobrenome().replaceAll("\\s+", " "));
+
+		// coloca o email em letras minúsculas
+		usuario.setEmail(usuario.getEmail().toLowerCase());
 	}
 	
 	public void validar(Usuario usuario) throws UsuarioInvalidoException {
