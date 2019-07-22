@@ -27,7 +27,7 @@ public class HomeController {
 	@GetMapping("/configuracoes")
 	public ModelAndView viewConfiguracoes(HttpSession session) {
 		ModelAndView mv=new ModelAndView("configuracoes");
-		mv.addObject("usuario", session.getAttribute("usuarioLogado"));
+		mv.addObject("usuario", (Usuario) session.getAttribute("usuarioLogado"));
 		return mv;
 	}
 
