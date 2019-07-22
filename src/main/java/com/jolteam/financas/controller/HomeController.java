@@ -16,69 +16,63 @@ import com.jolteam.financas.service.UsuarioService;
 
 @Controller
 public class HomeController {
-	
-	@Autowired private UsuarioService usuarioService;
-	
+
+	@Autowired
+	private UsuarioService usuarioService;
+
 	@GetMapping("/home")
 	public String viewHome() {
 		return "home";
 	}
-	
+
+	// ====== Configurações ====== //
 	@GetMapping("/configuracoes")
 	public ModelAndView viewConfiguracoes(HttpSession session) {
-		ModelAndView mv=new ModelAndView("configuracoes");
+		ModelAndView mv = new ModelAndView("configuracoes");
 		mv.addObject("usuario", (Usuario) session.getAttribute("usuarioLogado"));
 		return mv;
 	}
 
-	@PostMapping("/configuracoes")
-	public ModelAndView atualizarUsuario(@ModelAttribute Usuario usuario,RedirectAttributes ra,HttpSession session) {
-		ModelAndView mv=new ModelAndView("configuracoes");
-		mv.addObject("usuario",usuario);
+	@PostMapping("/configuracoes/perfil")
+	public String atualizarUsuario(@ModelAttribute Usuario usuario, RedirectAttributes ra, HttpSession session) {
+		ModelAndView mv = new ModelAndView("configuracoes");
+		mv.addObject("usuario", usuario);
+		
 		try {
-			Usuario usuarioExiste= (Usuario) session.getAttribute("usuarioLogado");
-			
-				//Validar campos atualizados
-				try {
-					
-				this.usuarioService.validarAtualizarUsuario(usuario);	
-					
-				if(!usuarioExiste.getNome().contentEquals(usuario.getNome())) {
-					usuarioExiste.setNome(usuario.getNome());
-				}
-				if(!usuarioExiste.getSobrenome().contentEquals(usuario.getSobrenome())) {
-					usuarioExiste.setSobrenome(usuario.getSobrenome());
-				}
-				if(usuarioExiste.getEmail().contentEquals(usuario.getEmail())) {
-					usuarioExiste.setEmail(usuario.getEmail());
-				}
-				
-				//salva usuario com valores atualizados
-				this.usuarioService.save(usuarioExiste);
-				
-				}catch(UsuarioInvalidoException ui){
-					return this.viewConfiguracoes(session).addObject("msgErroConfig", ui.getMessage());
-				}
+			Usuario usuarioLogado = (Usuario) session.getAttribute("usuarioLogado");
+
+			// Validar campos atualizados
+			try {
+				this.usuarioService.atualizarUsuario(usuarioLogado, usuario);
+
+				// salva usuario com valores atualizados
+				this.usuarioService.save(usuarioLogado);
+			} catch (UsuarioInvalidoException ui) {
+				ra.addFlashAttribute("msgErroConfig", ui.getMessage());
+				return "redirect:/configuracoes";
+			}
 		} catch (Exception e) {
-			return this.viewConfiguracoes(session).addObject("msgErroConfig", e.getMessage());
+			ra.addFlashAttribute("msgErroConfig", e.getMessage());
+			return "redirect:/configuracoes";
 		}
-		return this.viewConfiguracoes(session).addObject("msgSucessoConfig", "Configurações salvas!");
+		ra.addFlashAttribute("msgSucessoConfig", "Configurações salvas!");
+		return "redirect:/configuracoes";
 	}
-	
+
 	@GetMapping("/movimentos")
 	public String viewMovimentos() {
 		return "movimentos";
 	}
-	
+
 	@GetMapping("/sair")
 	public String sair(HttpSession session) {
 		session.invalidate();
 		return "redirect:/";
 	}
-	
+
 	@GetMapping("/acesso-negado")
 	public String viewAcessoNegado() {
 		return "acesso-negado";
 	}
-	
+
 }
