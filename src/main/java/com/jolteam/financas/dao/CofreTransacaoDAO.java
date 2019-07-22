@@ -11,9 +11,9 @@ import com.jolteam.financas.model.CofreTransacao;
 @Repository
 public interface CofreTransacaoDAO extends JpaRepository<CofreTransacao, Integer> {
 	
-	public List<CofreTransacao> findByid(Integer id);
-	public List<CofreTransacao> findAllByCofre(Cofre cofre);
+	List<CofreTransacao> findByid(Integer id);
+	List<CofreTransacao> findAllByCofre(Cofre cofre);
 	
-	public void deleteAllByCofre(Cofre cofre);
+	void deleteAllByCofre(Cofre cofre);
 	
 }

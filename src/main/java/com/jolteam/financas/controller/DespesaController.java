@@ -10,6 +10,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
@@ -26,13 +27,14 @@ import com.jolteam.financas.service.DespesaService;
 import com.jolteam.financas.service.LogService;
 
 @Controller
+@RequestMapping("/despesas")
 public class DespesaController {
 	
 	@Autowired private DespesaService despesaService;
 	@Autowired private LogService logService;
 	@Autowired private CategoriaDAO categorias;
 	
-	@GetMapping("/despesas/adicionar")
+	@GetMapping("/adicionar")
 	public ModelAndView viewDespesaAdicionar(HttpSession session) {
 			ModelAndView mv=new ModelAndView("despesas-adicionar");
 			mv.addObject("despesa", new Despesa());
@@ -40,7 +42,7 @@ public class DespesaController {
 			return mv;
 	}
 	
-	@PostMapping("/despesas/adicionar")
+	@PostMapping("/adicionar")
 	public ModelAndView adicionarDespesa(@ModelAttribute Despesa despesa,HttpServletRequest request, HttpSession session) {
 		despesa.setUsuario((Usuario) session.getAttribute("usuarioLogado"));
 		
@@ -50,16 +52,13 @@ public class DespesaController {
 			// salva um log de sucesso no banco
 			this.logService.save(new Log(despesa.getUsuario(), TiposLogs.CADASTRO_DESPESA, LocalDateTime.now(), request.getRemoteAddr()));
 		} catch (DespesaException de) {
-			// salva um log de erro no banco
-			this.logService.save(new Log(despesa.getUsuario(), TiposLogs.ERRO_CADASTRO_DESPESA, LocalDateTime.now(), request.getRemoteAddr()));
-			
 			return this.viewDespesaAdicionar(session).addObject("msgErroAdd", de.getMessage());
 		}
 		
 		return this.viewDespesaAdicionar(session).addObject("msgSucessoAdd", "Despesa salva com sucesso.");
 	}
 	
-	@GetMapping("/despesas/categorias")
+	@GetMapping("/categorias")
 	public ModelAndView viewCategoriasDespesas(HttpSession session) {
 		ModelAndView mv= new ModelAndView("despesas-categorias");
 		mv.addObject("catDespesa", new Categoria());
@@ -67,7 +66,7 @@ public class DespesaController {
 		return mv;
 	}
 	
-	@PostMapping("/despesas/categorias")
+	@PostMapping("/categorias")
 	public ModelAndView adicionarCatDespesa(@ModelAttribute Categoria catDespesa,HttpServletRequest request, HttpSession session) {
 		catDespesa.setUsuario((Usuario) session.getAttribute("usuarioLogado"));
 		
@@ -76,15 +75,13 @@ public class DespesaController {
 			
 			this.logService.save(new Log(catDespesa.getUsuario(),TiposLogs.CADASTRO_CATEGORIA_DESPESA,LocalDateTime.now(),request.getRemoteAddr()));
 		} catch (DespesaException de) {
-			this.logService.save(new Log(catDespesa.getUsuario(), TiposLogs.ERRO_CADASTRO_CATEGORIA_DESPESA, LocalDateTime.now(), request.getRemoteAddr()));
-			
 			return this.viewCategoriasDespesas(session).addObject("msgErroAdd", de.getMessage());
 		}
 		
 		return this.viewCategoriasDespesas(session).addObject("msgSucessoAdd", "Categoria salva com sucesso.");
 	}
 	
-	@GetMapping("/despesas/categorias/excluir")
+	@GetMapping("/categorias/excluir")
 	public String excluirCatDespesa(@RequestParam Integer id, HttpSession session, RedirectAttributes ra) {
 		try {
 			Usuario usuario = (Usuario) session.getAttribute("usuarioLogado");
@@ -104,7 +101,7 @@ public class DespesaController {
 		return "redirect:/despesas/categorias";
 	}
 	
-	@GetMapping("/despesas/historico")
+	@GetMapping("/historico")
 	public String viewHistoricoDespesas() {
 		return "despesas-historico";
 	}

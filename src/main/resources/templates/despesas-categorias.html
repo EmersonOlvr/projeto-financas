@@ -44,23 +44,25 @@
 									<span aria-hidden="true">&times;</span>
 								</button>
 							</div>
-							<table class="mT-30 table table-hover table-bordered">
-								<thead>
-									<tr>
-										<th scope="col">Nome</th>
-										<th scope="col">Ações</th>
-									</tr>
-								</thead>
-								<tbody>
-									<tr th:if="${listaCatDespesa.size() > 0}" th:each="catDesp : ${listaCatDespesa}">
-										<td th:text="${catDesp.nome}" ></td>
-										<td><a th:href="@{/despesas/categorias/excluir(id=${catDesp.id})}" class="btn btn-sm btn-outline-danger">Excluir</a></td>
-									</tr>
-									<tr th:if="${listaCatDespesa.size() == 0}" class="font-italic">
-										<td colspan="2">Nenhuma categoria encontrada</td>
-									</tr>
-								</tbody>
-							</table>
+							<div class="table-responsive">
+								<table class="mT-30 table table-hover table-bordered">
+									<thead>
+										<tr>
+											<th scope="col">Nome</th>
+											<th scope="col">Ações</th>
+										</tr>
+									</thead>
+									<tbody>
+										<tr th:if="${listaCatDespesa.size() > 0}" th:each="catDesp : ${listaCatDespesa}">
+											<td th:text="${catDesp.nome}" ></td>
+											<td><a th:href="@{/despesas/categorias/excluir(id=${catDesp.id})}" class="btn btn-sm btn-outline-danger">Excluir</a></td>
+										</tr>
+										<tr th:if="${listaCatDespesa.size() == 0}" class="font-italic">
+											<td colspan="2">Nenhuma categoria encontrada</td>
+										</tr>
+									</tbody>
+								</table>
+							</div>
 						</div>
 					</div>
 					<div class="col-md-6 mb-3">

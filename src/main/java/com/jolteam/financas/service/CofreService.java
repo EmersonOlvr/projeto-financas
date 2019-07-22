@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 
 import com.jolteam.financas.dao.CofreDAO;
 import com.jolteam.financas.dao.CofreTransacaoDAO;
+import com.jolteam.financas.enums.TiposTransacoes;
 import com.jolteam.financas.exceptions.CofreException;
 import com.jolteam.financas.model.Cofre;
 import com.jolteam.financas.model.CofreTransacao;
@@ -31,14 +32,14 @@ public class CofreService {
 		}
 		return cofre;
 	}
-	public Optional<Cofre> findByIdAndUsuario(Integer id,Usuario usuario){
+	public Optional<Cofre> findByIdAndUsuario(Integer id,Usuario usuario) {
 		Optional<Cofre> cofre = this.cofres.findByIdAndUsuario(id, usuario);
 		if (cofre.isPresent()) {
 			cofre.get().setTotalAcumulado(this.totalAcumuladoDe(cofre.get()));
 		}
 		return cofre;
 	}
-	public List<Cofre> findAllByUsuarioOrderByDataCriacaoDesc(Usuario usuario) {
+	public List<Cofre> listarPorUsuario(Usuario usuario) {
 		List<Cofre> cofres = this.cofres.findAllByUsuarioOrderByDataCriacaoDesc(usuario);
 		
 		for (Cofre cofre : cofres) {
@@ -84,9 +85,12 @@ public class CofreService {
 			cofre.setDataCriacao(LocalDateTime.now());
 		}
 		
-		// Validação do valor
-		if (cofre.getTotalDesejado() == null || cofre.getTotalDesejado().compareTo(new BigDecimal("0.05"))== -1) {
-			throw new CofreException("O total desejado deve ser igual ou maior que 5 centavos (R$ 0,05).");
+		// se o valor desejado for nulo ou igual à 0
+		if (cofre.getTotalDesejado() == null || cofre.getTotalDesejado().compareTo(new BigDecimal("0")) == 0) {
+			throw new CofreException("Informe o total desejado.");
+		}
+		if (cofre.getTotalDesejado().compareTo(new BigDecimal("0.05")) == -1) {
+			throw new CofreException("O total desejado deve ser igual ou maior que R$ 0,05.");
 		}
 		
 		return this.cofres.save(cofre);
@@ -102,12 +106,12 @@ public class CofreService {
 		this.cofres.delete(cofre);
 	}
 	
-	public void adicionarTransacao(Cofre cofre, BigDecimal valor) {
+	public void adicionarTransacao(Cofre cofre, BigDecimal valor, TiposTransacoes tipoTransacao) {
 		if (cofre != null && cofre.getId() != null) {
 			if (valor != null) {
 				int result = valor.compareTo(new BigDecimal("0"));
 				if (result != 0) {
-					this.cofreTransacao.save(new CofreTransacao(cofre, valor, LocalDateTime.now()));
+					this.cofreTransacao.save(new CofreTransacao(cofre, valor, LocalDateTime.now(), tipoTransacao));
 				}
 			}
 		}

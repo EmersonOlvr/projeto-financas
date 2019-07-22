@@ -10,6 +10,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
@@ -26,6 +27,7 @@ import com.jolteam.financas.service.LogService;
 import com.jolteam.financas.service.ReceitaService;
 
 @Controller
+@RequestMapping("/receitas")
 public class ReceitaController {
 	
 	@Autowired private LogService logService;
@@ -33,7 +35,7 @@ public class ReceitaController {
 	
 	@Autowired private CategoriaDAO categorias;
 	
-	@GetMapping("/receitas/adicionar")
+	@GetMapping("/adicionar")
 	public ModelAndView viewAdicionarReceita(HttpSession session) {
 		ModelAndView mv = new ModelAndView("receitas-adicionar");
 		mv.addObject("receita", new Receita());
@@ -41,7 +43,7 @@ public class ReceitaController {
 		return mv;
 	}
 	
-	@PostMapping("/receitas/adicionar")
+	@PostMapping("/adicionar")
 	public ModelAndView adicionarReceita(@ModelAttribute Receita receita, HttpServletRequest request, HttpSession session) {
 		receita.setUsuario((Usuario) session.getAttribute("usuarioLogado"));
 		
@@ -55,20 +57,13 @@ public class ReceitaController {
 				System.out.println(e.getMessage());
 			}
 		} catch (ReceitaException re) {
-			try {
-				// salva um log de erro no banco
-				this.logService.save(new Log(receita.getUsuario(), TiposLogs.ERRO_CADASTRO_RECEITA, LocalDateTime.now(), request.getRemoteAddr()));
-			} catch (Exception e) {
-				System.out.println(e.getMessage());
-			}
-			
 			return this.viewAdicionarReceita(session).addObject("msgErroAdd", re.getMessage());
 		}
 		
 		return this.viewAdicionarReceita(session).addObject("msgSucessoAdd", "Receita salva com sucesso.");
 	}
 	
-	@GetMapping("/receitas/categorias")
+	@GetMapping("/categorias")
 	public ModelAndView viewCategoriasReceitas(HttpSession session) {
 		ModelAndView mv= new ModelAndView("receitas-categorias");
 		mv.addObject("catReceita", new Categoria());
@@ -76,7 +71,7 @@ public class ReceitaController {
 		return mv;
 	}
 	
-	@PostMapping("/receitas/categorias")
+	@PostMapping("/categorias")
 	public ModelAndView adicionarCatReceita(@ModelAttribute Categoria catReceita, HttpServletRequest request, HttpSession session) {
 		catReceita.setUsuario((Usuario) session.getAttribute("usuarioLogado"));
 		
@@ -85,15 +80,13 @@ public class ReceitaController {
 			
 			this.logService.save(new Log(catReceita.getUsuario(),TiposLogs.CADASTRO_CATEGORIA_RECEITA,LocalDateTime.now(),request.getRemoteAddr()));
 		} catch (ReceitaException de) {
-			this.logService.save(new Log(catReceita.getUsuario(), TiposLogs.ERRO_CADASTRO_CATEGORIA_RECEITA, LocalDateTime.now(), request.getRemoteAddr()));
-			
 			return this.viewCategoriasReceitas(session).addObject("msgErroAdd", de.getMessage());
 		}
 		
 		return this.viewCategoriasReceitas(session).addObject("msgSucessoAdd", "Categoria salva com sucesso.");
 	}
 	
-	@GetMapping("/receitas/categorias/excluir")
+	@GetMapping("/categorias/excluir")
 	public String excluirCatReceita(@RequestParam Integer id, HttpSession session, RedirectAttributes ra) {
 		try {
 			Usuario usuario = (Usuario) session.getAttribute("usuarioLogado");
@@ -113,7 +106,7 @@ public class ReceitaController {
 		return "redirect:/receitas/categorias";
 	}
 	
-	@GetMapping("/receitas/historico")
+	@GetMapping("/historico")
 	public String viewHistoricoReceitas() {
 		return "receitas-historico";
 	}

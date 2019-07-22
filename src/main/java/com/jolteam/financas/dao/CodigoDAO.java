@@ -12,7 +12,7 @@ import com.jolteam.financas.model.Usuario;
 @Repository
 public interface CodigoDAO extends JpaRepository<Codigo, Integer> {
 
-	public Optional<Codigo> findByUsuario(Usuario usuario);
-	public Optional<Codigo> findByUsuarioAndTipo(Usuario usuario, TiposCodigos tipo);
+	Optional<Codigo> findByUsuario(Usuario usuario);
+	Optional<Codigo> findByUsuarioAndTipo(Usuario usuario, TiposCodigos tipo);
 	
 }

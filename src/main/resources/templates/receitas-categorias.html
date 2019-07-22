@@ -27,79 +27,83 @@
 			<th:block th:insert="includes/include.html :: menuSuperior"></th:block>
 			
 			<main class="main-content bgc-grey-100">
-				<h4 class="c-grey-900">Categorias de Receitas</h4>
-				<div class="row">
-					<div class="col-md-6 mb-3">
-						<div class="bgc-white bd bdrs-3 p-20">
-							<h6 class="c-grey-900">Todas as Categorias</h6>
-							<div th:if="${!#strings.isEmpty(msgErroExcluir)}" class="alert alert-danger alert-dismissible fade show" role="alert">
-								[[${msgErroExcluir}]]
-								<button type="button" class="close" data-dismiss="alert" aria-label="Close">
-									<span aria-hidden="true">&times;</span>
-								</button>
+				<div id="mainContent">
+					<h4 class="c-grey-900">Categorias de Receitas</h4>
+					<div class="row">
+						<div class="col-md-6 mb-3">
+							<div class="bgc-white bd bdrs-3 p-20">
+								<h6 class="c-grey-900">Todas as Categorias</h6>
+								<div th:if="${!#strings.isEmpty(msgErroExcluir)}" class="alert alert-danger alert-dismissible fade show" role="alert">
+									[[${msgErroExcluir}]]
+									<button type="button" class="close" data-dismiss="alert" aria-label="Close">
+										<span aria-hidden="true">&times;</span>
+									</button>
+								</div>
+								<div th:if="${!#strings.isEmpty(msgSucessoExcluir)}" class="alert alert-success alert-dismissible fade show" role="alert">
+									[[${msgSucessoExcluir}]]
+									<button type="button" class="close" data-dismiss="alert" aria-label="Close">
+										<span aria-hidden="true">&times;</span>
+									</button>
+								</div>
+								<div class="table-responsive">
+									<table class="mT-30 table table-hover table-bordered">
+										<thead>
+											<tr>
+												<th scope="col">Nome</th>
+												<th scope="col">Ações</th>
+											</tr>
+										</thead>
+										<tbody>
+											<tr th:if="${listaCatReceita.size() > 0}" th:each="catReceita : ${listaCatReceita}">
+												<td th:text="${catReceita.nome}" ></td>
+												<td><a th:href="@{/receitas/categorias/excluir(id=${catReceita.id})}" class="btn btn-sm btn-outline-danger">Excluir</a></td>
+											</tr>
+											<tr th:if="${listaCatReceita.size() == 0}" class="font-italic">
+												<td colspan="2">Nenhuma categoria encontrada</td>
+											</tr>
+										</tbody>
+									</table>
+								</div>
 							</div>
-							<div th:if="${!#strings.isEmpty(msgSucessoExcluir)}" class="alert alert-success alert-dismissible fade show" role="alert">
-								[[${msgSucessoExcluir}]]
-								<button type="button" class="close" data-dismiss="alert" aria-label="Close">
-									<span aria-hidden="true">&times;</span>
-								</button>
-							</div>
-							<table class="mT-30 table table-hover table-bordered">
-								<thead>
-									<tr>
-										<th scope="col">Nome</th>
-										<th scope="col">Ações</th>
-									</tr>
-								</thead>
-								<tbody>
-									<tr th:if="${listaCatReceita.size() > 0}" th:each="catReceita : ${listaCatReceita}">
-										<td th:text="${catReceita.nome}" ></td>
-										<td><a th:href="@{/receitas/categorias/excluir(id=${catReceita.id})}" class="btn btn-sm btn-outline-danger">Excluir</a></td>
-									</tr>
-									<tr th:if="${listaCatReceita.size() == 0}" class="font-italic">
-										<td colspan="2">Nenhuma categoria encontrada</td>
-									</tr>
-								</tbody>
-							</table>
 						</div>
-					</div>
-					<div class="col-md-6 mb-3">
-						<div class="bgc-white bd bdrs-3 p-20">
-							<h6 class="c-grey-900 mB-20">Adicionar Categoria</h6>
-							<div class="mT-30">
-								<div th:if="${!#strings.isEmpty(msgSucessoAdd)}" class="alert alert-success alert-dismissible fade show" role="alert">
-									[[${msgSucessoAdd}]]
-									<button type="button" class="close" data-dismiss="alert" aria-label="Close">
-										<span aria-hidden="true">&times;</span>
-									</button>
-								</div>
-								<div th:if="${!#strings.isEmpty(msgErroAdd)}" class="alert alert-danger alert-dismissible fade show" role="alert">
-									[[${msgErroAdd}]]
-									<button type="button" class="close" data-dismiss="alert" aria-label="Close">
-										<span aria-hidden="true">&times;</span>
-									</button>
-								</div>
-							
-								<form id="needs-validation" novalidate th:object="${catReceita}" method="post">
-									<label for="validationCustom01">Nome da Categoria</label>
-									<div class="input-group mb-3">
-										<input type="text" class="form-control" th:field="*{nome}" id="validationCustom01" placeholder="Nome da Categoria..." aria-label="Nome da Categoria..." required>
-										<div class="input-group-append">
-											<button class="btn btn-outline-primary" type="submit">Adicionar</button>
-										</div>
+						<div class="col-md-6 mb-3">
+							<div class="bgc-white bd bdrs-3 p-20">
+								<h6 class="c-grey-900 mB-20">Adicionar Categoria</h6>
+								<div class="mT-30">
+									<div th:if="${!#strings.isEmpty(msgSucessoAdd)}" class="alert alert-success alert-dismissible fade show" role="alert">
+										[[${msgSucessoAdd}]]
+										<button type="button" class="close" data-dismiss="alert" aria-label="Close">
+											<span aria-hidden="true">&times;</span>
+										</button>
 									</div>
-								</form>
-								<script>
-									!function() {
-										"use strict";
-										window.addEventListener("load", function() {
-											var e=document.getElementById("needs-validation");
-											e.addEventListener("submit", function(t) {
-												!1===e.checkValidity() && (t.preventDefault(), t.stopPropagation()), e.classList.add("was-validated")
+									<div th:if="${!#strings.isEmpty(msgErroAdd)}" class="alert alert-danger alert-dismissible fade show" role="alert">
+										[[${msgErroAdd}]]
+										<button type="button" class="close" data-dismiss="alert" aria-label="Close">
+											<span aria-hidden="true">&times;</span>
+										</button>
+									</div>
+								
+									<form id="needs-validation" novalidate th:object="${catReceita}" method="post">
+										<label for="validationCustom01">Nome da Categoria</label>
+										<div class="input-group mb-3">
+											<input type="text" class="form-control" th:field="*{nome}" id="validationCustom01" placeholder="Nome da Categoria..." aria-label="Nome da Categoria..." required>
+											<div class="input-group-append">
+												<button class="btn btn-outline-primary" type="submit">Adicionar</button>
+											</div>
+										</div>
+									</form>
+									<script>
+										!function() {
+											"use strict";
+											window.addEventListener("load", function() {
+												var e=document.getElementById("needs-validation");
+												e.addEventListener("submit", function(t) {
+													!1===e.checkValidity() && (t.preventDefault(), t.stopPropagation()), e.classList.add("was-validated")
+												}, !1)
 											}, !1)
-										}, !1)
-									}()
-								</script>
+										}()
+									</script>
+								</div>
 							</div>
 						</div>
 					</div>

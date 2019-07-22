@@ -30,69 +30,73 @@
 		<div class="page-container">
 			<th:block th:insert="includes/include.html :: menuSuperior"></th:block>
 
+
+
 			<main class="main-content bgc-grey-100">
-			<div id="mainContent">
-				
-				<div class="row gap-20 masonry pos-r">
-					<div class="masonry-sizer col-md-6"></div>
-					<div class="masonry-item col-md-12">
-						<div class="bgc-white p-20 bd">
-							<h6 class="c-grey-900">Seus cofres</h6>
-							<div class="table-responsive mT-30">
-								<div th:if="${!#strings.isEmpty(msgErroExcluir)}"
-									class="alert alert-danger alert-dismissible fade show"
-									role="alert">
-									[[${msgErroExcluir}]]
-									<button type="button" class="close" data-dismiss="alert"
-										aria-label="Close">
-										<span aria-hidden="true">&times;</span>
-									</button>
+				<div id="mainContent">
+					<div class="row gap-20 masonry pos-r">
+						<div class="masonry-sizer col-md-6"></div>
+						<div class="masonry-item col-md-12">
+							<div class="bgc-white p-20 bd">
+								<h6 class="c-grey-900">Seus Cofres</h6>
+								<div class="table-responsive mT-30">
+									<div th:if="${!#strings.isEmpty(msgErroExcluir)}"
+										class="alert alert-danger alert-dismissible fade show"
+										role="alert">
+										[[${msgErroExcluir}]]
+										<button type="button" class="close" data-dismiss="alert"
+											aria-label="Close">
+											<span aria-hidden="true">&times;</span>
+										</button>
+									</div>
+									<div th:if="${!#strings.isEmpty(msgSucessoExcluir)}"
+										class="alert alert-success alert-dismissible fade show"
+										role="alert">
+										[[${msgSucessoExcluir}]]
+										<button type="button" class="close" data-dismiss="alert"
+											aria-label="Close">
+											<span aria-hidden="true">&times;</span>
+										</button>
+									</div>
+									<div class="table-responsive">
+										<table class="table table-hover table-bordered">
+											<thead>
+												<tr>
+													<th>Finalidade</th>
+													<th>Total acumulado</th>
+													<th>Total desejado</th>
+													<th>Data de Criação</th>
+													<th scope="col" colspan="2">Ações</th>
+												</tr>
+											</thead>
+											<tbody>
+												<tr th:if="${listaCofres.size() > 0}" th:each="cofre: ${listaCofres}">
+													<td th:text="${cofre.finalidade}"></td>
+													<td th:text="|R$ ${#numbers.formatDecimal(cofre.totalAcumulado, 1, 'POINT', 2, 'COMMA')}|"></td>
+													<td th:text="|R$ ${#numbers.formatDecimal(cofre.totalDesejado, 1, 'POINT', 2, 'COMMA')}|"></td>
+													<td th:text="${#temporals.format(cofre.dataCriacao, 'dd/MM/yyyy HH:mm:ss')}"></td>
+													<td>
+														<a th:href="@{/cofres/editar(id=${cofre.id})}"
+														class="btn btn-sm btn-outline-primary">Editar</a>
+													</td>
+													<td>
+														<a th:href="@{/cofres/excluir(id=${cofre.id})}"
+														class="btn btn-sm btn-outline-danger">Excluir</a>
+													</td>
+												</tr>
+												<tr th:if="${listaCofres.size() == 0}" class="font-italic">
+													<td colspan="5">Nenhum cofre encontrado</td>
+												</tr>
+											</tbody>
+										</table>
+									</div>
 								</div>
-								<div th:if="${!#strings.isEmpty(msgSucessoExcluir)}"
-									class="alert alert-success alert-dismissible fade show"
-									role="alert">
-									[[${msgSucessoExcluir}]]
-									<button type="button" class="close" data-dismiss="alert"
-										aria-label="Close">
-										<span aria-hidden="true">&times;</span>
-									</button>
-								</div>
-								<table class="table table-hover table-bordered">
-									<thead>
-										<tr>
-											<th>Finalidade</th>
-											<th>Total acumulado</th>
-											<th>Total desejado</th>
-											<th>Data de Criação</th>
-											<th scope="col" colspan="2">Ações</th>
-										</tr>
-									</thead>
-									<tbody>
-										<tr th:if="${listaCofres.size() > 0}" th:each="cofre: ${listaCofres}">
-											<td th:text="${cofre.finalidade}"></td>
-											<td th:text="|R$ ${#numbers.formatDecimal(cofre.totalAcumulado, 1, 'POINT', 2, 'COMMA')}|"></td>
-											<td th:text="|R$ ${#numbers.formatDecimal(cofre.totalDesejado, 1, 'POINT', 2, 'COMMA')}|"></td>
-											<td th:text="${#temporals.format(cofre.dataCriacao, 'dd/MM/yyyy')}"></td>
-											<td>
-												<a th:href="@{/cofres/editar(id=${cofre.id})}"
-												class="btn btn-sm btn-outline-primary">Editar</a>
-											</td>
-											<td>
-												<a th:href="@{/cofres/excluir(id=${cofre.id})}"
-												class="btn btn-sm btn-outline-danger">Excluir</a>
-											</td>
-										</tr>
-										<tr th:if="${listaCofres.size() == 0}" class="font-italic">
-											<td colspan="5">Nenhum cofre encontrado</td>
-										</tr>
-									</tbody>
-								</table>
 							</div>
-						</div>
-					</div>	
+						</div>	
+					</div>
 				</div>
-			</div>
 			</main>
+
 
 
 			<th:block th:insert="includes/include.html :: footer"></th:block>
