@@ -114,7 +114,70 @@
 								-->
 							</div>
 						</div>
-
+						
+						<script src="https://www.chartjs.org/samples/latest/utils.js"></script>
+						<script type="text/javascript">
+							var presets = window.chartColors;
+							var utils = Samples.utils;
+							
+							var MONTHS = ['Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho', 'Julho', 'August', 'September', 'October', 'November', 'December'];
+							var config = {
+								type: 'line',
+								data: {
+									labels: ['Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho', 'Julho'],
+									datasets: [{
+										label: 'Despesa',
+										borderColor: presets.red,
+										backgroundColor: 'rgba(255, 99, 132, 0.4)',
+										data: [60, 50, 70, 60, 50, 70, 60],
+										fill: "start",
+									}, {
+										label: 'Receita',
+										borderColor: presets.green,
+										backgroundColor: 'rgba(75, 192, 192, 0.4)',
+										data: [70, 75, 85, 70, 75, 85, 70],
+										fill: "start",
+									}]
+								},
+								options: {
+									responsive: true,
+									title: {
+										display: false,
+										text: 'Chart.js Line Chart'
+									},
+									tooltips: {
+										mode: 'index',
+										intersect: false,
+									},
+									hover: {
+										mode: 'nearest',
+										intersect: false
+									},
+									scales: {
+										xAxes: [{
+											display: true,
+											scaleLabel: {
+												display: true,
+												labelString: 'Mês'
+											}
+										}],
+										yAxes: [{
+											display: true,
+											scaleLabel: {
+												display: true,
+												labelString: 'Valor'
+											}
+										}]
+									}
+								}
+							};
+						
+							window.onload = function() {
+								var ctx = document.getElementById('graficoHome').getContext('2d');
+								window.myLine = new Chart(ctx, config);
+							};
+						</script>
+						
 						<div class="masonry-item col-md-12">
 							<div class="bd bgc-white">
 								<div class="layers">
@@ -125,29 +188,18 @@
 										<canvas id="line-chart" height="220">
 										</canvas>
 									</div>
-									<div class="layer bdT p-20 w-100">
-										<div class="peers ai-c jc-c gapX-20">
-											<div class="peer">
-												<span class="fsz-def fw-600 mR-10 c-grey-800">10% <i class="fa fa-level-up c-green-500">
-													</i>
-												</span> <small class="c-grey-500 fw-600">APPL</small>
-											</div>
-											<div class="peer fw-600">
-												<span class="fsz-def fw-600 mR-10 c-grey-800">2% <i class="fa fa-level-down c-red-500">
-													</i>
-												</span> <small class="c-grey-500 fw-600">Average</small>
-											</div>
-											<div class="peer fw-600">
-												<span class="fsz-def fw-600 mR-10 c-grey-800">15% <i class="fa fa-level-up c-green-500">
-													</i>
-												</span> <small class="c-grey-500 fw-600">Sales</small>
-											</div>
-											<div class="peer fw-600">
-												<span class="fsz-def fw-600 mR-10 c-grey-800">8% <i class="fa fa-level-down c-red-500">
-													</i>
-												</span> <small class="c-grey-500 fw-600">Profit</small>
-											</div>
-										</div>
+								</div>
+							</div>
+						</div>
+						<div class="masonry-item col-md-12">
+							<div class="bd bgc-white">
+								<div class="layers">
+									<div class="layer w-100 pX-20 pT-20">
+										<h6 class="lh-1">Histórico de Receitas e Despesas</h6>
+									</div>
+									<div class="layer w-100 p-20">
+										<canvas id="graficoHome" height="80">
+										</canvas>
 									</div>
 								</div>
 							</div>
