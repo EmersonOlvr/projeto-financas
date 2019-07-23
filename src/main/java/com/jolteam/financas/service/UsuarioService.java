@@ -23,13 +23,10 @@ import com.jolteam.financas.model.Usuario;
 @Service
 public class UsuarioService {
 
-	@Autowired
-	private EmailService emailService;
+	@Autowired private EmailService emailService;
 
-	@Autowired
-	private UsuarioDAO usuarios;
-	@Autowired
-	private CodigoDAO codigos;
+	@Autowired private UsuarioDAO usuarios;
+	@Autowired private CodigoDAO codigos;
 
 	// vai de 4 à 31 (o padrão do gensalt() é 10)
 	private static final int complexidadeSenha = 10;
@@ -64,6 +61,10 @@ public class UsuarioService {
 
 	public String criptografarSenha(String senha) {
 		return BCrypt.hashpw(senha, BCrypt.gensalt(complexidadeSenha));
+	}
+	// retorna true se a senha for compatível com o hash informado
+	public boolean checarSenha(String senha, String hash) {
+		return BCrypt.checkpw(senha, hash);
 	}
 
 	// ==== Validação do Nome ==== //
@@ -110,7 +111,7 @@ public class UsuarioService {
 
 	private void validarSenhas(String senha, String senhaRepetida) throws UsuarioInvalidoException {
 		// ==== Validação da Senha ==== //
-		if (Strings.isBlank(senha)) {
+		if (Strings.isEmpty(senha)) {
 			throw new UsuarioInvalidoException("Insira uma senha.");
 		}
 		if (senha.length() < 6) {

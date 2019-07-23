@@ -28,90 +28,128 @@
 			
 			<main class="main-content bgc-grey-100">
 				<div id="mainContent">
-					<div class="d-flex justify-content-center">
-						<div class="col-5 peer pX-40 pY-40 h-100 bgc-white scrollable pos-r bd" style="min-width:1020px">
-							<h2 style="color: #2196f3" class="text-center">Configurações</h2><br>
-							<div th:if="${!#strings.isEmpty(msgSucessoConfig)}" class="alert alert-success alert-dismissible fade show" role="alert">
-								[[${msgSucessoConfig}]]
-								<button type="button" class="close" data-dismiss="alert" aria-label="Close">
-									<span aria-hidden="true">&times;</span>
-								</button>
-							</div>
-							<div th:if="${!#strings.isEmpty(msgErroConfig)}" class="alert alert-danger alert-dismissible fade show" role="alert">
-								[[${msgErroConfig}]]
-								<button type="button" class="close" data-dismiss="alert" aria-label="Close">
-									<span aria-hidden="true">&times;</span>
-								</button>
-							</div>
+					<div class="row masonry pos-r">
+						<div class="masonry-sizer col-md-6"></div>
+						<div class="masonry-item col-md-12">
+							<div class="bgc-white p-20 bd">
+								<h6 class="c-grey-900">Configurações</h6>
+								<div th:if="${!#strings.isEmpty(msgSucessoConfig)}" class="alert alert-success alert-dismissible fade show" role="alert">
+									[[${msgSucessoConfig}]]
+									<button type="button" class="close" data-dismiss="alert" aria-label="Close">
+										<span aria-hidden="true">&times;</span>
+									</button>
+								</div>
+								<div th:if="${!#strings.isEmpty(msgErroConfig)}" class="alert alert-danger alert-dismissible fade show" role="alert">
+									[[${msgErroConfig}]]
+									<button type="button" class="close" data-dismiss="alert" aria-label="Close">
+										<span aria-hidden="true">&times;</span>
+									</button>
+								</div>
+								
+								<div class="row">
+									<div class="col-sm-4">
+										<div class="list-group" id="lista" role="tablist">
+											<a th:class="|list-group-item list-group-item-action${alvoLista == 'perfil' || alvoLista == null ? ' active': ''}|" id="perfil-list" data-toggle="list" href="#perfil" role="tab" aria-controls="perfil">Perfil</a>
+											<a th:class="|list-group-item list-group-item-action${alvoLista == 'senha' ? ' active': ''}|" id="senha-list" data-toggle="list" href="#senha" role="tab" aria-controls="senha">Senha</a>
+											<a th:class="|list-group-item list-group-item-action${alvoLista == 'notificacoes' ? ' active': ''}|" id="notificacoes-list" data-toggle="list" href="#notificacoes" role="tab" aria-controls="notificacoes">Notificações</a>
+											<a th:class="|list-group-item list-group-item-action${alvoLista == 'privacidade' ? ' active': ''}|" id="privacidade-list" data-toggle="list" href="#privacidade" role="tab" aria-controls="privacidade">Privacidade</a>
+										</div>
+									</div>
+									<div class="col-sm-8">
+										<div class="tab-content" id="nav-tabContent">
+											<div th:class="|tab-pane fade pY-10 pX-10${alvoLista == 'perfil' || alvoLista == null ? ' show active': ''}|" id="perfil" role="tabpanel" aria-labelledby="perfil-list">
+												<form id="needs-validation1" th:object="${usuario}" th:action="@{/configuracoes/perfil}" method="post" novalidate>
+													<div class="row">
+														<div class="col-sm-6">
+															<div class="form-group">
+																<label for="nome" class="text-normal text-dark">Nome</label>
+																<input type="text" th:field="*{nome}" class="form-control" placeholder="Nome..." required>
+																<div class="invalid-feedback">Insira um nome</div>
+															</div>
+														</div>
+														<div class="col-sm-6">
+															<div class="form-group">
+																<label for="sobrenome" class="text-normal text-dark">Sobrenome</label>
+																<input type="text" th:field="*{sobrenome}" class="form-control" placeholder="Sobrenome..." required>
+																<div class="invalid-feedback">Insira um sobrenome</div>
+															</div>
+														</div>
+														<div class="col-sm-12">
+															<div class="form-group">
+																<label for="email" class="text-normal text-dark">E-mail</label>
+																<input type="text" th:field="*{email}" class="form-control" placeholder="E-mail..." required>
+																<div class="invalid-feedback">Insira um e-mail</div>
+															</div>
+														</div>
+														
+														<div class="col-sm-12">
+															<div class="form-group d-flex justify-content-center">
+																<button type="submit" class="btn btn-primary">Salvar alterações</button>
+															</div>
+														</div>
+													</div>
+												</form>
+											</div>
+											<div th:class="|tab-pane fade pY-10 pX-10${alvoLista == 'senha' ? ' show active': ''}|" id="senha" role="tabpanel" aria-labelledby="senha-list">
+												<form id="needs-validation2" th:object="${usuario}" th:action="@{/configuracoes/senha}" method="post" novalidate>
+													<div class="row">
+														<div class="col-sm-12">
+															<div class="form-group">
+																<label for="senhaAtual" class="text-normal text-dark">Senha atual</label>
+																<input type="password" id="senhaAtual" name="senhaAtual" class="form-control" placeholder="Senha atual..." required>
+																<div class="invalid-feedback">Insira a senha atual</div>
+															</div>
+														</div>
+														<div class="col-sm-6">
+															<div class="form-group">
+																<label for="novaSenha" class="text-normal text-dark">Nova senha</label>
+																<input type="password" id="novaSenha" name="novaSenha" class="form-control" placeholder="Nova senha..." required>
+																<div class="invalid-feedback">Insira a nova senha</div>
+															</div>
+														</div>
+														<div class="col-sm-6">
+															<div class="form-group">
+																<label for="novaSenhaRepetida" class="text-normal text-dark">Nova senha (repita)</label>
+																<input type="password" id="novaSenhaRepetida" name="novaSenhaRepetida" class="form-control" placeholder="Senha atual..." required>
+																<div class="invalid-feedback">Por favor, repita a senha</div>
+															</div>
+														</div>
+														
+														<div class="col-sm-12">
+															<div class="form-group d-flex justify-content-center">
+																<button type="submit" class="btn btn-primary">Salvar alterações</button>
+															</div>
+														</div>
+													</div>
+												</form>
+											</div>
+											<div th:class="|tab-pane fade pY-10 pX-10${alvoLista == 'notificacoes' ? ' show active': ''}|" id="notificacoes" role="tabpanel" aria-labelledby="notificacoes-list">
+												<input type="checkbox" id="receberNotificacoes">
+												<label for="receberNotificacoes">Receber notificações</label>
+											</div>
+											<div th:class="|tab-pane fade pY-10 pX-10${alvoLista == 'privacidade' ? ' show active': ''}|" id="privacidade" role="tabpanel" aria-labelledby="privacidade-list">
+												Privacidade...
+											</div>
+										</div>
+									</div>
+								</div>
 							
-							<div class="row">
-								<div class="col-4">
-									<div class="list-group" id="list-tab" role="tablist">
-										<a class="list-group-item list-group-item-action active" id="list-profile-list" data-toggle="list" href="#list-profile" role="tab" aria-controls="profile">Perfil</a>
-										<a class="list-group-item list-group-item-action" id="list-password-list" data-toggle="list" href="#list-password" role="tab" aria-controls="password">Senha</a>
-										<a class="list-group-item list-group-item-action" id="list-notifications-list" data-toggle="list" href="#list-notifications" role="tab" aria-controls="notifications">Notificações</a>
-										<a class="list-group-item list-group-item-action" id="list-privacy-list" data-toggle="list" href="#list-privacy" role="tab" aria-controls="privacy">Privacidade</a>
-									</div>
-								</div>
-								<div class="col-8">
-									<div class="tab-content" id="nav-tabContent">
-										<div class="tab-pane fade pY-10 pX-10 show active" id="list-profile" role="tabpanel" aria-labelledby="list-profile-list">
-											<form id="needs-validation" th:object="${usuario}" th:action="@{/configuracoes/perfil}" method="post" novalidate>
-												<div class="row">
-													<input type="hidden" th:field="*{id}">
-													<div class="col-sm-6">
-														<div class="form-group">
-															<label for="nome" class="text-normal text-dark">Nome</label>
-															<input type="text" th:field="*{nome}" class="form-control" placeholder="Nome..." required>
-															<div class="invalid-feedback">Insira um nome</div>
-														</div>
-													</div>
-													<div class="col-sm-6">
-														<div class="form-group">
-															<label for="sobrenome" class="text-normal text-dark">Sobrenome</label>
-															<input type="text" th:field="*{sobrenome}" class="form-control" placeholder="Sobrenome..." required>
-															<div class="invalid-feedback">Insira um sobrenome</div>
-														</div>
-													</div>
-													<div class="col-sm-12">
-														<div class="form-group">
-															<label for="email" class="text-normal text-dark">E-mail</label>
-															<input type="text" th:field="*{email}" class="form-control" placeholder="E-mail..." required>
-															<div class="invalid-feedback">Insira um e-mail</div>
-														</div>
-													</div>
-													
-													<div class="col-sm-12">
-														<div class="form-group d-flex justify-content-center">
-															<button type="submit" class="btn btn-primary">Salvar alterações</button>
-														</div>
-													</div>
-												</div>
-											</form>
-										</div>
-										<div class="tab-pane fade pY-10 pX-10" id="list-password" role="tabpanel" aria-labelledby="list-password-list">
-											Senha...
-										</div>
-										<div class="tab-pane fade pY-10 pX-10" id="list-notifications" role="tabpanel" aria-labelledby="list-notifications-list">
-											Notificações...
-										</div>
-										<div class="tab-pane fade pY-10 pX-10" id="list-privacy" role="tabpanel" aria-labelledby="list-privacy-list">
-											Privacidade...
-										</div>
-									</div>
-								</div>
-							</div>
-							<script>
-								!function() {
-									"use strict";
-									window.addEventListener("load", function() {
-										var e=document.getElementById("needs-validation");
-										e.addEventListener("submit", function(t) {
-											!1===e.checkValidity() && (t.preventDefault(), t.stopPropagation()), e.classList.add("was-validated")
+								<script>
+									!function() {
+										"use strict";
+										window.addEventListener("load", function() {
+											var e1=document.getElementById("needs-validation1");
+											var e2=document.getElementById("needs-validation2");
+											e1.addEventListener("submit", function(t) {
+												!1===e1.checkValidity() && (t.preventDefault(), t.stopPropagation()), e1.classList.add("was-validated")
+											}, !1)
+											e2.addEventListener("submit", function(t) {
+												!1===e2.checkValidity() && (t.preventDefault(), t.stopPropagation()), e2.classList.add("was-validated")
+											}, !1)
 										}, !1)
-									}, !1)
-								}()
-							</script>
+									}()
+								</script>
+							</div>
 						</div>
 					</div>
 				</div>
