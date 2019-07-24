@@ -13,7 +13,7 @@ import com.jolteam.financas.enums.BigDecimalInvalidoException;
 public class Util {
 
 	// método para obter o IP do usuário
-	public String getUserIp(HttpServletRequest request) {
+	public static String getUserIp(HttpServletRequest request) {
 		String ipAddress = request.getHeader("X-FORWARDED-FOR");
 		if (ipAddress == null) {
 			ipAddress = request.getRemoteAddr();
