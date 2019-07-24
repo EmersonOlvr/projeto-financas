@@ -14,10 +14,10 @@ public class AutorizadorInterceptor implements HandlerInterceptor {
 	private final String PAGINA_ACESSO_NEGADO = "/acesso-negado";
 	
 	private final String[] PAGINAS_ESTATICAS = {"/css/", "/js/", "/img/", "/fonts/", "/util/"};
-	private final String[] PAGINAS_DESLOGADO = {"/", "/error", "/cadastrar", "/entrar", 
+	private final String[] PAGINAS_DESLOGADO = {"/", "/cadastrar", "/entrar", 
 												"/reenviar-link-ativacao", "/ativarConta", 
 												"/recuperar-senha", "/redefinirSenha"};
-	private final String[] PAGINAS_LOGADO = {"/home", "/error", "/configuracoes", "/sair", "/movimentos", 
+	private final String[] PAGINAS_LOGADO = {"/home", "/configuracoes", "/sair", "/movimentos", 
 											 "/receitas", "/despesas", "/cofres", 
 											 PAGINA_ACESSO_NEGADO};
 	
