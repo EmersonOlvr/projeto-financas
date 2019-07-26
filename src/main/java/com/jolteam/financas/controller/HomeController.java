@@ -92,10 +92,7 @@ public class HomeController {
 		return "redirect:/configuracoes";
 	}
 
-	@GetMapping("/movimentos")
-	public String viewMovimentos() {
-		return "movimentos";
-	}
+	
 
 	@GetMapping("/sair")
 	public String sair(HttpSession session) {

@@ -48,61 +48,28 @@
 									<tr>
 										<th class="bdwT-0">Tipo (Receita/Despesa)</th>
 										<th class="bdwT-0">Categoria</th>
-										<th class="bdwT-0">Mês</th>
+										<th class="bdwT-0">Data/Hora</th>
 										<th class="bdwT-0">Valor</th>
+										<th class="bdwT-0">Ação</th>
+
 									</tr>
 								</thead>
 								<tbody>
-									<tr>
-										<td class="fw-600">Despesa</td>
+									<tr th:each = "transacao : ${listatransacao}">
+										<td class="fw-600" th:text = "${transacao.tipo}"></td>
 										<td>
-											<span class="badge bgc-red-50 p-10 lh-0 tt-c badge-pill">Alimentação</span>
+											<span th:class= "|badge p-10 lh-0 tt-c badge-pill${transacao.tipo.name() == 'DESPESA' ? ' bgc-red-50' : ' bgc-green-50'}|"  th:text = "${transacao.categoria.nome}"></span>
 										</td>
-										<td>Março</td>
+										<td th:text = "${#temporals.format(transacao.data, 'dd/MM/yyyy HH:mm:ss')}"></td>
 										<td>
-											<span class="text-danger">-R$ 20,80</span>
+											<span th:class="${transacao.tipo.name() == 'DESPESA' ? 'text-danger' : 'text-success'}" th:text = "${transacao.valor}"></span>
 										</td>
-									</tr>
-									<tr>
-										<td class="fw-600">Despesa</td>
 										<td>
-											<span class="badge bgc-red-50 p-10 lh-0 tt-c badge-pill">Saúde</span>
-										</td>
-										<td>Março</td>
-										<td>
-											<span class="text-danger">-R$ 17,75</span>
+										<a href ="#" class="btn btn-sm btn-outline-danger">Excluir</a>
+										
 										</td>
 									</tr>
-									<tr>
-										<td class="fw-600">Despesa</td>
-										<td>
-											<span class="badge bgc-red-50 p-10 lh-0 tt-c badge-pill">Transporte</span>
-										</td>
-										<td>Março</td>
-										<td>
-											<span class="text-danger">-R$ 86,00</span>
-										</td>
-									</tr>
-									<tr>
-										<td class="fw-600">Receita</td>
-										<td>
-											<span class="badge bgc-green-50  p-10 lh-0 tt-c badge-pill">Salário</span>
-										</td>
-										<td>Março</td>
-										<td>
-											<span class="text-success">R$ 500,00</span>
-										</td>
-									</tr>
-									<tr>
-										<td class="fw-600">Receita</td>
-										<td>
-											<span class="badge bgc-green-50  p-10 lh-0 tt-c badge-pill">Cheque</span>
-										</td>
-										<td>Março</td>
-										<td>
-											<span class="text-success">R$ 100,00</span>
-										</td>
-									</tr>
+									
 								</tbody>
 							</table>
 						</div>
@@ -113,8 +80,8 @@
 									<p>Despesas</p>
 									<h6 class="mb-0">Saldo Atual</h6>
 								</div>
-								<div class="peer">
-									<p class="text-success mb-0">R$ 600,00</p>
+								<div class="peer"  th:each = "transacao : ${listatransacao}">
+									<p class="text-success mb-0" th:text = "${transacao.valor}"></p>
 									<p class="text-danger">R$ 124,55</p>
 									<p class="text-info mb-0">R$ 445,45</p>
 								</div>
