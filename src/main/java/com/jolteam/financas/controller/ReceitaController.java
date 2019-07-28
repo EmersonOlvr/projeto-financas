@@ -16,8 +16,8 @@ import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.jolteam.financas.dao.CategoriaDAO;
-import com.jolteam.financas.enums.TiposLogs;
-import com.jolteam.financas.enums.TiposTransacoes;
+import com.jolteam.financas.enums.TipoLog;
+import com.jolteam.financas.enums.TipoTransacao;
 import com.jolteam.financas.exceptions.ReceitaException;
 import com.jolteam.financas.model.Categoria;
 import com.jolteam.financas.model.Log;
@@ -39,7 +39,7 @@ public class ReceitaController {
 	public ModelAndView viewAdicionarReceita(HttpSession session) {
 		ModelAndView mv = new ModelAndView("receitas-adicionar");
 		mv.addObject("receita", new Receita());
-		mv.addObject("categorias", this.categorias.findByUsuarioAndTipoTransacaoOrderByDataCriacaoDesc((Usuario) session.getAttribute("usuarioLogado"), TiposTransacoes.RECEITA));
+		mv.addObject("categorias", this.categorias.findByUsuarioAndTipoTransacaoOrderByDataCriacaoDesc((Usuario) session.getAttribute("usuarioLogado"), TipoTransacao.RECEITA));
 		return mv;
 	}
 	
@@ -52,7 +52,7 @@ public class ReceitaController {
 			
 			try {
 				// salva um log de sucesso no banco
-				this.logService.save(new Log(receita.getUsuario(), TiposLogs.CADASTRO_RECEITA, LocalDateTime.now(), request.getRemoteAddr()));
+				this.logService.save(new Log(receita.getUsuario(), TipoLog.CADASTRO_RECEITA, LocalDateTime.now(), request.getRemoteAddr()));
 			} catch (Exception e) {
 				System.out.println(e.getMessage());
 			}
@@ -67,7 +67,7 @@ public class ReceitaController {
 	public ModelAndView viewCategoriasReceitas(HttpSession session) {
 		ModelAndView mv= new ModelAndView("receitas-categorias");
 		mv.addObject("catReceita", new Categoria());
-		mv.addObject("listaCatReceita", this.categorias.findByUsuarioAndTipoTransacaoOrderByDataCriacaoDesc((Usuario) session.getAttribute("usuarioLogado"), TiposTransacoes.RECEITA));
+		mv.addObject("listaCatReceita", this.categorias.findByUsuarioAndTipoTransacaoOrderByDataCriacaoDesc((Usuario) session.getAttribute("usuarioLogado"), TipoTransacao.RECEITA));
 		return mv;
 	}
 	
@@ -78,7 +78,7 @@ public class ReceitaController {
 		try {
 			this.receitaService.salvarCategoriaReceita(catReceita);
 			
-			this.logService.save(new Log(catReceita.getUsuario(),TiposLogs.CADASTRO_CATEGORIA_RECEITA,LocalDateTime.now(),request.getRemoteAddr()));
+			this.logService.save(new Log(catReceita.getUsuario(),TipoLog.CADASTRO_CATEGORIA_RECEITA,LocalDateTime.now(),request.getRemoteAddr()));
 		} catch (ReceitaException de) {
 			return this.viewCategoriasReceitas(session).addObject("msgErroAdd", de.getMessage());
 		}
@@ -90,7 +90,7 @@ public class ReceitaController {
 	public String excluirCatReceita(@RequestParam Integer id, HttpSession session, RedirectAttributes ra) {
 		try {
 			Usuario usuario = (Usuario) session.getAttribute("usuarioLogado");
-			Categoria catExistente = this.categorias.findByIdAndUsuarioAndTipoTransacao(id, usuario, TiposTransacoes.RECEITA)
+			Categoria catExistente = this.categorias.findByIdAndUsuarioAndTipoTransacao(id, usuario, TipoTransacao.RECEITA)
 													.orElseThrow(() -> new Exception("Categoria inexistente."));
 			
 			if (this.receitaService.existsByCategoria(catExistente)) {

@@ -8,7 +8,7 @@ import javax.servlet.http.HttpServletRequest;
 import org.apache.logging.log4j.util.Strings;
 import org.thymeleaf.expression.Numbers;
 
-import com.jolteam.financas.enums.BigDecimalInvalidoException;
+import com.jolteam.financas.exceptions.BigDecimalInvalidoException;
 
 public class Util {
 

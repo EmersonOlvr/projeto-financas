@@ -16,9 +16,9 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import com.jolteam.financas.enums.BigDecimalInvalidoException;
-import com.jolteam.financas.enums.TiposLogs;
-import com.jolteam.financas.enums.TiposTransacoes;
+import com.jolteam.financas.enums.TipoLog;
+import com.jolteam.financas.enums.TipoTransacao;
+import com.jolteam.financas.exceptions.BigDecimalInvalidoException;
 import com.jolteam.financas.exceptions.CofreException;
 import com.jolteam.financas.model.Cofre;
 import com.jolteam.financas.model.Log;
@@ -90,7 +90,7 @@ public class CofreController {
 			cofre = this.cofreService.salvar(cofre);
 			
 			// salva um log de sucesso no banco
-			this.logService.save(new Log(cofre.getUsuario(), TiposLogs.CADASTRO_COFRE,LocalDateTime.now(), request.getRemoteAddr()));
+			this.logService.save(new Log(cofre.getUsuario(), TipoLog.CADASTRO_COFRE,LocalDateTime.now(), request.getRemoteAddr()));
 			
 			// verifica se o usuário deseja inserir um valor inicial no cofre.
 			// esse valor vai para as transações do cofre e não para o cofre em si
@@ -98,7 +98,7 @@ public class CofreController {
 			// se o valor inicial informado for maior que R$ 0,00
 			if (result > 0) {
 				// adiciona um valor inicial ao cofre (isto é, nas transações do cofre)
-				this.cofreService.adicionarTransacao(cofre, valorInicial, TiposTransacoes.RECEITA);
+				this.cofreService.adicionarTransacao(cofre, valorInicial, TipoTransacao.RECEITA);
 			// se o valor inicial informado for menor que R$ 0,00
 			} else if (result < 0) {
 				return mv.addObject("msgErro", "O Valor inicial deve ser maior que R$ 0,00");
@@ -199,10 +199,10 @@ public class CofreController {
 		
 		int result = valor.compareTo(new BigDecimal("0"));
 		if (result > 0) {
-			this.cofreService.adicionarTransacao(cofre, valor, TiposTransacoes.RECEITA);
+			this.cofreService.adicionarTransacao(cofre, valor, TipoTransacao.RECEITA);
 			return mv.addObject("msgSucesso", "R$ "+Util.getStringOf(valor)+" adicionados ao cofre.");
 		} else if (result < 0) {
-			this.cofreService.adicionarTransacao(cofre, valor, TiposTransacoes.DESPESA);
+			this.cofreService.adicionarTransacao(cofre, valor, TipoTransacao.DESPESA);
 			return mv.addObject("msgSucesso", "R$ "+Util.getStringOf(valor.negate())+" retirados do cofre.");
 		} else {
 			return mv.addObject("msgErro", "Informe um valor diferente de R$ 0,00.");

@@ -13,7 +13,7 @@ import org.springframework.stereotype.Service;
 
 import com.jolteam.financas.dao.CofreDAO;
 import com.jolteam.financas.dao.CofreTransacaoDAO;
-import com.jolteam.financas.enums.TiposTransacoes;
+import com.jolteam.financas.enums.TipoTransacao;
 import com.jolteam.financas.exceptions.CofreException;
 import com.jolteam.financas.model.Cofre;
 import com.jolteam.financas.model.CofreTransacao;
@@ -106,7 +106,7 @@ public class CofreService {
 		this.cofres.delete(cofre);
 	}
 	
-	public void adicionarTransacao(Cofre cofre, BigDecimal valor, TiposTransacoes tipoTransacao) {
+	public void adicionarTransacao(Cofre cofre, BigDecimal valor, TipoTransacao tipoTransacao) {
 		if (cofre != null && cofre.getId() != null) {
 			if (valor != null) {
 				int result = valor.compareTo(new BigDecimal("0"));

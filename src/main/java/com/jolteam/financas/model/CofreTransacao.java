@@ -13,7 +13,7 @@ import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
-import com.jolteam.financas.enums.TiposTransacoes;
+import com.jolteam.financas.enums.TipoTransacao;
 
 @Entity
 @Table(name="cofre_transacoes")
@@ -33,11 +33,11 @@ public class CofreTransacao {
 	
 	@Column(nullable = false)
 	@Enumerated(EnumType.STRING)
-	private TiposTransacoes tipo;
+	private TipoTransacao tipo;
 
 	
 	public CofreTransacao() {}
-	public CofreTransacao(Cofre cofre, BigDecimal valor, LocalDateTime data, TiposTransacoes tipo) {
+	public CofreTransacao(Cofre cofre, BigDecimal valor, LocalDateTime data, TipoTransacao tipo) {
 		this.cofre = cofre;
 		this.valor = valor;
 		this.data = data;
@@ -69,10 +69,10 @@ public class CofreTransacao {
 	public void setData(LocalDateTime dataCriacao) {
 		this.data = dataCriacao;
 	}
-	public TiposTransacoes getTipo() {
+	public TipoTransacao getTipo() {
 		return tipo;
 	}
-	public void setTipo(TiposTransacoes tipo) {
+	public void setTipo(TipoTransacao tipo) {
 		this.tipo = tipo;
 	}
 	

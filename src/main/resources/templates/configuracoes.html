@@ -49,15 +49,15 @@
 								<div class="row">
 									<div class="col-sm-4">
 										<div class="list-group" id="lista" role="tablist">
-											<a th:class="|list-group-item list-group-item-action${alvoLista == 'perfil' || alvoLista == null ? ' active': ''}|" id="perfil-list" data-toggle="list" href="#perfil" role="tab" aria-controls="perfil">Perfil</a>
-											<a th:class="|list-group-item list-group-item-action${alvoLista == 'senha' ? ' active': ''}|" id="senha-list" data-toggle="list" href="#senha" role="tab" aria-controls="senha">Senha</a>
-											<a th:class="|list-group-item list-group-item-action${alvoLista == 'notificacoes' ? ' active': ''}|" id="notificacoes-list" data-toggle="list" href="#notificacoes" role="tab" aria-controls="notificacoes">Notificações</a>
+											<a th:if="${isProvedorLocal}" th:class="|list-group-item list-group-item-action${alvoLista == 'perfil' || alvoLista == null ? ' active': ''}|" id="perfil-list" data-toggle="list" href="#perfil" role="tab" aria-controls="perfil">Perfil</a>
+											<a th:if="${isProvedorLocal}" th:class="|list-group-item list-group-item-action${alvoLista == 'senha' ? ' active': ''}|" id="senha-list" data-toggle="list" href="#senha" role="tab" aria-controls="senha">Senha</a>
+											<a th:class="|list-group-item list-group-item-action${alvoLista == 'notificacoes' || isProvedorLocal == false ? ' active': ''}|" id="notificacoes-list" data-toggle="list" href="#notificacoes" role="tab" aria-controls="notificacoes">Notificações</a>
 											<a th:class="|list-group-item list-group-item-action${alvoLista == 'privacidade' ? ' active': ''}|" id="privacidade-list" data-toggle="list" href="#privacidade" role="tab" aria-controls="privacidade">Privacidade</a>
 										</div>
 									</div>
 									<div class="col-sm-8">
 										<div class="tab-content" id="nav-tabContent">
-											<div th:class="|tab-pane fade pY-10 pX-10${alvoLista == 'perfil' || alvoLista == null ? ' show active': ''}|" id="perfil" role="tabpanel" aria-labelledby="perfil-list">
+											<div th:if="${isProvedorLocal}" th:class="|tab-pane fade pY-10 pX-10${alvoLista == 'perfil' || alvoLista == null ? ' show active': ''}|" id="perfil" role="tabpanel" aria-labelledby="perfil-list">
 												<form id="needs-validation1" th:object="${usuario}" th:action="@{/configuracoes/perfil}" method="post" novalidate>
 													<div class="row">
 														<div class="col-sm-6">
@@ -90,7 +90,7 @@
 													</div>
 												</form>
 											</div>
-											<div th:class="|tab-pane fade pY-10 pX-10${alvoLista == 'senha' ? ' show active': ''}|" id="senha" role="tabpanel" aria-labelledby="senha-list">
+											<div th:if="${isProvedorLocal}" th:class="|tab-pane fade pY-10 pX-10${alvoLista == 'senha' ? ' show active': ''}|" id="senha" role="tabpanel" aria-labelledby="senha-list">
 												<form id="needs-validation2" th:object="${usuario}" th:action="@{/configuracoes/senha}" method="post" novalidate>
 													<div class="row">
 														<div class="col-sm-12">
@@ -123,7 +123,7 @@
 													</div>
 												</form>
 											</div>
-											<div th:class="|tab-pane fade pY-10 pX-10${alvoLista == 'notificacoes' ? ' show active': ''}|" id="notificacoes" role="tabpanel" aria-labelledby="notificacoes-list">
+											<div th:class="|tab-pane fade pY-10 pX-10${alvoLista == 'notificacoes' || isProvedorLocal == false ? ' show active': ''}|" id="notificacoes" role="tabpanel" aria-labelledby="notificacoes-list">
 												<input type="checkbox" id="receberNotificacoes">
 												<label for="receberNotificacoes">Receber notificações</label>
 											</div>

@@ -1,6 +1,6 @@
 package com.jolteam.financas.enums;
 
-public enum TiposLogs {
+public enum TipoLog {
 	
 	LOGIN("Login"), 
 	
@@ -21,7 +21,7 @@ public enum TiposLogs {
 	EXCLUSAO_CATEGORIA_COFRE("Exclusão de Categoria de Cofre");
 	
 	public String valor;
-	TiposLogs(String valor) {
+	TipoLog(String valor) {
 		this.valor = valor;
 	}
 	

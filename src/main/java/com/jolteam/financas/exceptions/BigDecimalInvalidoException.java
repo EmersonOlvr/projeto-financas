@@ -1,4 +1,4 @@
-package com.jolteam.financas.enums;
+package com.jolteam.financas.exceptions;
 
 public class BigDecimalInvalidoException extends Exception {
 	

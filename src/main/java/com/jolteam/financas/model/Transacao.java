@@ -13,7 +13,7 @@ import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
-import com.jolteam.financas.enums.TiposTransacoes;
+import com.jolteam.financas.enums.TipoTransacao;
 
 @Entity
 @Table(name = "transacoes")
@@ -26,7 +26,7 @@ public class Transacao {
 	private Usuario usuario;
 
 	@Column(nullable = false) @Enumerated(EnumType.STRING)
-	private TiposTransacoes tipo;
+	private TipoTransacao tipo;
 	
 	@ManyToOne(optional = false)
 	private Categoria categoria;
@@ -43,7 +43,7 @@ public class Transacao {
 	
 	// construtores
 	public Transacao() {}
-	public Transacao(Usuario usuario, TiposTransacoes tipo, Categoria categoria, String descricao,
+	public Transacao(Usuario usuario, TipoTransacao tipo, Categoria categoria, String descricao,
 			BigDecimal valor) {
 		this.usuario = usuario;
 		this.tipo = tipo;
@@ -67,10 +67,10 @@ public class Transacao {
 	public void setUsuario(Usuario usuario) {
 		this.usuario = usuario;
 	}
-	public TiposTransacoes getTipo() {
+	public TipoTransacao getTipo() {
 		return tipo;
 	}
-	public void setTipoTransacao(TiposTransacoes tipo) {
+	public void setTipoTransacao(TipoTransacao tipo) {
 		this.tipo = tipo;
 	}
 	public Categoria getCategoria() {

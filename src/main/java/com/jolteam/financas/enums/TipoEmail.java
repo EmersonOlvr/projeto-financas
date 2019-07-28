@@ -1,6 +1,6 @@
 package com.jolteam.financas.enums;
 
-public enum TiposEmails {
+public enum TipoEmail {
 
 	TEXTO, HTML
 	

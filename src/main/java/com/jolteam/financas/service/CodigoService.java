@@ -7,7 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.jolteam.financas.dao.CodigoDAO;
-import com.jolteam.financas.enums.TiposCodigos;
+import com.jolteam.financas.enums.TipoCodigo;
 import com.jolteam.financas.model.Codigo;
 import com.jolteam.financas.model.Usuario;
 
@@ -21,14 +21,14 @@ public class CodigoService {
 	public Optional<Codigo> findByUsuario(Usuario usuario) {
 		return this.codigos.findByUsuario(usuario);
 	}
-	public Optional<Codigo> findByUsuarioAndTipo(Usuario usuario, TiposCodigos tipo) {
+	public Optional<Codigo> findByUsuarioAndTipo(Usuario usuario, TipoCodigo tipo) {
 		return this.codigos.findByUsuarioAndTipo(usuario, tipo);
 	}
 	public void delete(Codigo codigo) {
 		this.codigos.delete(codigo);
 	}
 	
-	public boolean isCodigoValido(Integer id, String codigo, TiposCodigos tipoCodigo) {
+	public boolean isCodigoValido(Integer id, String codigo, TipoCodigo tipoCodigo) {
 		if (id == null || Strings.isEmpty(codigo)) {
 			return false;
 		} else {

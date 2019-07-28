@@ -9,7 +9,7 @@ import org.springframework.stereotype.Service;
 
 import com.jolteam.financas.dao.CategoriaDAO;
 import com.jolteam.financas.dao.TransacaoDAO;
-import com.jolteam.financas.enums.TiposTransacoes;
+import com.jolteam.financas.enums.TipoTransacao;
 import com.jolteam.financas.exceptions.ReceitaException;
 import com.jolteam.financas.model.Categoria;
 import com.jolteam.financas.model.Receita;
@@ -42,7 +42,7 @@ public class ReceitaService {
 
 		// tenta salvar no banco...
 		try {
-			this.transacoes.save(new Transacao(receita.getUsuario(), TiposTransacoes.RECEITA, receita.getCategoria(),
+			this.transacoes.save(new Transacao(receita.getUsuario(), TipoTransacao.RECEITA, receita.getCategoria(),
 					receita.getDescricao(), receita.getValor()));
 		} catch (Exception e) {
 			throw new ReceitaException("Desculpe, algo deu errado.");
@@ -53,7 +53,7 @@ public class ReceitaService {
 		catReceitas.setDataCriacao(LocalDateTime.now());
 		
 		//define tipo de transação da categoria 
-		catReceitas.setTipoTransacao(TiposTransacoes.RECEITA);
+		catReceitas.setTipoTransacao(TipoTransacao.RECEITA);
 		
 		//Validação nome e tratamento de dados
 		

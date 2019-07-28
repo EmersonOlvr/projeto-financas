@@ -12,8 +12,9 @@ import org.springframework.stereotype.Service;
 
 import com.jolteam.financas.dao.CodigoDAO;
 import com.jolteam.financas.dao.UsuarioDAO;
-import com.jolteam.financas.enums.TiposCodigos;
-import com.jolteam.financas.enums.TiposEmails;
+import com.jolteam.financas.enums.TipoCodigo;
+import com.jolteam.financas.enums.TipoEmail;
+import com.jolteam.financas.enums.Provedor;
 import com.jolteam.financas.exceptions.UsuarioDesativadoException;
 import com.jolteam.financas.exceptions.UsuarioInexistenteException;
 import com.jolteam.financas.exceptions.UsuarioInvalidoException;
@@ -157,6 +158,7 @@ public class UsuarioService {
 		// atributos que vieram do formulário nulos mas que não podem ser nulos no banco
 		usuario.setAtivado(false);
 		usuario.setPermissao((short) 1);
+		usuario.setProvedor(Provedor.LOCAL);
 	}
 	
 	public void atualizarUsuario(Usuario usuarioAntigo, Usuario usuarioNovo) throws UsuarioInvalidoException {
@@ -210,13 +212,22 @@ public class UsuarioService {
 
 		// busca no banco o usuário com o e-mail fornecido
 		Optional<Usuario> usuario = this.usuarios.findByEmail(email);
-
-		// se existir e a senha estiver correta...
-		if (usuario.isPresent() && BCrypt.checkpw(senha, usuario.get().getSenha())) {
-			if (usuario.get().isAtivado()) {
-				return usuario.get();
+		
+		if (usuario.isPresent()) {
+			if (usuario.get().getProvedor().equals(Provedor.LOCAL)) {
+				// se a senha estiver correta...
+				if (BCrypt.checkpw(senha, usuario.get().getSenha())) {
+					if (usuario.get().isAtivado()) {
+						return usuario.get();
+					} else {
+						throw new UsuarioDesativadoException("A conta não está ativa.");
+					}
+				} else {
+					throw new UsuarioInexistenteException("E-mail e/ou senha inválidos.");
+				}
 			} else {
-				throw new UsuarioDesativadoException("A conta não está ativa.");
+				throw new UsuarioInvalidoException("Este e-mail foi cadastrado com o "
+						+ usuario.get().getProvedor().getValor() + ".");
 			}
 		} else {
 			throw new UsuarioInexistenteException("E-mail e/ou senha inválidos.");
@@ -239,9 +250,9 @@ public class UsuarioService {
 		String url = this.getServerUrl(request);
 
 		// obtém o código de ativação do banco, se não existir cria um novo
-		Optional<Codigo> cod = this.codigos.findByUsuarioAndTipo(usuario, TiposCodigos.ATIVACAO_CONTA);
+		Optional<Codigo> cod = this.codigos.findByUsuarioAndTipo(usuario, TipoCodigo.ATIVACAO_CONTA);
 		Codigo codigo = cod.isPresent() ? cod.get()
-				: this.codigos.save(new Codigo(usuario, TiposCodigos.ATIVACAO_CONTA));
+				: this.codigos.save(new Codigo(usuario, TipoCodigo.ATIVACAO_CONTA));
 
 		String codigoAtivacao = codigo.getCodigo().replaceAll("[\\-]+", "");
 
@@ -255,16 +266,16 @@ public class UsuarioService {
 				+ "</div>";
 
 		// envia o código para o e-mail do usuário
-		this.emailService.enviar(destinatario, assunto, corpo, TiposEmails.HTML);
+		this.emailService.enviar(destinatario, assunto, corpo, TipoEmail.HTML);
 	}
 
 	public void enviarLinkRedefinicaoSenha(Usuario usuario, HttpServletRequest request) {
 		String url = this.getServerUrl(request);
 
 		// obtém o código de ativação do banco, se não existir cria um novo
-		Optional<Codigo> cod = this.codigos.findByUsuarioAndTipo(usuario, TiposCodigos.REDEFINICAO_SENHA);
+		Optional<Codigo> cod = this.codigos.findByUsuarioAndTipo(usuario, TipoCodigo.REDEFINICAO_SENHA);
 		Codigo codigo = cod.isPresent() ? cod.get()
-				: this.codigos.save(new Codigo(usuario, TiposCodigos.REDEFINICAO_SENHA));
+				: this.codigos.save(new Codigo(usuario, TipoCodigo.REDEFINICAO_SENHA));
 
 		String codigoRedefinicao = codigo.getCodigo().replaceAll("[\\-]+", "");
 
@@ -278,7 +289,7 @@ public class UsuarioService {
 				+ "</div>";
 
 		// envia o link para o e-mail do usuário
-		this.emailService.enviar(destinatario, assunto, corpo, TiposEmails.HTML);
+		this.emailService.enviar(destinatario, assunto, corpo, TipoEmail.HTML);
 	}
 
 }

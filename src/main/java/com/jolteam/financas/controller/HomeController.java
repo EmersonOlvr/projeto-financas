@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import com.jolteam.financas.enums.Provedor;
 import com.jolteam.financas.exceptions.UsuarioInvalidoException;
 import com.jolteam.financas.model.Usuario;
 import com.jolteam.financas.service.UsuarioService;
@@ -31,7 +32,9 @@ public class HomeController {
 	@GetMapping("/configuracoes")
 	public ModelAndView viewConfiguracoes(HttpSession session) {
 		ModelAndView mv = new ModelAndView("configuracoes");
-		mv.addObject("usuario", (Usuario) session.getAttribute("usuarioLogado"));
+		Usuario usuarioLogado = (Usuario) session.getAttribute("usuarioLogado");
+		mv.addObject("usuario", usuarioLogado);
+		mv.addObject("isProvedorLocal", usuarioLogado.getProvedor().equals(Provedor.LOCAL) ? true : false);
 		return mv;
 	}
 
@@ -41,6 +44,10 @@ public class HomeController {
 		mv.addObject("usuario", usuario);
 		
 		Usuario usuarioLogado = (Usuario) session.getAttribute("usuarioLogado");
+		
+		if (!usuarioLogado.getProvedor().equals(Provedor.LOCAL)) {
+			return "redirect:/configuracoes";
+		}
 
 		// Validar campos atualizados
 		try {

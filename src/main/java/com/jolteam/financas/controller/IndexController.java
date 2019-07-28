@@ -20,8 +20,8 @@ import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.jolteam.financas.dao.LogDAO;
-import com.jolteam.financas.enums.TiposCodigos;
-import com.jolteam.financas.enums.TiposLogs;
+import com.jolteam.financas.enums.TipoCodigo;
+import com.jolteam.financas.enums.TipoLog;
 import com.jolteam.financas.exceptions.UsuarioDesativadoException;
 import com.jolteam.financas.exceptions.UsuarioInexistenteException;
 import com.jolteam.financas.exceptions.UsuarioInvalidoException;
@@ -45,7 +45,7 @@ public class IndexController {
 	}
 
 	@GetMapping("/cadastrar")
-	public ModelAndView viewCadastrar(Model model) {
+	public ModelAndView viewCadastrar() {
 		ModelAndView mv = new ModelAndView("deslogado/cadastrar");
 		mv.addObject("usuario", new Usuario());
 
@@ -81,8 +81,14 @@ public class IndexController {
 	}
 
 	@GetMapping("/entrar")
-	public ModelAndView viewEntrar() {
+	public ModelAndView viewEntrar(@RequestParam(required = false) String erro, RedirectAttributes ra) {
 		ModelAndView mv = new ModelAndView("deslogado/entrar");
+		
+		if (erro != null && erro.equals("email_em_uso")) {
+			ra.addFlashAttribute("msgErro", "Este e-mail foi cadastrado sem vínculo com Google.");
+			mv.setViewName("redirect:/entrar");
+		}
+		
 		return mv;
 	}
 
@@ -96,7 +102,7 @@ public class IndexController {
 			session.setAttribute("usuarioLogado", usuario);
 
 			// salva um log de login no banco
-			this.logs.save(new Log(usuario, TiposLogs.LOGIN, LocalDateTime.now(), request.getRemoteAddr()));
+			this.logs.save(new Log(usuario, TipoLog.LOGIN, LocalDateTime.now(), request.getRemoteAddr()));
 			
 			if (!Strings.isBlank(destino)) {
 				System.out.println("Redirecionando para "+destino+"...");
@@ -140,9 +146,9 @@ public class IndexController {
 	{
 		if (id == null || Strings.isEmpty(codigo)) {
 			return "redirect:/";
-		} else if (this.codigoService.isCodigoValido(id, codigo, TiposCodigos.ATIVACAO_CONTA)) {
+		} else if (this.codigoService.isCodigoValido(id, codigo, TipoCodigo.ATIVACAO_CONTA)) {
 			Usuario usuario = this.usuarioService.findById(id).get();
-			Codigo codigoExistente = this.codigoService.findByUsuarioAndTipo(usuario, TiposCodigos.ATIVACAO_CONTA).get();
+			Codigo codigoExistente = this.codigoService.findByUsuarioAndTipo(usuario, TipoCodigo.ATIVACAO_CONTA).get();
 			
 			// ativa a conta do usuário e atualiza no banco
 			usuario.setAtivado(true);
@@ -189,7 +195,7 @@ public class IndexController {
 	{
 		if (id == null || Strings.isEmpty(codigo)) {
 			return "redirect:/";
-		} else if (!this.codigoService.isCodigoValido(id, codigo, TiposCodigos.REDEFINICAO_SENHA)) {
+		} else if (!this.codigoService.isCodigoValido(id, codigo, TipoCodigo.REDEFINICAO_SENHA)) {
 			model.addAttribute("msgErro", "Este link é inválido ou já foi usado antes.");
 		}
 		
@@ -214,9 +220,9 @@ public class IndexController {
 		} else if (!novaSenhaRepetida.equals(novaSenha)) {
 			model.addAttribute("msgErroCampos", "As senhas não conferem.");
 		} else {
-			if (this.codigoService.isCodigoValido(id, codigo, TiposCodigos.REDEFINICAO_SENHA)) {
+			if (this.codigoService.isCodigoValido(id, codigo, TipoCodigo.REDEFINICAO_SENHA)) {
 				Usuario usuario = this.usuarioService.findById(id).get();
-				Codigo codigoExistente = this.codigoService.findByUsuarioAndTipo(usuario, TiposCodigos.REDEFINICAO_SENHA).get();
+				Codigo codigoExistente = this.codigoService.findByUsuarioAndTipo(usuario, TipoCodigo.REDEFINICAO_SENHA).get();
 				
 				// define a nova senha do usuário e atualiza no banco
 				usuario.setSenha(this.usuarioService.criptografarSenha(novaSenha));

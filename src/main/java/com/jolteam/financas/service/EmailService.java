@@ -8,19 +8,19 @@ import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
 
-import com.jolteam.financas.enums.TiposEmails;
+import com.jolteam.financas.enums.TipoEmail;
 
 @Service
 public class EmailService {
 
 	@Autowired JavaMailSender mailSender;
 	
-	public void enviar(String destinatario, String assunto, String corpo, TiposEmails tipo) {
+	public void enviar(String destinatario, String assunto, String corpo, TipoEmail tipo) {
 		new Thread() {
 			
 			@Override
 			public void run() {
-				if (tipo.equals(TiposEmails.TEXTO)) {
+				if (tipo.equals(TipoEmail.TEXTO)) {
 					SimpleMailMessage message = new SimpleMailMessage();
 					message.setSubject(assunto);
 					message.setText(corpo);

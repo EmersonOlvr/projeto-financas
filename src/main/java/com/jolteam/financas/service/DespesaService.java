@@ -9,7 +9,7 @@ import org.springframework.stereotype.Service;
 
 import com.jolteam.financas.dao.CategoriaDAO;
 import com.jolteam.financas.dao.TransacaoDAO;
-import com.jolteam.financas.enums.TiposTransacoes;
+import com.jolteam.financas.enums.TipoTransacao;
 import com.jolteam.financas.exceptions.DespesaException;
 import com.jolteam.financas.model.Categoria;
 import com.jolteam.financas.model.Despesa;
@@ -45,7 +45,7 @@ public class DespesaService {
 		//tentativa de salvar no banco
 		
 		try {
-			this.transacoes.save(new Transacao(despesa.getUsuario(), TiposTransacoes.DESPESA, despesa.getCategoria(),
+			this.transacoes.save(new Transacao(despesa.getUsuario(), TipoTransacao.DESPESA, despesa.getCategoria(),
 					despesa.getDescricao(), despesa.getValor()));
 		} catch (Exception e){
 			throw new DespesaException("Desculpe, algo deu errado.");
@@ -57,7 +57,7 @@ public class DespesaService {
 		catDespesa.setDataCriacao(LocalDateTime.now());
 		
 		//define tipo de transação da categoria 
-		catDespesa.setTipoTransacao(TiposTransacoes.DESPESA);
+		catDespesa.setTipoTransacao(TipoTransacao.DESPESA);
 		
 		//Validação nome e tratamento de dados
 		

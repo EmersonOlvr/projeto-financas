@@ -81,7 +81,7 @@
 										<span aria-hidden="true">&times;</span>
 									</button>
 								</div>
-								<form id="needs-validation" novalidate th:object="${catDespesa}" method="post">
+								<form id="needs-validation" novalidate th:object="${catDespesa}" th:action="@{/despesas/categorias}" method="post">
 									<label for="validationCustom01">Nome da Categoria</label>
 									<div class="input-group mb-3">
 										<input type="text" class="form-control" th:field="*{nome}" id="validationCustom01" placeholder="Nome da Categoria..." aria-label="Nome da Categoria..." required>

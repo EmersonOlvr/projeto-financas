@@ -54,7 +54,7 @@
 		<!-- Redes Sociais -->
 		<div class="text-center align-middle">
 			<!--<button class="btn btn-facebook btn-rounded" onclick="">Entrar com Facebook</button><br><br>-->
-			<div id="customBtn" style="height: 50px; width: 240px; margin: 0 auto;" class="abcRioButton abcRioButtonBlue">
+			<div onclick="location.href='/oauth2/authorize/google'" style="height: 50px; width: 240px; margin: 0 auto;" class="abcRioButton abcRioButtonBlue">
 				<div class="abcRioButtonContentWrapper">
 					<div class="abcRioButtonIcon" style="padding:15px">
 						<div style="width:18px;height:18px;" class="abcRioButtonSvgImageWithFallback abcRioButtonIconImage abcRioButtonIconImage18">
@@ -93,7 +93,7 @@
 			Verifique seu e-mail para <a href="#" data-toggle="modal" data-target="#modalAtivacao"><sup><span class="icon-size"><i class="fas fa-info"></i></span></sup>ativar sua conta</a>.
 		</div>
 			
-		<form method="post" onsubmit="desativar(this.entrar)">
+		<form th:action="@{/entrar}" method="POST" onsubmit="desativar(this.entrar)">
 			<div class="form-label-group">
 				<input type="email" id="email" name="email" class="form-control" placeholder="E-mail" required autofocus>
 				<label for="email">E-mail</label>

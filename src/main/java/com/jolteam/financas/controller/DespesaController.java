@@ -16,8 +16,8 @@ import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.jolteam.financas.dao.CategoriaDAO;
-import com.jolteam.financas.enums.TiposLogs;
-import com.jolteam.financas.enums.TiposTransacoes;
+import com.jolteam.financas.enums.TipoLog;
+import com.jolteam.financas.enums.TipoTransacao;
 import com.jolteam.financas.exceptions.DespesaException;
 import com.jolteam.financas.model.Categoria;
 import com.jolteam.financas.model.Despesa;
@@ -38,7 +38,7 @@ public class DespesaController {
 	public ModelAndView viewDespesaAdicionar(HttpSession session) {
 			ModelAndView mv=new ModelAndView("despesas-adicionar");
 			mv.addObject("despesa", new Despesa());
-			mv.addObject("categorias", this.categorias.findByUsuarioAndTipoTransacaoOrderByDataCriacaoDesc((Usuario) session.getAttribute("usuarioLogado"), TiposTransacoes.DESPESA));
+			mv.addObject("categorias", this.categorias.findByUsuarioAndTipoTransacaoOrderByDataCriacaoDesc((Usuario) session.getAttribute("usuarioLogado"), TipoTransacao.DESPESA));
 			return mv;
 	}
 	
@@ -50,7 +50,7 @@ public class DespesaController {
 			this.despesaService.salvar(despesa);
 			
 			// salva um log de sucesso no banco
-			this.logService.save(new Log(despesa.getUsuario(), TiposLogs.CADASTRO_DESPESA, LocalDateTime.now(), request.getRemoteAddr()));
+			this.logService.save(new Log(despesa.getUsuario(), TipoLog.CADASTRO_DESPESA, LocalDateTime.now(), request.getRemoteAddr()));
 		} catch (DespesaException de) {
 			return this.viewDespesaAdicionar(session).addObject("msgErroAdd", de.getMessage());
 		}
@@ -62,7 +62,7 @@ public class DespesaController {
 	public ModelAndView viewCategoriasDespesas(HttpSession session) {
 		ModelAndView mv= new ModelAndView("despesas-categorias");
 		mv.addObject("catDespesa", new Categoria());
-		mv.addObject("listaCatDespesa", this.categorias.findByUsuarioAndTipoTransacaoOrderByDataCriacaoDesc((Usuario) session.getAttribute("usuarioLogado"), TiposTransacoes.DESPESA));
+		mv.addObject("listaCatDespesa", this.categorias.findByUsuarioAndTipoTransacaoOrderByDataCriacaoDesc((Usuario) session.getAttribute("usuarioLogado"), TipoTransacao.DESPESA));
 		return mv;
 	}
 	
@@ -73,7 +73,7 @@ public class DespesaController {
 		try {
 			this.despesaService.salvarCategoriaDespesa(catDespesa);
 			
-			this.logService.save(new Log(catDespesa.getUsuario(),TiposLogs.CADASTRO_CATEGORIA_DESPESA,LocalDateTime.now(),request.getRemoteAddr()));
+			this.logService.save(new Log(catDespesa.getUsuario(),TipoLog.CADASTRO_CATEGORIA_DESPESA,LocalDateTime.now(),request.getRemoteAddr()));
 		} catch (DespesaException de) {
 			return this.viewCategoriasDespesas(session).addObject("msgErroAdd", de.getMessage());
 		}
@@ -85,7 +85,7 @@ public class DespesaController {
 	public String excluirCatDespesa(@RequestParam Integer id, HttpSession session, RedirectAttributes ra) {
 		try {
 			Usuario usuario = (Usuario) session.getAttribute("usuarioLogado");
-			Categoria catExistente = this.categorias.findByIdAndUsuarioAndTipoTransacao(id, usuario, TiposTransacoes.DESPESA)
+			Categoria catExistente = this.categorias.findByIdAndUsuarioAndTipoTransacao(id, usuario, TipoTransacao.DESPESA)
 													.orElseThrow(() -> new Exception("Categoria inexistente."));
 			
 			if (this.despesaService.existsByCategoria(catExistente)) {

@@ -11,7 +11,7 @@ import javax.persistence.Table;
 
 import org.hibernate.annotations.GenericGenerator;
 
-import com.jolteam.financas.enums.TiposCodigos;
+import com.jolteam.financas.enums.TipoCodigo;
 
 @Entity
 @Table(name = "codigos")
@@ -27,11 +27,11 @@ public class Codigo {
 	
 	@Column(nullable = false)
 	@Enumerated(EnumType.STRING)
-	private TiposCodigos tipo;
+	private TipoCodigo tipo;
 	
 	
 	public Codigo() {}
-	public Codigo(Usuario usuario, TiposCodigos tipo) {
+	public Codigo(Usuario usuario, TipoCodigo tipo) {
 		this.usuario = usuario;
 		this.tipo = tipo;
 	}
@@ -43,10 +43,10 @@ public class Codigo {
 	public void setUsuario(Usuario usuario) {
 		this.usuario = usuario;
 	}
-	public TiposCodigos getTipo() {
+	public TipoCodigo getTipo() {
 		return tipo;
 	}
-	public void setTipo(TiposCodigos tipo) {
+	public void setTipo(TipoCodigo tipo) {
 		this.tipo = tipo;
 	}
 	public String getCodigo() {
