@@ -72,6 +72,10 @@ public class HomeController {
 	{
 		Usuario usuarioLogado = (Usuario) session.getAttribute("usuarioLogado");
 		
+		if (!usuarioLogado.getProvedor().equals(Provedor.LOCAL)) {
+			return "redirect:/configuracoes";
+		}
+		
 		if (Strings.isEmpty(senhaAtual)) {
 			ra.addFlashAttribute("msgErroConfig", "Insira a senha atual.");
 		} else if (!this.usuarioService.checarSenha(senhaAtual, usuarioLogado.getSenha())) {
