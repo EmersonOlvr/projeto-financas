@@ -2,7 +2,7 @@ package com.jolteam.financas.enums;
 
 public enum Provedor {
 
-	LOCAL("Local"), GOOGLE("Google");
+	LOCAL("Local"), GOOGLE("Google"), FACEBOOK("Facebook");
 	
 	private String valor;
 	Provedor(String valor) {

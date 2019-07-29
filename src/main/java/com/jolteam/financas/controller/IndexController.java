@@ -84,9 +84,24 @@ public class IndexController {
 	public ModelAndView viewEntrar(@RequestParam(required = false) String erro, RedirectAttributes ra) {
 		ModelAndView mv = new ModelAndView("deslogado/entrar");
 		
-		if (erro != null && erro.equals("email_em_uso")) {
-			ra.addFlashAttribute("msgErro", "Este e-mail foi cadastrado sem vínculo com Google.");
+		if (erro != null) {
 			mv.setViewName("redirect:/entrar");
+			
+			if (erro.equals("email_em_uso")) {
+				ra.addFlashAttribute("msgErro", "Este e-mail já está em uso.");
+			} else if (erro.equals("authorization_request_not_found")) {
+				ra.addFlashAttribute("msgErro", "Erro ao entrar. Por favor, tente novamente.");
+			} else if (erro.equals("email_inexistente")) {
+				ra.addFlashAttribute("msgErro", "E-mail não encontrado em nossa base de dados.");
+			} else if (erro.equals("access_denied")) {
+				ra.addFlashAttribute("msgErro", "Por favor, aceite as permissões necessárias.");
+			} else if (erro.equals("provedor_invalido_google")) {
+				ra.addFlashAttribute("msgErro", "Parece que você está cadastrado com a conta do Google. Por favor, use sua conta do Google para entrar.");
+			} else if (erro.equals("provedor_invalido_facebook")) {
+				ra.addFlashAttribute("msgErro", "Parece que você está cadastrado com a conta do Facebook. Por favor, use sua conta do Facebook para entrar.");
+			} else {
+				ra.addFlashAttribute("msgErro", "Desculpe, algo deu errado. Tente novamente.");
+			}
 		}
 		
 		return mv;

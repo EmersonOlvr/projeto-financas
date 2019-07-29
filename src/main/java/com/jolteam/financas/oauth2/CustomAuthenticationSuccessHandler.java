@@ -1,6 +1,7 @@
 package com.jolteam.financas.oauth2;
 
 import java.io.IOException;
+import java.time.LocalDateTime;
 import java.util.Map;
 
 import javax.servlet.ServletException;
@@ -9,22 +10,25 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.oauth2.core.oidc.user.DefaultOidcUser;
+import org.springframework.security.oauth2.core.user.DefaultOAuth2User;
 import org.springframework.security.web.authentication.SimpleUrlAuthenticationSuccessHandler;
 import org.springframework.stereotype.Component;
 
+import com.jolteam.financas.dao.LogDAO;
 import com.jolteam.financas.dao.UsuarioDAO;
 import com.jolteam.financas.enums.Provedor;
+import com.jolteam.financas.enums.TipoLog;
 import com.jolteam.financas.exceptions.UsuarioInexistenteException;
+import com.jolteam.financas.model.Log;
 import com.jolteam.financas.model.Usuario;
 
 @Component
 public class CustomAuthenticationSuccessHandler extends SimpleUrlAuthenticationSuccessHandler {
 
+	@Autowired private LogDAO logs;
 	@Autowired private UsuarioDAO usuarios;
 
-//	@Autowired private JwtTokenUtil jwtTokenUtil;
-
+	// este método é chamado após o usuário oauth ser inserido/atualizado no banco
 	@Override
 	public void onAuthenticationSuccess(HttpServletRequest request, 
 			HttpServletResponse response, 
@@ -36,23 +40,17 @@ public class CustomAuthenticationSuccessHandler extends SimpleUrlAuthenticationS
 			return;
 		}
 		
-		DefaultOidcUser oidcUser = (DefaultOidcUser) authentication.getPrincipal();
-		Map<String, Object> attributes = oidcUser.getAttributes();
+		// obtém os atributos da conta do usuário do provedor oauth
+		DefaultOAuth2User oauth2User = (DefaultOAuth2User) authentication.getPrincipal();
+		Map<String, Object> attributes = oauth2User.getAttributes();
+		
 		String email = (String) attributes.get("email");
 		try {
-			// o correto seria não lançar uma excessão, pois, antes de chegar neste método
-			// o usuário foi inserido no banco (no método updateUser()), mas é melhor prevenir do que remediar 
-			// (por isso o uso do try/catch).
 			Usuario usuario = this.usuarios.findByEmail(email).orElseThrow(() -> 
-				new UsuarioInexistenteException("Erro no Login. E-mail inexistente."));
+				new UsuarioInexistenteException("E-mail inexistente."));
 			
+			// se o provedor não for local, ou seja, é um conta do Google ou do Facebook
 			if (!usuario.getProvedor().equals(Provedor.LOCAL)) {
-//				String token = this.jwtTokenUtil.generateToken(usuario);
-//				String redirectionUrl = UriComponentsBuilder.fromUriString("/home")
-//						.queryParam("auth_token", token)
-//						.build()
-//						.toUriString();
-				
 				// define o IP de registro do usuário caso esteja indefinido
 				if (usuario.getRegistroIp().equals("indefinido")) {
 					usuario.setRegistroIp(request.getRemoteAddr());
@@ -62,6 +60,9 @@ public class CustomAuthenticationSuccessHandler extends SimpleUrlAuthenticationS
 				// salva o usuário na sessão
 				request.getSession().setAttribute("usuarioLogado", usuario);
 				
+				// salva um log de login no banco
+				this.logs.save(new Log(usuario, TipoLog.LOGIN, LocalDateTime.now(), request.getRemoteAddr()));
+				
 				// redireciona para /home
 				this.getRedirectStrategy().sendRedirect(request, response, "/home");
 				System.out.println("Redirecionando para /home...");
@@ -69,11 +70,9 @@ public class CustomAuthenticationSuccessHandler extends SimpleUrlAuthenticationS
 				this.getRedirectStrategy().sendRedirect(request, response, "/entrar?erro=email_em_uso");
 			}
 		} catch (UsuarioInexistenteException e) {
-			System.out.println(e.getMessage());
-			
 			// isso é estranho mas o e-mail informado não existe, portanto, não dá pra realizar login.
 			// sendo assim, redireciona para /entrar
-			this.getRedirectStrategy().sendRedirect(request, response, "/entrar");
+			this.getRedirectStrategy().sendRedirect(request, response, "/entrar?erro=email_inexistente");
 		}
 		
 	}
