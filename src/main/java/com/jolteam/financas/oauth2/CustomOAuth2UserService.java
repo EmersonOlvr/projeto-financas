@@ -4,6 +4,7 @@ import java.time.LocalDateTime;
 import java.util.Map;
 import java.util.Optional;
 
+import org.apache.logging.log4j.util.Strings;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.oauth2.client.userinfo.DefaultOAuth2UserService;
 import org.springframework.security.oauth2.client.userinfo.OAuth2UserRequest;
@@ -14,6 +15,7 @@ import org.springframework.stereotype.Service;
 
 import com.jolteam.financas.dao.UsuarioDAO;
 import com.jolteam.financas.dto.FacebookOAuth2UserInfo;
+import com.jolteam.financas.dto.GithubOAuth2UserInfo;
 import com.jolteam.financas.dto.GoogleOAuth2UserInfo;
 import com.jolteam.financas.dto.OAuth2UserInfo;
 import com.jolteam.financas.enums.Provedor;
@@ -36,7 +38,7 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
 		Map<String, Object> attributes = super.loadUser(userRequest).getAttributes();
 		
 		// OAuth2UserInfo é uma classe abstrata, portanto, esta variável aceita qualquer objeto
-		// de classes que extendam (extends) OAuth2UserInfo, por exemplo: GoogleOAuth2UserInfo
+		// de classes que extendam (extends) ela, por exemplo: GoogleOAuth2UserInfo
 		OAuth2UserInfo userInfo = null;
 		
 		// esta variável recebe o nome do provedor auth, por exemplo: 'google'
@@ -54,6 +56,11 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
 			// (que também extende OAuth2UserInfo)
 			// juntamente com os valores de seus atributos
 			userInfo = new FacebookOAuth2UserInfo(attributes);
+		} else if (registrationId.equalsIgnoreCase(Provedor.GITHUB.toString())) {
+			// a variável userInfo receberá uma nova instância da classe GithubOAuth2UserInfo
+			// (que também extende OAuth2UserInfo)
+			// juntamente com os valores de seus atributos
+			userInfo = new GithubOAuth2UserInfo(attributes);
 		}
 		
 		// chama o método que irá checar se o usuário existe ou não, fazer validações
@@ -85,6 +92,12 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
 				// mas o usuário da requisição (que acabou de fazer login) não for um usuário do Facebook
 				if (!(userInfo instanceof FacebookOAuth2UserInfo)) {
 					throw new OAuth2AuthenticationException(new OAuth2Error("unauthorized_client"), "provedor_invalido_facebook");
+				}
+			// se o provedor do usuário do banco for o GitHub
+			} else if (usuario.getProvedor().equals(Provedor.GITHUB)) {
+				// mas o usuário da requisição (que acabou de fazer login) não for um usuário do GitHub
+				if (!(userInfo instanceof GithubOAuth2UserInfo)) {
+					throw new OAuth2AuthenticationException(new OAuth2Error("unauthorized_client"), "provedor_invalido_github");
 				}
 			}
 			// resumindo... por exemplo, se um usuário usou sua conta do Google para se cadastrar
@@ -125,6 +138,15 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
 			} else if (userInfo instanceof FacebookOAuth2UserInfo) {
 				usuario.setSobrenome(((FacebookOAuth2UserInfo) userInfo).getLastName());
 				usuario.setProvedor(Provedor.FACEBOOK);
+			// se for um usuário do GitHub
+			} else if (userInfo instanceof GithubOAuth2UserInfo) {
+				if (Strings.isBlank(((GithubOAuth2UserInfo) userInfo).getFullName())) {
+					throw new OAuth2AuthenticationException(new OAuth2Error("unauthorized_client"), "nome_vazio_github");
+				}
+				usuario.setSobrenome(((GithubOAuth2UserInfo) userInfo).getSobrenome());
+				usuario.setProvedor(Provedor.GITHUB);
+				
+				System.out.println(userInfo);
 			}
 		}
 		

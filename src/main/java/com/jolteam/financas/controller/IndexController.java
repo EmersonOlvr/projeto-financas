@@ -95,10 +95,14 @@ public class IndexController {
 				ra.addFlashAttribute("msgErro", "E-mail não encontrado em nossa base de dados.");
 			} else if (erro.equals("access_denied")) {
 				ra.addFlashAttribute("msgErro", "Por favor, aceite as permissões necessárias.");
+			} else if (erro.equals("nome_vazio_github")) {
+				ra.addFlashAttribute("msgErro", "Parece que você não tem um nome definido no GitHub. Por favor, defina um antes de continuar.");
 			} else if (erro.equals("provedor_invalido_google")) {
-				ra.addFlashAttribute("msgErro", "Parece que você está cadastrado com a conta do Google. Por favor, use sua conta do Google para entrar.");
+				ra.addFlashAttribute("msgErro", "Aparentemente você está cadastrado com a conta do Google. Por favor, use sua conta do Google para entrar.");
 			} else if (erro.equals("provedor_invalido_facebook")) {
-				ra.addFlashAttribute("msgErro", "Parece que você está cadastrado com a conta do Facebook. Por favor, use sua conta do Facebook para entrar.");
+				ra.addFlashAttribute("msgErro", "Aparentemente você está cadastrado com a conta do Facebook. Por favor, use sua conta do Facebook para entrar.");
+			} else if (erro.equals("provedor_invalido_github")) {
+				ra.addFlashAttribute("msgErro", "Aparentemente você está cadastrado com a conta do GitHub. Por favor, use sua conta do GitHub para entrar.");
 			} else {
 				ra.addFlashAttribute("msgErro", "Desculpe, algo deu errado. Tente novamente.");
 			}
