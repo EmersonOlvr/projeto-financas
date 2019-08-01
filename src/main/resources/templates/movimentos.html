@@ -30,14 +30,30 @@
 			
 			<main class="main-content bgc-grey-100">
 				<div id="mainContent">
+				
+				<div th:if="${!#strings.isEmpty(msgSucessoExcluir)}" class="alert alert-success alert-dismissible fade show" role="alert">
+									[[${msgSucessoExcluir}]]
+									<button type="button" class="close" data-dismiss="alert" aria-label="Close">
+										<span aria-hidden="true">&times;</span>
+									</button>
+				
+				
+				
+				</div>
+				
+				
+				
+				
+				
+				
 					<div class="bgc-light-green-500 c-white p-20">
 						<div class="peers ai-c jc-sb">
 							<div class="peer peer-greed">
-								<h5>Março 2017</h5>
-								<p class="mB-0">Movimentos</p>
+								<h5>Lista de Movimentos</h5>
+<!-- 								<p class="mB-0">Movimentos</p> -->
 							</div>
 							<div class="peer">
-								<h3 class="text-right">R$ 600,00</h3>
+								<h3 class="text-right">[[${saldoAtual}]]</h3>
 							</div>
 						</div>
 					</div>
@@ -65,11 +81,13 @@
 											<span th:class="${transacao.tipo.name() == 'DESPESA' ? 'text-danger' : 'text-success'}" th:text = "${transacao.valor}"></span>
 										</td>
 										<td>
-										<a href ="#" class="btn btn-sm btn-outline-danger">Excluir</a>
+										<a th:href="@{/movimentos/excluir(id=${transacao.id})}" class="btn btn-sm btn-outline-danger">Excluir</a>
 										
 										</td>
 									</tr>
-									
+									<tr th:if="${listatransacao.size() == 0}">
+										<td colspan="5"><i>Nenhuma movimentação encontrada.</i></td>
+									</tr>
 								</tbody>
 							</table>
 						</div>
@@ -80,10 +98,10 @@
 									<p>Despesas</p>
 									<h6 class="mb-0">Saldo Atual</h6>
 								</div>
-								<div class="peer"  th:each = "transacao : ${listatransacao}">
-									<p class="text-success mb-0" th:text = "${transacao.valor}"></p>
-									<p class="text-danger">R$ 124,55</p>
-									<p class="text-info mb-0">R$ 445,45</p>
+								<div class="peer">
+									<p class="text-success mb-0">[[${totalReceitas}]]</p>
+									<p class="text-danger">[[${totalDespesas}]]</p>
+									<p class="text-info mb-0">[[${saldoAtual}]]</p>
 								</div>
 							</div>
 						</div>
