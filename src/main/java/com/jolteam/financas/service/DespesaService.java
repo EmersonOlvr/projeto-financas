@@ -32,14 +32,12 @@ public class DespesaService {
 		}
 		//Validação da descrição 
 		despesa.setDescricao(despesa.getDescricao().trim());
-		if(despesa.getDescricao().isEmpty()) {
-			throw new DespesaException("Insira uma descrição.");
-		}else if(despesa.getDescricao().length() < 2){
+		if (!Strings.isBlank(despesa.getDescricao()) && despesa.getDescricao().length() < 2){
 			throw new DespesaException("A descrição deve ter no mínimo 2 caracteres.");
 		}
 		//Validação do valor
 		if(despesa.getValor().compareTo(new BigDecimal("0.05"))== -1) {
-			throw new DespesaException("O valor da despesa deve ser igual ou maior que 5 centavos (0.05).");
+			throw new DespesaException("O valor da despesa deve ser igual ou maior que R$ 0,05.");
 		}
 		
 		//tentativa de salvar no banco

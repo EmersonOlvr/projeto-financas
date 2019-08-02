@@ -31,7 +31,7 @@ public class Transacao {
 	@ManyToOne(optional = false)
 	private Categoria categoria;
 	
-	@Column(length = 50, nullable = false)
+	@Column(length = 50)
 	private String descricao;
 	
 	@Column(nullable = false)

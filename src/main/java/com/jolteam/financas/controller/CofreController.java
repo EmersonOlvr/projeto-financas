@@ -60,10 +60,6 @@ public class CofreController {
 		mv.addObject("str_valorInicial", str_valorInicial);
 		mv.addObject("str_totalDesejado", str_totalDesejado);
 		
-		System.out.println(cofre);
-		System.out.println("Valor inicial: "+str_valorInicial);
-		System.out.println("Valor desejado: "+str_totalDesejado);
-		
 		// converte os valores informados (que estão como String) para BigDecimal
 		BigDecimal valorInicial;
 		BigDecimal totalDesejado;
@@ -84,8 +80,6 @@ public class CofreController {
 		cofre.setDataCriacao(LocalDateTime.now());
 		
 		try {
-			System.out.println(cofre);
-			
 			// salva o cofre no banco (ou não, pode lançar uma excessão)
 			cofre = this.cofreService.salvar(cofre);
 			

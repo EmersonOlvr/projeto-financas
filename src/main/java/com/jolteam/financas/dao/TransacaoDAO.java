@@ -21,7 +21,11 @@ public interface TransacaoDAO extends JpaRepository<Transacao, Integer> {
 	@Query("SELECT t FROM Transacao t WHERE t.usuario = :usuario AND t.tipo = :tipo")
 	List<Transacao> findAllByUsuarioAndTipo(@Param("usuario") Usuario usuario, @Param("tipo") TipoTransacao tipo);
 
+	List<Transacao> findAllByCategoria(Categoria categoria);
+	
 	boolean existsByCategoria(Categoria categoria);
+	
+	List<Transacao> findAllByUsuario(Usuario usuario);
 	
 	Optional<Transacao> findByIdAndUsuario(@Param("id") Integer id, @Param("usuario") Usuario usuario);
 	

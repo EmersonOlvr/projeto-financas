@@ -111,7 +111,7 @@ public class CofreService {
 			if (valor != null) {
 				int result = valor.compareTo(new BigDecimal("0"));
 				if (result != 0) {
-					this.cofreTransacao.save(new CofreTransacao(cofre, valor, LocalDateTime.now(), tipoTransacao));
+					this.cofreTransacao.save(new CofreTransacao(cofre, valor, LocalDateTime.now()));
 				}
 			}
 		}

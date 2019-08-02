@@ -31,13 +31,11 @@ public class ReceitaService {
 			throw new ReceitaException("Selecione uma categoria.");
 		}
 		receita.setDescricao(receita.getDescricao().trim());
-		if (receita.getDescricao().isEmpty()) {
-			throw new ReceitaException("Insira uma descrição.");
-		} else if (receita.getDescricao().length() < 2) {
+		if (!Strings.isBlank(receita.getDescricao()) && receita.getDescricao().length() < 2) {
 			throw new ReceitaException("A descrição deve ter no mínimo 2 caracteres.");
 		}
 		if (receita.getValor().compareTo(new BigDecimal("0.05")) == -1) {
-			throw new ReceitaException("O valor da receita deve ser igual ou maior que 5 centavos (0.05).");
+			throw new ReceitaException("O valor da receita deve ser igual ou maior que R$ 0,05.");
 		}
 
 		// tenta salvar no banco...

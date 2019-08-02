@@ -5,7 +5,7 @@
 	<meta name="viewport" content="width=device-width,initial-scale=1,shrink-to-fit=no">
 	<link rel="icon" href="/img/favicon.ico">
 
-	<title>Histórico das Despesas</title>
+	<title>Histórico de Despesas</title>
 
 	<th:block th:insert="includes/include.html :: #head"></th:block>
 </head>
@@ -32,99 +32,55 @@
 			<main class="main-content bgc-grey-100">
 				<h4 class="c-grey-900">Histórico das Despesas ordenado por Categoria</h4>
 				<div class="row">
-					<div class="col-md-12 mb-3">
+					
+					<div th:if="${!#strings.isEmpty(msgSucessoExcluir)}" class="col-md-12">
+						<div class="alert alert-success alert-dismissible fade show" role="alert">
+							[[${msgSucessoExcluir}]]
+							<button type="button" class="close" data-dismiss="alert" aria-label="Close">
+								<span aria-hidden="true">&times;</span>
+							</button>
+						</div>
+					</div>
+					
+					<div th:if="${#lists.isEmpty(historicoDespesas)}" class="col-md-12 mb-3">
+						<div class="bgc-white bd bdrs-3 p-20" style="font-style: italic;">
+							Nenhuma categoria e nenhuma transação de despesa encontrada.
+						</div>
+					</div>
+					<div th:each="historicoDespesa : ${historicoDespesas}" class="col-md-12 mb-3">
 						<div class="bgc-white bd bdrs-3 p-20">
-							<h4 class="c-grey-900 mB-20">Alimentação</h4>
+							<h4 class="c-grey-900 mB-20">[[${historicoDespesa.categoria.nome}]]</h4>
 							<div class="table-responsive">
 								<table class="table table-hover table-bordered">
 									<thead>
 										<tr>
-											<th scope="col">Nome</th>
-											<th scope="col">Categoria</th>
-											<th scope="col">Data</th>
 											<th scope="col">Valor</th>
+											<th scope="col">Descrição</th>
+											<th scope="col">Data</th>
+											<th scope="col">Ações</th>
 										</tr>
 									</thead>
 									<tbody>
-										<tr>
-											<td>Walmart</td>
-											<td>Alimentação</td>
-											<td>30/03/2014</td>
-											<td>R$ 20,80</td>
+										<tr th:each="transacao : ${historicoDespesa.transacoes}">
+											<td>[[${transacao.valor}]]</td>
+											
+											<td th:if="${#strings.isEmpty(transacao.descricao)}" style="font-style: italic; color: #72777a">
+												Vazia.
+											</td>
+											<td th:if="${!#strings.isEmpty(transacao.descricao)}" th:text="${transacao.descricao}"></td>
+											
+											<td>[[${#temporals.format(transacao.data, 'dd/MM/yyyy HH:mm:ss')}]]</td>
+											<td><a th:href="@{/movimentos/excluir(id=${transacao.id},l=DH)}" class="btn btn-sm btn-outline-danger">Excluir</a></td>
 										</tr>
-										<tr>
-											<td>Leão Atacarejo</td>
-											<td>Alimentação</td>
-											<td>26/03/2014</td>
-											<td>R$ 15,80</td>
+										<tr th:if="${#lists.isEmpty(historicoDespesa.transacoes)}">
+											<td colspan="4" style="font-style: italic;">Nenhuma transação encontrada para esta categoria.</td>
 										</tr>
 									</tbody>
 								</table>
 							</div>
 						</div>
 					</div>
-					<div class="col-md-12 mb-3">
-						<div class="bgc-white bd bdrs-3 p-20">
-							<h4 class="c-grey-900 mB-20">Saúde</h4>
-							<div class="table-responsive">
-								<table class="table table-hover table-bordered">
-									<thead>
-										<tr>
-											<th scope="col">Nome</th>
-											<th scope="col">Categoria</th>
-											<th scope="col">Data</th>
-											<th scope="col">Valor</th>
-										</tr>
-									</thead>
-									<tbody>
-										<tr>
-											<td>Farmácia do Povo</td>
-											<td>Saúde</td>
-											<td>25/03/2014</td>
-											<td>R$ 17,75</td>
-										</tr>
-										<tr>
-											<td>Farmácia Permanente</td>
-											<td>Saúde</td>
-											<td>26/03/2014</td>
-											<td>R$ 45,90</td>
-										</tr>
-									</tbody>
-								</table>
-							</div>
-						</div>
-					</div>
-					<div class="col-md-12 mb-3">
-						<div class="bgc-white bd bdrs-3 p-20">
-							<h4 class="c-grey-900 mB-20">Transporte</h4>
-							<div class="table-responsive">
-								<table class="table table-hover table-bordered">
-									<thead>
-										<tr>
-											<th scope="col">Nome</th>
-											<th scope="col">Categoria</th>
-											<th scope="col">Data</th>
-											<th scope="col">Valor</th>
-										</tr>
-									</thead>
-									<tbody>
-										<tr>
-											<td>Posto Shell</td>
-											<td>Transporte</td>
-											<td>12/03/2014</td>
-											<td>R$ 86,00</td>
-										</tr>
-										<tr>
-											<td>Posto Ipiranga</td>
-											<td>Transporte</td>
-											<td>30/03/2014</td>
-											<td>R$ 40,50</td>
-										</tr>
-									</tbody>
-								</table>
-							</div>
-						</div>
-					</div>
+					
 				</div>
 			</main>
 

@@ -2,6 +2,7 @@ package com.jolteam.financas.service;
 
 import java.math.BigDecimal;
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -12,9 +13,25 @@ import com.jolteam.financas.model.Transacao;
 import com.jolteam.financas.model.Usuario;
 
 @Service
-public class MovimentoService {
+public class MovimentosService {
 
 	@Autowired private TransacaoDAO transacoes;
+	
+	public List<Transacao> listarTodas() {
+		return this.transacoes.findAll();
+	}
+	
+	public List<Transacao> listarTodasPorUsuario(Usuario usuario) {
+		return this.transacoes.findAllByUsuario(usuario);
+	}
+	
+	public Optional<Transacao> buscarPorIdEUsuario(Integer id, Usuario usuario) {
+		return this.transacoes.findByIdAndUsuario(id, usuario);
+	}
+	
+	public void deletarPorIdEUsuario(Integer id, Usuario usuario) {
+		this.transacoes.deleteByIdAndUsuario(id, usuario);
+	}
 	
 	public BigDecimal totalReceitaAcumuladaDe(Usuario usuario) {
 		BigDecimal totalAcumulado = new BigDecimal("0");
