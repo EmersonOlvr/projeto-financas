@@ -10,7 +10,7 @@ import org.thymeleaf.expression.Numbers;
 
 import com.jolteam.financas.exceptions.BigDecimalInvalidoException;
 
-public class Util {
+public abstract class Util {
 
 	// método para obter o IP do usuário
 	public static String getUserIp(HttpServletRequest request) {

@@ -2,6 +2,8 @@ package com.jolteam.financas.controller;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
@@ -21,6 +23,8 @@ import com.jolteam.financas.enums.TipoTransacao;
 import com.jolteam.financas.exceptions.BigDecimalInvalidoException;
 import com.jolteam.financas.exceptions.CofreException;
 import com.jolteam.financas.model.Cofre;
+import com.jolteam.financas.model.CofreTransacao;
+import com.jolteam.financas.model.HistoricoCofreTransacao;
 import com.jolteam.financas.model.Log;
 import com.jolteam.financas.model.Usuario;
 import com.jolteam.financas.service.CofreService;
@@ -109,7 +113,7 @@ public class CofreController {
 		ModelAndView mv = new ModelAndView("cofres-editar");
 		
 		try {
-			Cofre cofre = this.cofreService.findByIdAndUsuario(id, (Usuario) session.getAttribute("usuarioLogado"))
+			Cofre cofre = this.cofreService.obterPorIdEUsuario(id, (Usuario) session.getAttribute("usuarioLogado"))
 					.orElseThrow(() -> new CofreException("Cofre inexistente."));
 			mv.addObject("cofre", cofre);
 		} catch (CofreException ce) {
@@ -124,7 +128,7 @@ public class CofreController {
 			RedirectAttributes ra, HttpSession session) {
 		try {
 			// obtém o cofre do banco que contém o ID fornecido na URL
-			Cofre cofreExistente = this.cofreService.findByIdAndUsuario(
+			Cofre cofreExistente = this.cofreService.obterPorIdEUsuario(
 					cofre.getId(), (Usuario) session.getAttribute("usuarioLogado"))
 					.orElseThrow(() -> new Exception("Cofre inexistente."));
 			
@@ -176,7 +180,7 @@ public class CofreController {
 			if (cofreId == null || cofreId == 0) {
 				throw new Exception("Selecione um cofre.");
 			}
-			cofre = this.cofreService.findByIdAndUsuario(cofreId, (Usuario) session.getAttribute("usuarioLogado"))
+			cofre = this.cofreService.obterPorIdEUsuario(cofreId, (Usuario) session.getAttribute("usuarioLogado"))
 					.orElseThrow(() -> new CofreException("O Cofre selecionado não existe."));
 		} catch (Exception e) {
 			mv.addObject("msgErro", e.getMessage());
@@ -204,11 +208,47 @@ public class CofreController {
 		
 	}
 	
+	@GetMapping("/historico")
+	public ModelAndView viewHistorico(HttpSession session) {
+		ModelAndView mv = new ModelAndView("cofres-historico");
+		
+		Usuario usuario = (Usuario) session.getAttribute("usuarioLogado");
+		
+		List<HistoricoCofreTransacao> historico = new ArrayList<>();
+		
+		List<Cofre> cofresUsuario = this.cofreService.listarPorUsuario(usuario);
+		for (Cofre cofre : cofresUsuario) {
+			List<CofreTransacao> transacoesPorCofre = this.cofreService.listarTransacoesPorCofre(cofre);
+			historico.add(new HistoricoCofreTransacao(cofre, transacoesPorCofre));
+		}
+		
+		mv.addObject("historico", historico);
+		
+		return mv;
+	}
+	
+	@GetMapping("/historico/excluir")
+	public String excluirTransacao(HttpSession session, 
+			@RequestParam(value = "id", required = false) Integer id, 
+			RedirectAttributes ra) 
+	{
+		Usuario usuario = (Usuario) session.getAttribute("usuarioLogado");
+		
+		if (id != null) {
+			// deletarTransacaoPorId() retorna true somente se realmente excluir a transação
+			if (this.cofreService.deletarTransacaoPorId(id, usuario)) {
+				ra.addFlashAttribute("msgSucessoExcluir", "Movimentação excluída com sucesso!");
+			}
+		}
+		
+		return "redirect:/cofres/historico";
+	}
+	
 	@GetMapping("/excluir")
 	public String excluirCofre(@RequestParam Integer id, HttpSession session, RedirectAttributes ra) {
 		try {
 			Usuario usuario = (Usuario) session.getAttribute("usuarioLogado");
-			Cofre cofre = this.cofreService.findByIdAndUsuario(id, usuario).orElseThrow(() -> new Exception("Cofre inexistente."));
+			Cofre cofre = this.cofreService.obterPorIdEUsuario(id, usuario).orElseThrow(() -> new Exception("Cofre inexistente."));
 			
 			this.cofreService.delete(cofre);
 		} catch (Exception e) {

@@ -25,14 +25,14 @@ public class CofreService {
 	@Autowired private CofreDAO cofres;
 	@Autowired private CofreTransacaoDAO cofreTransacao;
 	
-	public Optional<Cofre> findById(Integer id) {
+	public Optional<Cofre> obterPorId(Integer id) {
 		Optional<Cofre> cofre = this.cofres.findById(id);
 		if (cofre.isPresent()) {
 			cofre.get().setTotalAcumulado(this.totalAcumuladoDe(cofre.get()));
 		}
 		return cofre;
 	}
-	public Optional<Cofre> findByIdAndUsuario(Integer id,Usuario usuario) {
+	public Optional<Cofre> obterPorIdEUsuario(Integer id,Usuario usuario) {
 		Optional<Cofre> cofre = this.cofres.findByIdAndUsuario(id, usuario);
 		if (cofre.isPresent()) {
 			cofre.get().setTotalAcumulado(this.totalAcumuladoDe(cofre.get()));
@@ -48,7 +48,7 @@ public class CofreService {
 		
 		return cofres;
 	}
-	public List<Cofre> findAll() {
+	public List<Cofre> listarTodos() {
 		List<Cofre> cofres = this.cofres.findAll();
 		
 		for (Cofre cofre : cofres) {
@@ -56,6 +56,23 @@ public class CofreService {
 		}
 		
 		return cofres;
+	}
+	
+	public List<CofreTransacao> listarTransacoesPorCofre(Cofre cofre) {
+		return this.cofreTransacao.findAllByCofre(cofre);
+	}
+	public boolean deletarTransacaoPorId(Integer id, Usuario usuario) {
+		Optional<CofreTransacao> transacao = this.cofreTransacao.findById(id);
+		if (transacao.isPresent()) {
+			// só excluir a transação se o dono do cofre desta transação for o mesmo que está logado
+			// por exemplo, se um usuário souber o ID da transação de um cofre de um outro usuário
+			// e acessar a URL para excluir passando este ID, nada será feito, pois o cofre não pertence a ele
+			if (transacao.get().getCofre().getUsuario().equals(usuario)) {
+				this.cofreTransacao.deleteById(id);
+				return true;
+			}
+		}
+		return false;
 	}
 	
 	public boolean existsByDescricao(String descricao) {

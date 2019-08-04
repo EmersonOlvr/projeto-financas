@@ -115,6 +115,8 @@ public class IndexController {
 	public String autenticarUsuario(Model model, @RequestParam String email, @RequestParam String senha, 
 			@RequestParam(required = false) String destino, HttpServletRequest request, HttpSession session) {
 		try {
+			System.out.println(destino);
+			
 			Usuario usuario = this.usuarioService.entrar(email, senha);
 
 			// salva o usuário na sessão

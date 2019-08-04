@@ -83,6 +83,7 @@
 		</div>
 			
 		<form th:action="@{/entrar}" method="POST" onsubmit="desativar(this.entrar)">
+			<input type="hidden" name="destino" th:if="${!#strings.isEmpty(param.destino)}" th:value="${param.destino}">
 			<div class="form-label-group">
 				<input type="email" id="email" name="email" class="form-control" placeholder="E-mail" required autofocus>
 				<label for="email">E-mail</label>

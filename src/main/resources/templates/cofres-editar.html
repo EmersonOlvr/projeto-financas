@@ -54,7 +54,7 @@
 											<span aria-hidden="true">&times;</span>
 										</button>
 									</div>
-									<form class="container" th:object="${cofre}" method="post" id="needs-validation" novalidate>
+									<form class="container" th:object="${cofre}" method="post" th:action="@{/cofres/editar}" id="needs-validation" novalidate>
 										<div class="row">
 											<div class="col-md-6 mb-3">
 												<input type="hidden" th:field="*{id}"> <label
