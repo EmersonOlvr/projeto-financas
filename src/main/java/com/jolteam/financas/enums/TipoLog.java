@@ -16,9 +16,15 @@ public enum TipoLog {
 	EXCLUSAO_DESPESA("Exclusão de Despesa"), 
 	EXCLUSAO_COFRE("Exclusão de Cofre"), 
 	
-	EXLUSAO_CATEGORIA_RECEITA("Exclusão de Categoria de Receita"), 
+	EXCLUSAO_CATEGORIA_RECEITA("Exclusão de Categoria de Receita"), 
 	EXCLUSAO_CATEGORIA_DESPESA("Exclusão de Categoria de Despesa"), 
-	EXCLUSAO_CATEGORIA_COFRE("Exclusão de Categoria de Cofre");
+	EXCLUSAO_CATEGORIA_COFRE("Exclusão de Categoria de Cofre"), 
+	
+	CADASTRO_TRANSACAO_POSITIVA_COFRE("Cadastro de Transação Positiva de Cofre"), 
+	CADASTRO_TRANSACAO_NEGATIVA_COFRE("Cadastro de Transação Negativa de Cofre"), 
+	
+	EXCLUSAO_TRANSACAO_POSITIVA_COFRE("Exclusão de Transação com Valor Positivo de Cofre"), 
+	EXCLUSAO_TRANSACAO_NEGATIVA_COFRE("Exclusão de Transação com Valor Negativo de Cofre");
 	
 	public String valor;
 	TipoLog(String valor) {

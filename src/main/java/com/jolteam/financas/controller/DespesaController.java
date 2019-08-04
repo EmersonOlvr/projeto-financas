@@ -108,7 +108,9 @@ public class DespesaController {
 	}
 	
 	@GetMapping("/categorias/excluir")
-	public String excluirCatDespesa(@RequestParam Integer id, HttpSession session, RedirectAttributes ra) {
+	public String excluirCatDespesa(@RequestParam Integer id, HttpSession session, HttpServletRequest request,
+			RedirectAttributes ra) 
+	{
 		try {
 			Usuario usuario = (Usuario) session.getAttribute("usuarioLogado");
 			Categoria catExistente = this.categoriaService.obterPorIdEUsuarioETipoTransacao(id, usuario, TipoTransacao.DESPESA)
@@ -119,6 +121,9 @@ public class DespesaController {
 			} else {
 				ra.addFlashAttribute("msgSucessoExcluir", "Categoria excluída com sucesso!");
 				this.categoriaService.deletarPorId(id);
+				
+				this.logService.save(new Log(usuario, TipoLog.EXCLUSAO_CATEGORIA_DESPESA, LocalDateTime.now(), 
+						Util.getUserIp(request)));
 			}
 		} catch (Exception e) {
 			System.out.println(e.getMessage());

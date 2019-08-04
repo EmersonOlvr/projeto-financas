@@ -58,8 +58,15 @@ public class CofreService {
 		return cofres;
 	}
 	
+	public Optional<CofreTransacao> obterTransacaoPorId(Integer id) {
+		return this.cofreTransacao.findById(id);
+	}
+	
 	public List<CofreTransacao> listarTransacoesPorCofre(Cofre cofre) {
 		return this.cofreTransacao.findAllByCofre(cofre);
+	}
+	public void deletarTransacao(CofreTransacao cofreTransacao) {
+		this.cofreTransacao.delete(cofreTransacao);
 	}
 	public boolean deletarTransacaoPorId(Integer id, Usuario usuario) {
 		Optional<CofreTransacao> transacao = this.cofreTransacao.findById(id);

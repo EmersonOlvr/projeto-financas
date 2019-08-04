@@ -4,6 +4,7 @@ import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
@@ -171,7 +172,7 @@ public class CofreController {
 	
 	@PostMapping("/movimentar")
 	public ModelAndView cofreMovimentos(@RequestParam String str_valor, @RequestParam Integer cofreId,
-			HttpSession session) 
+			HttpSession session, HttpServletRequest request) 
 	{
 		ModelAndView mv = this.viewMovimentos(session);
 		
@@ -195,12 +196,22 @@ public class CofreController {
 			return mv;
 		}
 		
+		Usuario usuario = (Usuario) session.getAttribute("usuarioLogado");
+		
 		int result = valor.compareTo(new BigDecimal("0"));
 		if (result > 0) {
 			this.cofreService.adicionarTransacao(cofre, valor, TipoTransacao.RECEITA);
+
+			this.logService.save(new Log(usuario, TipoLog.CADASTRO_TRANSACAO_POSITIVA_COFRE, LocalDateTime.now(), 
+					Util.getUserIp(request)));
+			
 			return mv.addObject("msgSucesso", "R$ "+Util.getStringOf(valor)+" adicionados ao cofre.");
 		} else if (result < 0) {
 			this.cofreService.adicionarTransacao(cofre, valor, TipoTransacao.DESPESA);
+			
+			this.logService.save(new Log(usuario, TipoLog.CADASTRO_TRANSACAO_NEGATIVA_COFRE, LocalDateTime.now(), 
+					Util.getUserIp(request)));
+			
 			return mv.addObject("msgSucesso", "R$ "+Util.getStringOf(valor.negate())+" retirados do cofre.");
 		} else {
 			return mv.addObject("msgErro", "Informe um valor diferente de R$ 0,00.");
@@ -228,16 +239,26 @@ public class CofreController {
 	}
 	
 	@GetMapping("/historico/excluir")
-	public String excluirTransacao(HttpSession session, 
+	public String excluirTransacao(HttpSession session, HttpServletRequest request, 
 			@RequestParam(value = "id", required = false) Integer id, 
 			RedirectAttributes ra) 
 	{
 		Usuario usuario = (Usuario) session.getAttribute("usuarioLogado");
 		
 		if (id != null) {
-			// deletarTransacaoPorId() retorna true somente se realmente excluir a transação
-			if (this.cofreService.deletarTransacaoPorId(id, usuario)) {
+			Optional<CofreTransacao> cofreTransacao = this.cofreService.obterTransacaoPorId(id);
+			
+			if (cofreTransacao.isPresent()) {
+				this.cofreService.deletarTransacao(cofreTransacao.get());
 				ra.addFlashAttribute("msgSucessoExcluir", "Movimentação excluída com sucesso!");
+				
+				if (cofreTransacao.get().getValor().compareTo(new BigDecimal("0")) < 0) {
+					this.logService.save(new Log(usuario, TipoLog.EXCLUSAO_TRANSACAO_NEGATIVA_COFRE, LocalDateTime.now(), 
+							Util.getUserIp(request)));
+				} else {
+					this.logService.save(new Log(usuario, TipoLog.EXCLUSAO_TRANSACAO_POSITIVA_COFRE, LocalDateTime.now(), 
+							Util.getUserIp(request)));
+				}
 			}
 		}
 		
@@ -245,12 +266,14 @@ public class CofreController {
 	}
 	
 	@GetMapping("/excluir")
-	public String excluirCofre(@RequestParam Integer id, HttpSession session, RedirectAttributes ra) {
+	public String excluirCofre(@RequestParam Integer id, HttpSession session, HttpServletRequest request, RedirectAttributes ra) {
 		try {
 			Usuario usuario = (Usuario) session.getAttribute("usuarioLogado");
 			Cofre cofre = this.cofreService.obterPorIdEUsuario(id, usuario).orElseThrow(() -> new Exception("Cofre inexistente."));
 			
 			this.cofreService.delete(cofre);
+			
+			this.logService.save(new Log(usuario, TipoLog.EXCLUSAO_COFRE, LocalDateTime.now(), Util.getUserIp(request)));
 		} catch (Exception e) {
 			return "redirect:/cofres/listar";
 		}
