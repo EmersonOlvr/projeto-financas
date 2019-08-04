@@ -61,7 +61,7 @@
 									</thead>
 									<tbody>
 										<tr th:each="transacao : ${historico.transacoes}">
-											<td th:style="${transacao.valor > 0 ? 'color: green;' : 'color: red;'}">[[|R$ ${#numbers.formatDecimal(transacao.valor, 1, 'POINT', 2, 'COMMA')}|]]</td>
+											<td th:style="${transacao.valor > 0 ? 'color: green;' : 'color: red;'}">[[${new java.text.DecimalFormat('R$ #,##0.00; -R$ #,##0.00').format(transacao.valor)}]]</td>
 											<td>[[${#temporals.format(transacao.data, 'dd/MM/yyyy HH:mm:ss')}]]</td>
 											<td><a th:href="@{/cofres/historico/excluir(id=${transacao.id})}" class="btn btn-sm btn-outline-danger">Excluir</a></td>
 										</tr>

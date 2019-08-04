@@ -46,14 +46,14 @@
 				
 				
 				
-					<div class="bgc-light-green-500 c-white p-20">
+					<div th:class="|${saldoAtual >= 0 ? 'bgc-light-green-500 ' : ''}c-white p-20|" th:style="${saldoAtual < 0 ? 'background-color: #f44336!important;' : ''}">
 						<div class="peers ai-c jc-sb">
 							<div class="peer peer-greed">
 								<h5>Lista de Movimentos</h5>
 <!-- 								<p class="mB-0">Movimentos</p> -->
 							</div>
 							<div class="peer">
-								<h3 class="text-right">[[|R$ ${#numbers.formatDecimal(saldoAtual, 1, 'POINT', 2, 'COMMA')}|]]</h3>
+								<h3 class="text-right">[[${new java.text.DecimalFormat('R$ #,##0.00; -R$ #,##0.00').format(saldoAtual)}]]</h3>
 							</div>
 						</div>
 					</div>
