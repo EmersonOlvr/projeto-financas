@@ -53,7 +53,7 @@
 <!-- 								<p class="mB-0">Movimentos</p> -->
 							</div>
 							<div class="peer">
-								<h3 class="text-right">[[${new java.text.DecimalFormat('R$ #,##0.00; -R$ #,##0.00').format(saldoAtual)}]]</h3>
+								<h3 class="text-right">[[${T(com.jolteam.financas.util.Util).format(saldoAtual)}]]</h3>
 							</div>
 						</div>
 					</div>
@@ -72,17 +72,29 @@
 								</thead>
 								<tbody>
 									<tr th:each = "transacao : ${listatransacao}">
-										<td class="fw-600" th:text = "${transacao.tipo}"></td>
-										<td><span th:class= "|badge p-10 lh-0 tt-c badge-pill${transacao.tipo.name() == 'DESPESA' ? ' bgc-red-50' : ' bgc-green-50'}|"  th:text = "${transacao.categoria.nome}"></span></td>
-										<td><span th:class="${transacao.tipo.name() == 'DESPESA' ? 'text-danger' : 'text-success'}" th:text = "|R$ ${#numbers.formatDecimal(transacao.valor, 1, 'POINT', 2, 'COMMA')}|"></span></td>
+										<td class="fw-600">[[${transacao.tipo}]]</td>
+										<td>
+											<span th:class="|badge p-10 lh-0 tt-c badge-pill${transacao.tipo.name() == 'DESPESA' ? ' bgc-red-50' : ' bgc-green-50'}|">
+												[[${transacao.categoria.nome}]]$
+											</span>
+										</td>
+										<td>
+											<span th:class="${transacao.tipo.name() == 'DESPESA' ? 'text-danger' : 'text-success'}">
+												[[|R$ ${#numbers.formatDecimal(transacao.valor, 1, 'POINT', 2, 'COMMA')}|]]
+											</span>
+										</td>
 										
 										<td th:if="${#strings.isEmpty(transacao.descricao)}" style="font-style: italic; color: #72777a">
 											Vazia.
 										</td>
-										<td th:if="${!#strings.isEmpty(transacao.descricao)}" th:text="${transacao.descricao}"></td>
+										<td th:if="${!#strings.isEmpty(transacao.descricao)}">
+											[[${transacao.descricao}]]
+										</td>
 										
-										<td th:text = "${#temporals.format(transacao.data, 'dd/MM/yyyy HH:mm:ss')}"></td>
-										<td><a th:href="@{/movimentos/excluir(id=${transacao.id})}" class="btn btn-sm btn-outline-danger">Excluir</a></td>
+										<td>[[${#temporals.format(transacao.data, 'dd/MM/yyyy HH:mm:ss')}]]</td>
+										<td>
+											<a th:href="@{/movimentos/excluir(id=${transacao.id})}" class="btn btn-sm btn-outline-danger">Excluir</a>
+										</td>
 									</tr>
 									<tr th:if="${listatransacao.size() == 0}">
 										<td colspan="6"><i>Nenhuma movimentação encontrada.</i></td>

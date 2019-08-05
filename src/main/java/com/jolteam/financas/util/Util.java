@@ -1,6 +1,7 @@
 package com.jolteam.financas.util;
 
 import java.math.BigDecimal;
+import java.text.DecimalFormat;
 import java.util.Locale;
 
 import javax.servlet.http.HttpServletRequest;
@@ -35,6 +36,12 @@ public abstract class Util {
 	public static String getStringOf(BigDecimal valor) {
 		String str_valor = new Numbers(Locale.ITALY).formatDecimal(valor, 1, "POINT", 2, "COMMA");
 		return str_valor;
+	}
+	
+	public static String format(BigDecimal valor) {
+		DecimalFormat df = (DecimalFormat) DecimalFormat.getCurrencyInstance(new Locale("pt", "BR"));
+		df.applyPattern("R$ #,##0.00;-R$ #,##0.00");
+		return df.format(valor);
 	}
 	
 	public static boolean isEmailValido(String email) {
