@@ -1,10 +1,15 @@
 package com.jolteam.financas.controller;
 
+
+import java.util.List;
+
+
 import javax.servlet.http.HttpSession;
 
 import org.apache.logging.log4j.util.Strings;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -12,9 +17,13 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+
 import com.jolteam.financas.enums.Provedor;
+import com.jolteam.financas.enums.TipoTransacao;
 import com.jolteam.financas.exceptions.UsuarioInvalidoException;
+import com.jolteam.financas.model.Transacao;
 import com.jolteam.financas.model.Usuario;
+import com.jolteam.financas.service.MovimentosService;
 import com.jolteam.financas.service.UsuarioService;
 
 @Controller
@@ -22,10 +31,18 @@ public class HomeController {
 
 	@Autowired
 	private UsuarioService usuarioService;
-
+	@Autowired MovimentosService movimentoService;
+	
 	@GetMapping("/home")
-	public String viewHome() {
-		return "home";
+	public ModelAndView viewHome(HttpSession session) {
+		ModelAndView mv=new ModelAndView("home");
+		Usuario usuario= (Usuario) session.getAttribute("usuarioLogado");
+		List<Transacao> valorReceitas=this.movimentoService.listarPorUsuarioeTipo(usuario, TipoTransacao.RECEITA);
+		List<Transacao> valorDespesas=this.movimentoService.listarPorUsuarioeTipo(usuario, TipoTransacao.DESPESA);
+		
+		mv.addObject("valorReceitas", valorReceitas);
+		mv.addObject("valorDespesas", valorDespesas);
+		return mv;
 	}
 
 	// ====== Configurações ====== //

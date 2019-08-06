@@ -20,7 +20,10 @@ public class MovimentosService {
 	public List<Transacao> listarTodas() {
 		return this.transacoes.findAll();
 	}
+	public List<Transacao> listarPorUsuarioeTipo(Usuario usuario,TipoTransacao tipo){
 	
+		return this.transacoes.findAllByUsuarioAndTipo(usuario, tipo);
+	}
 	public List<Transacao> listarTodasPorUsuario(Usuario usuario) {
 		return this.transacoes.findAllByUsuario(usuario);
 	}
