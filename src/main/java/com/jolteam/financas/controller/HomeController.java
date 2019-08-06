@@ -38,6 +38,8 @@ public class HomeController {
 	public ModelAndView viewHome(HttpSession session) {
 		ModelAndView mv=new ModelAndView("home");
 		
+		Usuario usuario = (Usuario) session.getAttribute("usuarioLogado");
+		
 		int mesAtual = LocalDate.now().getMonthValue();
 		int mesAtualMenosSeis = LocalDate.now().getMonthValue() - 5;
 		
@@ -47,8 +49,8 @@ public class HomeController {
 		for (int i = mesAtualMenosSeis; i <= mesAtual; i++) {
 			Month mes = Month.of(i);
 			
-			List<Transacao> receitasPorMes = this.movimentosService.obterReceitasPorMes(mes);
-			List<Transacao> despesasPorMes = this.movimentosService.obterDespesasPorMes(mes);
+			List<Transacao> receitasPorMes = this.movimentosService.obterReceitasPorMes(mes, usuario);
+			List<Transacao> despesasPorMes = this.movimentosService.obterDespesasPorMes(mes, usuario);
 			
 			BigDecimal totalReceitasPorMes = Util.somarTransacoes(receitasPorMes);
 			BigDecimal totalDespesasPorMes = Util.somarTransacoes(despesasPorMes);

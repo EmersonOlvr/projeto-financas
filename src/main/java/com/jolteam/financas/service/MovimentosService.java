@@ -32,15 +32,13 @@ public class MovimentosService {
 		return this.transacoes.findAllByUsuario(usuario);
 	}
 	
-	public List<Transacao> obterReceitasPorMes(Month mes) {
+	public List<Transacao> obterReceitasPorMes(Month mes, Usuario usuario) {
 		LocalDate data = LocalDate.of(LocalDate.now().getYear(), mes, 1);
-		Usuario usuario = this.usuarios.getOne(1);
 		
 		return this.transacoes.findAllByMes(data, TipoTransacao.RECEITA, usuario);
 	}
-	public List<Transacao> obterDespesasPorMes(Month mes) {
+	public List<Transacao> obterDespesasPorMes(Month mes, Usuario usuario) {
 		LocalDate data = LocalDate.of(LocalDate.now().getYear(), mes, 1);
-		Usuario usuario = this.usuarios.getOne(1);
 		
 		return this.transacoes.findAllByMes(data, TipoTransacao.DESPESA, usuario);
 	}
