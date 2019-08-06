@@ -55,14 +55,9 @@ public class HomeController {
 			BigDecimal totalReceitasPorMes = Util.somarTransacoes(receitasPorMes);
 			BigDecimal totalDespesasPorMes = Util.somarTransacoes(despesasPorMes);
 			
-			System.out.println("Total Receitas de " + mes + ": " + totalReceitasPorMes);
-			System.out.println("Total Despesas de " + mes + ": " + totalDespesasPorMes);
-			
 			receitas.add(totalReceitasPorMes);
 			despesas.add(totalDespesasPorMes);
 		}
-		
-		System.out.println(Util.obterUltimosSeisMeses());
 		
 		mv.addObject("meses", Util.obterUltimosSeisMeses());
 		mv.addObject("receitas", receitas);
