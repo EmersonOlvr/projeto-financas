@@ -1,5 +1,6 @@
 package com.jolteam.financas.dao;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
@@ -22,6 +23,10 @@ public interface TransacaoDAO extends JpaRepository<Transacao, Integer> {
 	List<Transacao> findAllByUsuarioAndTipo(@Param("usuario") Usuario usuario, @Param("tipo") TipoTransacao tipo);
 
 	List<Transacao> findAllByCategoria(Categoria categoria);
+	
+	@Query("SELECT t FROM Transacao t WHERE month(t.data) = month(:data) AND year(t.data) = year(:data)"
+			+ "AND t.tipo = :tipo AND t.usuario = :usuario")
+	List<Transacao> findAllByMes(LocalDate data, TipoTransacao tipo, Usuario usuario);
 	
 	boolean existsByCategoria(Categoria categoria);
 	

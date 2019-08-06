@@ -2,6 +2,10 @@ package com.jolteam.financas.util;
 
 import java.math.BigDecimal;
 import java.text.DecimalFormat;
+import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 import java.util.Locale;
 
 import javax.servlet.http.HttpServletRequest;
@@ -10,6 +14,7 @@ import org.apache.logging.log4j.util.Strings;
 import org.thymeleaf.expression.Numbers;
 
 import com.jolteam.financas.exceptions.BigDecimalInvalidoException;
+import com.jolteam.financas.model.Transacao;
 
 public abstract class Util {
 
@@ -42,6 +47,28 @@ public abstract class Util {
 		DecimalFormat df = (DecimalFormat) DecimalFormat.getCurrencyInstance(new Locale("pt", "BR"));
 		df.applyPattern("R$ #,##0.00;-R$ #,##0.00");
 		return df.format(valor);
+	}
+	
+	public static BigDecimal somarTransacoes(List<Transacao> transacoes) {
+		BigDecimal total = new BigDecimal("0");
+		
+		for (Transacao tr : transacoes) {
+			total = total.add(tr.getValor());
+		}
+		
+		return total;
+	}
+	
+	public static List<String> obterUltimosSeisMeses() {
+		List<String> meses = new ArrayList<>(Arrays.asList(
+					"Janeiro", "Fevereiro", "Março", "Abril", "Maio", "Junho", 
+					"Julho", "Agosto", "Setembro", "Outubro", "Novembro", "Dezembro"
+				));
+		
+		int mesAtual = LocalDate.now().getMonthValue();
+		int primeiroMes = mesAtual - 6;
+		
+		return meses.subList(primeiroMes, mesAtual);
 	}
 	
 	public static boolean isEmailValido(String email) {
