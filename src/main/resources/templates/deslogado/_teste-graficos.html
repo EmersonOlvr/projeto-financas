@@ -1,25 +1,89 @@
-
 <!doctype html>
 <html>
 <head>
+	<meta charset="utf-8">
 	<title>Teste</title>
 	<script type="text/javascript" src="/js/vendor.js"></script>
 	<script type="text/javascript" src="/js/bundle.js"></script>
 	<script type="text/javascript" src="https://www.chartjs.org/samples/latest/utils.js"></script>
 
-	<script type="text/javascript" src="/js/_chartsData.js"></script>
-	<script type="text/javascript" src="/js/_chartsConfig.js"></script>
+<!-- 	<script type="text/javascript" src="/js/_chartsData.js"></script> -->
+<!-- 	<script type="text/javascript" src="/js/_chartsConfig.js"></script> -->
 </head>
 <body>
 	<div style="width: 50%">
-		<canvas id="chart-area-1" height="100"></canvas>
-		<canvas id="chart-area-2" height="100"></canvas>
+<!-- 		<canvas id="chart-area-1" height="100"></canvas> -->
+		<canvas id="chart-area-2" height="200" width="500"></canvas>
 	</div>
-
+	
+	<script th:inline="javascript">
+		/*<![CDATA[*/
+		
+		var config2 = {
+			type: 'line',
+			data: {
+				labels: ['Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho'],
+				datasets: [{
+					label: 'Receitas',
+					backgroundColor: window.chartColors.blue,
+					borderColor: window.chartColors.blue,
+					data: /*[[${receitas}]]*/,
+					fill: false,
+				}, {
+					label: 'Despesas',
+					backgroundColor: window.chartColors.red,
+					borderColor: window.chartColors.red,
+					data: /*[[${despesas}]]*/,
+					fill: false,
+				}]
+			},
+			options: {
+				responsive: true,
+				title: {
+					display: true,
+					text: 'Chart.js Line Chart'
+				},
+				tooltips: {
+					callbacks: {
+						label: (tooltipItem, chart) => {	
+							const realValue = chart.datasets[tooltipItem.datasetIndex].data[tooltipItem.index]
+							const customValue = 'R$ ' + realValue.toFixed(2).replace(".", ",");
+// 							const label = chart.labels[tooltipItem.index] + ':';
+							const label = chart.datasets[tooltipItem.datasetIndex].label + ': ';
+							return label + customValue;
+						}
+					}
+				},
+				hover: {
+					mode: 'nearest',
+					intersect: true
+				},
+				scales: {
+					xAxes: [{
+						display: true,
+						scaleLabel: {
+							display: true,
+							labelString: 'Mês'
+						}
+					}],
+					yAxes: [{
+						display: true,
+						scaleLabel: {
+							display: true,
+							labelString: 'Valor'
+						}
+					}]
+				}
+			}
+		};
+	
+		/*]]>*/
+	</script>
+	
 	<script type="text/javascript">
 		window.onload = function() {
-			var ctx1 = document.getElementById('chart-area-1').getContext('2d');
-			window.myPie = new Chart(ctx1, config1);
+// 			var ctx1 = document.getElementById('chart-area-1').getContext('2d');
+// 			window.myPie = new Chart(ctx1, config1);
 
 			var ctx2 = document.getElementById('chart-area-2').getContext('2d');
 			window.myPie = new Chart(ctx2, config2);

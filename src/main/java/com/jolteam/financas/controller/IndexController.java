@@ -1,6 +1,9 @@
 package com.jolteam.financas.controller;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 import javax.servlet.http.HttpServletRequest;
@@ -39,6 +42,32 @@ public class IndexController {
 	@Autowired private UsuarioService usuarioService;
 	@Autowired private CodigoService codigoService;
 
+	@GetMapping("/teste")
+	public ModelAndView testeGraficos() {
+		ModelAndView mv = new ModelAndView("deslogado/_teste-graficos");
+		
+		List<BigDecimal> receitas = new ArrayList<>();
+		receitas.add(new BigDecimal("1000.90"));
+		receitas.add(new BigDecimal("950.46"));
+		receitas.add(new BigDecimal("710.10"));
+		receitas.add(new BigDecimal("1012.34"));
+		receitas.add(new BigDecimal("990.10"));
+		receitas.add(new BigDecimal("800.90"));
+		
+		List<BigDecimal> despesas = new ArrayList<>();
+		despesas.add(new BigDecimal("500.00"));
+		despesas.add(new BigDecimal("450.07"));
+		despesas.add(new BigDecimal("501.10"));
+		despesas.add(new BigDecimal("410.23"));
+		despesas.add(new BigDecimal("301.08"));
+		despesas.add(new BigDecimal("450.90"));
+		
+		mv.addObject("receitas", receitas);
+		mv.addObject("despesas", despesas);
+		
+		return mv;
+	}
+	
 	@GetMapping("/")
 	public String viewIndex() {
 		return "deslogado/index";
