@@ -10,6 +10,7 @@
 	<th:block th:insert="includes/include.html :: #head"></th:block>
 </head>
 <body class="app">
+
 	<div id="loader">
 		<div class="spinner"></div>
 	</div>
@@ -130,28 +131,40 @@
 								-->
 							</div>
 						</div>
-						
+					
 						<script src="https://www.chartjs.org/samples/latest/utils.js"></script>
-						<script type="text/javascript">
+						<script th:inline="javascript">
+							/*<![CDATA[*/
+							
+							//Pegar valores do banco
+							var vr=[[${valorReceitas}]];
+							var saldoReceita=[],
+							//pegar apenas valores
+							for(i=0;i<vr.length;i++){
+								saldoReceita[i]=vr[i].valor;
+							}
+							console.log(saldoReceita);
+							
 							var presets = window.chartColors;
 							var utils = Samples.utils;
 							
 							var MONTHS = ['Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho', 'Julho', 'August', 'September', 'October', 'November', 'December'];
-							var config = {
+							var config = {	
+									
 								type: 'line',
-								data: {
+								data: { 
 									labels: ['Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho', 'Julho'],
 									datasets: [{
 										label: 'Despesa',
 										borderColor: presets.red,
 										backgroundColor: 'rgba(255, 99, 132, 0.4)',
-										data: [60, 50, 70, 60, 50, 70, 60],
+										data: [0,10,20],
 										fill: "start",
 									}, {
 										label: 'Receita',
 										borderColor: presets.green,
 										backgroundColor: 'rgba(75, 192, 192, 0.4)',
-										data: [70, 75, 85, 70, 75, 85, 70],
+										data: [[saldoReceita]],
 										fill: "start",
 									}]
 								},
@@ -192,6 +205,7 @@
 								var ctx = document.getElementById('graficoHome').getContext('2d');
 								window.myLine = new Chart(ctx, config);
 							};
+							/*]]>*/
 						</script>
 						
 						<div class="masonry-item col-md-12">
