@@ -26,7 +26,7 @@ public interface TransacaoDAO extends JpaRepository<Transacao, Integer> {
 	
 	@Query("SELECT t FROM Transacao t WHERE month(t.data) = month(:data) AND year(t.data) = year(:data)"
 			+ "AND t.tipo = :tipo AND t.usuario = :usuario")
-	List<Transacao> findAllByMes(LocalDate data, TipoTransacao tipo, Usuario usuario);
+	List<Transacao> findAllByMes(@Param("data")LocalDate data, @Param("tipo")TipoTransacao tipo, @Param("usuario")Usuario usuario);
 	
 	boolean existsByCategoria(Categoria categoria);
 	
