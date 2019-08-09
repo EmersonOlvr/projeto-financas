@@ -3,6 +3,7 @@ package com.jolteam.financas.service;
 import java.util.List;
 import java.util.Optional;
 
+import javax.persistence.Transient;
 import javax.servlet.http.HttpServletRequest;
 
 import org.apache.logging.log4j.util.Strings;
@@ -31,7 +32,8 @@ public class UsuarioService {
 
 	// vai de 4 à 31 (o padrão do gensalt() é 10)
 	private static final int complexidadeSenha = 10;
-
+	
+	@Transient
 	public Usuario save(Usuario usuario) {
 		return this.usuarios.save(usuario);
 	}

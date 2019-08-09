@@ -2,6 +2,7 @@ package com.jolteam.financas.model;
 
 import java.time.LocalDateTime;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
@@ -9,6 +10,7 @@ import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.persistence.Transient;
 
@@ -55,11 +57,13 @@ public class Usuario {
 	@Column(length=72, nullable=false)
 	private String registroIp;
 	
+	@OneToOne(cascade = CascadeType.ALL)
+	private Foto foto;
 	
 	// construtores
 	public Usuario() {}
 	public Usuario(String nome, String sobrenome, String email, Boolean ativado, String senha, String senhaRepetida,
-			Short permissao, Provedor provedor, String provedorId, LocalDateTime registroData, String registroIp) {
+			Short permissao, Provedor provedor, String provedorId, LocalDateTime registroData, String registroIp,Foto foto) {
 		this.nome = nome;
 		this.sobrenome = sobrenome;
 		this.email = email;
@@ -71,6 +75,7 @@ public class Usuario {
 		this.provedorId = provedorId;
 		this.registroData = registroData;
 		this.registroIp = registroIp;
+		this.foto=foto;
 	}
 
 
@@ -147,9 +152,13 @@ public class Usuario {
 	}
 	public void setRegistroIp(String registroIp) {
 		this.registroIp = registroIp;
+	}	
+	public Foto getFoto() {
+		return foto;
 	}
-	
-	
+	public void setFoto(Foto foto) {
+		this.foto = foto;
+	}
 	@Override
 	public boolean equals(Object obj) {
 		if (this == obj)

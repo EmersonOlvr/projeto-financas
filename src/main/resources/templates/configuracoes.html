@@ -58,7 +58,7 @@
 									<div class="col-sm-8">
 										<div class="tab-content" id="nav-tabContent">
 											<div th:if="${isProvedorLocal}" th:class="|tab-pane fade pY-10 pX-10${alvoLista == 'perfil' || alvoLista == null ? ' show active': ''}|" id="perfil" role="tabpanel" aria-labelledby="perfil-list">
-												<form id="needs-validation1" th:object="${usuario}" th:action="@{/configuracoes/perfil}" method="post" novalidate>
+												<form id="needs-validation1" th:object="${usuario}" th:action="@{/configuracoes/perfil}" method="post" novalidate enctype="multipart/form-data">
 													<div class="row">
 														<div class="col-sm-6">
 															<div class="form-group">
@@ -79,6 +79,12 @@
 																<label for="email" class="text-normal text-dark">E-mail</label>
 																<input type="text" th:field="*{email}" class="form-control" placeholder="E-mail..." required>
 																<div class="invalid-feedback">Insira um e-mail</div>
+															</div>
+														</div>
+														<div class="col-sm-12">
+															<div class="form-group">
+																<label for="foto" class="text-normal text-dark">Foto</label>
+																<input type="file" id="foto" name="fotoUser"  >
 															</div>
 														</div>
 														

@@ -7,6 +7,7 @@ import java.time.Month;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.persistence.Transient;
 import javax.servlet.http.HttpSession;
 
 import org.apache.logging.log4j.util.Strings;
@@ -16,16 +17,23 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.jolteam.financas.enums.Provedor;
+import com.jolteam.financas.exceptions.FotoInvalidaException;
 import com.jolteam.financas.exceptions.UsuarioInvalidoException;
+import com.jolteam.financas.model.Foto;
 import com.jolteam.financas.model.Transacao;
 import com.jolteam.financas.model.Usuario;
+import com.jolteam.financas.service.FotoStorageService;
 import com.jolteam.financas.service.MovimentosService;
 import com.jolteam.financas.service.UsuarioService;
 import com.jolteam.financas.util.Util;
+
+
+
 
 @Controller
 public class HomeController {
@@ -33,6 +41,7 @@ public class HomeController {
 	@Autowired
 	private UsuarioService usuarioService;
 	@Autowired MovimentosService movimentosService;
+	@Autowired FotoStorageService fotoService;
 	
 	@GetMapping("/home")
 	public ModelAndView viewHome(HttpSession session) {
@@ -77,7 +86,8 @@ public class HomeController {
 	}
 
 	@PostMapping("/configuracoes/perfil")
-	public String atualizarPerfilUsuario(@ModelAttribute Usuario usuario, RedirectAttributes ra, HttpSession session) {
+	@Transient
+	public String atualizarPerfilUsuario(@ModelAttribute Usuario usuario,@RequestParam(name="fotoUser",required = false)MultipartFile file, RedirectAttributes ra, HttpSession session) {
 		ModelAndView mv = new ModelAndView("configuracoes");
 		mv.addObject("usuario", usuario);
 		
@@ -86,17 +96,42 @@ public class HomeController {
 		if (!usuarioLogado.getProvedor().equals(Provedor.LOCAL)) {
 			return "redirect:/configuracoes";
 		}
-
+		
+		
 		// Validar campos atualizados
 		try {
+			ArrayList<String> erros = new ArrayList<>();
+			if (file != null && !file.isEmpty()) {
+				try {
+					Foto fotoNova = this.fotoService.validar(file);
+					
+					if (usuarioLogado.getFoto() != null) {
+						Foto fotoExistente = usuarioLogado.getFoto();
+						fotoExistente.setConteudo(fotoNova.getConteudo());
+					} else {
+						usuarioLogado.setFoto(fotoNova);
+					}
+				} catch (FotoInvalidaException e) {
+					System.out.println(e.getMessage());
+					erros.add(e.getMessage());
+				}
+			}
+			if (erros.size() > 0) {
+				throw new FotoInvalidaException(erros.get(0));
+			}
+			
 			this.usuarioService.atualizarUsuario(usuarioLogado, usuario);
 
 			// salva usuario com valores atualizados
-			this.usuarioService.save(usuarioLogado);
+			usuarioLogado = this.usuarioService.save(usuarioLogado);
+			
+			session.setAttribute("usuarioLogado", usuarioLogado);
 			
 			ra.addFlashAttribute("msgSucessoConfig", "Perfil atualizado com sucesso!");
 		} catch (UsuarioInvalidoException ui) {
 			ra.addFlashAttribute("msgErroConfig", ui.getMessage());
+		} catch (FotoInvalidaException e) {
+			ra.addFlashAttribute("msgErroConfig", e.getMessage());
 		}
 		
 		ra.addFlashAttribute("alvoLista", "perfil");
