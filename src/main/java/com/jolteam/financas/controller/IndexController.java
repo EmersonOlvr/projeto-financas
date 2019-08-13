@@ -20,6 +20,7 @@ import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.jolteam.financas.dao.LogDAO;
+import com.jolteam.financas.enums.Provedor;
 import com.jolteam.financas.enums.TipoCodigo;
 import com.jolteam.financas.enums.TipoLog;
 import com.jolteam.financas.exceptions.UsuarioDesativadoException;
@@ -199,12 +200,18 @@ public class IndexController {
 
 	@PostMapping("recuperar-senha")
 	public ModelAndView recuperarSenha(@RequestParam String email, HttpServletRequest request) {
+		ModelAndView mv = new ModelAndView("deslogado/recuperar-senha");
+		
 		if (Strings.isBlank(email) || !Util.isEmailValido(email)) {
-			return new ModelAndView("deslogado/recuperar-senha").addObject("msgErro", "Insira um e-mail em formato válido.");
+			return mv.addObject("msgErro", "Insira um e-mail em formato válido.");
 		} else {
 			Optional<Usuario> usuario = this.usuarioService.findByEmail(email);
 			if (usuario.isPresent()) {
-				this.usuarioService.enviarLinkRedefinicaoSenha(usuario.get(), request);
+				if (usuario.get().getProvedor() == Provedor.LOCAL) {
+					this.usuarioService.enviarLinkRedefinicaoSenha(usuario.get(), request);
+				} else {
+					return mv.addObject("msgErro", "Apenas senhas de contas locais podem ser recuperadas.");
+				}
 			}
 			return new ModelAndView("deslogado/recuperar-senha-2").addObject("email", email);
 		}

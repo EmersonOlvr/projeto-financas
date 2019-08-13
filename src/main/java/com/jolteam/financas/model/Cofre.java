@@ -31,6 +31,9 @@ public class Cofre {
 	@Transient
 	private BigDecimal totalAcumulado;
 	
+	@Transient
+	private BigDecimal totalRestante;
+	
 	@Column(nullable = false,columnDefinition="datetime")
 	private LocalDateTime dataCriacao;
 	
@@ -72,6 +75,12 @@ public class Cofre {
 	}
 	public void setTotalAcumulado(BigDecimal totalAcumulado) {
 		this.totalAcumulado = totalAcumulado;
+	}
+	public BigDecimal getTotalRestante() {
+		return totalRestante;
+	}
+	public void setTotalRestante(BigDecimal totalRestante) {
+		this.totalRestante = totalRestante;
 	}
 	public LocalDateTime getDataCriacao() {
 		return dataCriacao;

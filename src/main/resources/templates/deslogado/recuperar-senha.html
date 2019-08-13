@@ -55,7 +55,7 @@
 			[[${msgErro}]]
 		</p>
 		
-		<form method="post" onsubmit="desativar(this.recuperar)">
+		<form method="post" th:action="@{/recuperar-senha}" onsubmit="desativar(this.recuperar)">
 			<div class="row">
 				<div class="col-8">
 					<div class="form-label-group">

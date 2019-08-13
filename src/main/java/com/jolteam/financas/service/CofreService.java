@@ -44,6 +44,7 @@ public class CofreService {
 		
 		for (Cofre cofre : cofres) {
 			cofre.setTotalAcumulado(this.totalAcumuladoDe(cofre));
+			cofre.setTotalRestante(cofre.getTotalDesejado().subtract(cofre.getTotalAcumulado()));
 		}
 		
 		return cofres;

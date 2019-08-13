@@ -75,6 +75,7 @@
 													<th>Finalidade</th>
 													<th>Total acumulado</th>
 													<th>Total desejado</th>
+													<th>Total restante</th>
 													<th>Data e Hora de Criação</th>
 													<th scope="col" colspan="2">Ações</th>
 												</tr>
@@ -84,6 +85,7 @@
 													<td th:text="${cofre.finalidade}"></td>
 													<td th:text="|R$ ${#numbers.formatDecimal(cofre.totalAcumulado, 1, 'POINT', 2, 'COMMA')}|"></td>
 													<td th:text="|R$ ${#numbers.formatDecimal(cofre.totalDesejado, 1, 'POINT', 2, 'COMMA')}|"></td>
+													<td th:text="|R$ ${#numbers.formatDecimal(cofre.totalRestante, 1, 'POINT', 2, 'COMMA')}|"></td>
 													<td th:text="${#temporals.format(cofre.dataCriacao, 'dd/MM/yyyy HH:mm:ss')}"></td>
 													<td>
 														<a th:href="@{/cofres/editar(id=${cofre.id})}"
