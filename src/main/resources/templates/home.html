@@ -64,8 +64,12 @@
 													</span>
 												</div>
 												<div class="peer">
-													<!-- +x% baseado na adição anterior -->
-													<span class="d-ib lh-0 va-m fw-600 bdrs-10em pX-15 pY-15 bgc-green-50 c-green-500">+10%</span>
+													<span class="d-ib lh-0 va-m fw-600 bdrs-10em pX-15 pY-15 bgc-green-50 c-green-500">
+														<script type="text/javascript">
+															var pr = ""+[[${porcentagemReceitasMesAtual}]];
+															document.write(pr.replace('.', ',') + "%");
+														</script>
+													</span>
 												</div>
 											</div>
 										</div>
@@ -83,8 +87,12 @@
 													</span>
 												</div>
 												<div class="peer">
-													<!-- -x% baseado no valor retirado do total da receita -->
-													<span class="d-ib lh-0 va-m fw-600 bdrs-10em pX-15 pY-15 bgc-red-50 c-red-500">-7%</span>
+													<span class="d-ib lh-0 va-m fw-600 bdrs-10em pX-15 pY-15 bgc-red-50 c-red-500">
+														<script type="text/javascript">
+															var pd = ""+[[${porcentagemDespesasMesAtual}]];
+															document.write(pd.replace('.', ',') + "%");
+														</script>
+													</span>
 												</div>
 											</div>
 										</div>

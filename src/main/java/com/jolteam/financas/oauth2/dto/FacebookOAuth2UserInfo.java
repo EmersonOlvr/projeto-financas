@@ -1,4 +1,4 @@
-package com.jolteam.financas.dto;
+package com.jolteam.financas.oauth2.dto;
 
 import java.util.Map;
 

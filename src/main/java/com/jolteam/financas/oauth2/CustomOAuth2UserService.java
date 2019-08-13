@@ -14,13 +14,13 @@ import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.stereotype.Service;
 
 import com.jolteam.financas.dao.UsuarioDAO;
-import com.jolteam.financas.dto.FacebookOAuth2UserInfo;
-import com.jolteam.financas.dto.GithubOAuth2UserInfo;
-import com.jolteam.financas.dto.GoogleOAuth2UserInfo;
-import com.jolteam.financas.dto.OAuth2UserInfo;
 import com.jolteam.financas.enums.Provedor;
 import com.jolteam.financas.model.Foto;
 import com.jolteam.financas.model.Usuario;
+import com.jolteam.financas.oauth2.dto.FacebookOAuth2UserInfo;
+import com.jolteam.financas.oauth2.dto.GithubOAuth2UserInfo;
+import com.jolteam.financas.oauth2.dto.GoogleOAuth2UserInfo;
+import com.jolteam.financas.oauth2.dto.OAuth2UserInfo;
 
 @Service
 public class CustomOAuth2UserService extends DefaultOAuth2UserService {

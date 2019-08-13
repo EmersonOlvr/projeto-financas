@@ -1,7 +1,7 @@
 package com.jolteam.financas.controller;
 
-
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.time.LocalDate;
 import java.time.Month;
 import java.util.ArrayList;
@@ -31,9 +31,6 @@ import com.jolteam.financas.service.FotoStorageService;
 import com.jolteam.financas.service.MovimentosService;
 import com.jolteam.financas.service.UsuarioService;
 import com.jolteam.financas.util.Util;
-
-
-
 
 @Controller
 public class HomeController {
@@ -71,6 +68,31 @@ public class HomeController {
 		mv.addObject("meses", Util.obterUltimosSeisMeses());
 		mv.addObject("receitas", receitas);
 		mv.addObject("despesas", despesas);
+		
+		List<Transacao> receitasMesAtual = this.movimentosService.obterReceitasPorMes(Month.of(mesAtual), usuario);
+		List<Transacao> despesasMesAtual = this.movimentosService.obterDespesasPorMes(Month.of(mesAtual), usuario);
+		
+		BigDecimal totalReceitasMesAtual = Util.somarTransacoes(receitasMesAtual);
+		BigDecimal totalDespesasMesAtual = Util.somarTransacoes(despesasMesAtual);
+		BigDecimal total = totalReceitasMesAtual.add(totalDespesasMesAtual);
+		
+		double porcentagemReceitasMesAtual = 0;
+		double porcentagemDespesasMesAtual = 0;
+		
+		if (total.compareTo(new BigDecimal("0")) > 0) {	
+			// fórmula para calcular porcentagem: X / Y * 100
+			// onde Y é o total e X é o valor que queremos saber quantos por cento ele equivale de Y
+			// o resultado será o valor de X em Y
+			porcentagemReceitasMesAtual = totalReceitasMesAtual
+					.divide(total, 3, RoundingMode.HALF_EVEN)
+					.multiply(new BigDecimal("100")).doubleValue();
+			porcentagemDespesasMesAtual = totalDespesasMesAtual
+					.divide(total, 3, RoundingMode.HALF_EVEN)
+					.multiply(new BigDecimal("100")).doubleValue();
+		}
+		
+		mv.addObject("porcentagemReceitasMesAtual", porcentagemReceitasMesAtual);
+		mv.addObject("porcentagemDespesasMesAtual", porcentagemDespesasMesAtual);
 		
 		return mv;
 	}

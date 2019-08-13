@@ -10,7 +10,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.jolteam.financas.dao.TransacaoDAO;
-import com.jolteam.financas.dao.UsuarioDAO;
 import com.jolteam.financas.enums.TipoTransacao;
 import com.jolteam.financas.model.Transacao;
 import com.jolteam.financas.model.Usuario;
@@ -19,7 +18,6 @@ import com.jolteam.financas.model.Usuario;
 public class MovimentosService {
 
 	@Autowired private TransacaoDAO transacoes;
-	@Autowired private UsuarioDAO usuarios;
 	
 	public List<Transacao> listarTodas() {
 		return this.transacoes.findAll();
