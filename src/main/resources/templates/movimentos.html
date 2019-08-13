@@ -8,6 +8,16 @@
 	<title>Lista de Movimentos</title>
 
 	<th:block th:insert="includes/include.html :: #head"></th:block>
+	
+	<script type="text/javascript">
+		var id = 0;
+		function setId(novoId) {
+			id = novoId;
+		}
+		function redirecionar() {
+			window.location.href="/movimentos/excluir?id="+id;
+		}
+	</script>
 </head>
 <body class="app">
 	<div id="loader">
@@ -93,7 +103,11 @@
 										
 										<td>[[${#temporals.format(transacao.data, 'dd/MM/yyyy HH:mm:ss')}]]</td>
 										<td>
-											<a th:href="@{/movimentos/excluir(id=${transacao.id})}" class="btn btn-sm btn-outline-danger">Excluir</a>
+											<button class="btn btn-sm btn-outline-danger"
+												data-toggle="modal" data-target="#confirmacaoExclusao"
+												th:onclick="'javascript:setId(\'' +${transacao.id}+ '\');'">
+													Excluir
+											</button>
 										</td>
 									</tr>
 									<tr th:if="${listatransacao.size() == 0}">
@@ -123,6 +137,27 @@
 			
 			
 			<th:block th:insert="includes/include.html :: footer"></th:block>
+		</div>
+	</div>
+
+	<!-- Modal de confirmação de exclusão -->
+	<div class="modal fade" id="confirmacaoExclusao" tabindex="-1" role="dialog" aria-labelledby="confirmacaoExclusaoLabel" aria-hidden="true">
+		<div class="modal-dialog" role="document">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h5 class="modal-title" id="confirmacaoExclusaoLabel">Confirmação de Exclusão</h5>
+					<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+						<span aria-hidden="true">&times;</span>
+					</button>
+				</div>
+				<div class="modal-body">
+					Tenha em mente que a exclusão desta transação alterará seu saldo atual. Deseja continuar?
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+					<button type="submit" class="btn btn-danger" onclick="redirecionar()">Sim, excluir</button>
+				</div>
+			</div>
 		</div>
 	</div>
 

@@ -55,7 +55,7 @@
 								<div class="col-md-6">
 									<div class="layers bd bgc-white p-20">
 										<div class="layer w-100 mB-10">
-											<h6 class="lh-1">Receitas</h6>
+											<h6 class="lh-1">Receitas (este Mês)</h6>
 										</div>
 										<div class="layer w-100">
 											<div class="peers ai-sb fxw-nw">
@@ -78,7 +78,7 @@
 								<div class="col-md-6">
 									<div class="layers bd bgc-white p-20">
 										<div class="layer w-100 mB-10">
-											<h6 class="lh-1">Despesas</h6>
+											<h6 class="lh-1">Despesas (este Mês)</h6>
 										</div>
 										<div class="layer w-100">
 											<div class="peers ai-sb fxw-nw">
@@ -149,6 +149,7 @@
 							
 							var config = {
 								type: 'line', 
+								scaleOverride : true,
 								data: { 
 									labels: /*[[${meses}]]*/,
 									datasets: [{
@@ -179,10 +180,11 @@
 									tooltips: {
 										callbacks: {
 											label: (tooltipItem, chart) => {
-												var formatter = new Intl.NumberFormat("br", {
-													style: "currency",
-													currency: "BRL"
-												});
+												var formatter = new Intl.NumberFormat("pt-BR", {
+														style: "currency", 
+														currency: "BRL"
+													}
+												);
 												
 												const realValue = chart.datasets[tooltipItem.datasetIndex].data[tooltipItem.index].toFixed(2);
 												const valorFormatado = formatter.format(realValue);
@@ -209,6 +211,10 @@
 											scaleLabel: {
 												display: false,
 												labelString: 'Valor'
+											},
+											ticks: {
+												beginAtZero: true,
+												suggestedMax: 100
 											}
 										}]
 									}

@@ -8,6 +8,16 @@
 	<title>Categorias de Despesas</title>
 
 	<th:block th:insert="includes/include.html :: #head"></th:block>
+	
+	<script type="text/javascript">
+		var id = 0;
+		function setId(novoId) {
+			id = novoId;
+		}
+		function redirecionar() {
+			window.location.href="/despesas/categorias/excluir?id="+id;
+		}
+	</script>
 </head>
 <body class="app">
 	<div id="loader">
@@ -55,7 +65,13 @@
 									<tbody>
 										<tr th:if="${listaCatDespesa.size() > 0}" th:each="catDesp : ${listaCatDespesa}">
 											<td th:text="${catDesp.nome}" ></td>
-											<td><a th:href="@{/despesas/categorias/excluir(id=${catDesp.id})}" class="btn btn-sm btn-outline-danger">Excluir</a></td>
+											<td>
+												<button class="btn btn-sm btn-outline-danger"
+													data-toggle="modal" data-target="#confirmacaoExclusao"
+													th:onclick="'javascript:setId(\'' +${catDesp.id}+ '\');'">
+														Excluir
+												</button>
+											</td>
 										</tr>
 										<tr th:if="${listaCatDespesa.size() == 0}" class="font-italic">
 											<td colspan="2">Nenhuma categoria encontrada.</td>
@@ -110,6 +126,27 @@
 			
 			
 			<th:block th:insert="includes/include.html :: footer"></th:block>
+		</div>
+	</div>
+
+	<!-- Modal de confirmação de exclusão -->
+	<div class="modal fade" id="confirmacaoExclusao" tabindex="-1" role="dialog" aria-labelledby="confirmacaoExclusaoLabel" aria-hidden="true">
+		<div class="modal-dialog" role="document">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h5 class="modal-title" id="confirmacaoExclusaoLabel">Confirmação de Exclusão</h5>
+					<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+						<span aria-hidden="true">&times;</span>
+					</button>
+				</div>
+				<div class="modal-body">
+					Tem certeza que deseja excluir esta categoria?
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+					<button type="submit" class="btn btn-danger" onclick="redirecionar()">Sim, excluir</button>
+				</div>
+			</div>
 		</div>
 	</div>
 
