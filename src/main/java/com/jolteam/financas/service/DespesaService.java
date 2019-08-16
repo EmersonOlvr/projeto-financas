@@ -31,18 +31,26 @@ public class DespesaService {
 		if(despesa.getCategoria() == null) {
 			throw new DespesaException("Selecione uma categoria.");
 		}
+		
 		//Validação da descrição 
 		despesa.setDescricao(despesa.getDescricao().trim());
 		if (!Strings.isBlank(despesa.getDescricao()) && despesa.getDescricao().length() < 2){
 			throw new DespesaException("A descrição deve ter no mínimo 2 caracteres.");
 		}
+		if (despesa.getDescricao().length() > 50) {
+			throw new DespesaException("A descrição deve ter no máximo 50 caracteres.");
+		}
+		if (!despesa.getDescricao().matches("^[a-zA-ZÀ-ú0-9 ]*$")) {
+			throw new DespesaException("Descrição inválida: somente letras, espaços e números são permitidos.");
+		}
+		despesa.setDescricao(despesa.getDescricao().replaceAll("\\s+", " "));
+		
 		//Validação do valor
 		if(despesa.getValor().compareTo(new BigDecimal("0.05"))== -1) {
 			throw new DespesaException("O valor da despesa deve ser igual ou maior que R$ 0,05.");
 		}
 		
-		//tentativa de salvar no banco
-		
+		// tenta salvar no banco...
 		try {
 			this.transacoes.save(new Transacao(despesa.getUsuario(), TipoTransacao.DESPESA, despesa.getCategoria(),
 					despesa.getDescricao(), despesa.getValor()));
@@ -61,16 +69,21 @@ public class DespesaService {
 		catDespesa.setTipoTransacao(TipoTransacao.DESPESA);
 		
 		//Validação nome e tratamento de dados
-		
 		if(Strings.isBlank(catDespesa.getNome())) {
 			throw new DespesaException("Insira nome da categoria.");
 		}
-		if(!catDespesa.getNome().matches("^[A-zÀ-ú ]*$")) {
-			throw new DespesaException("Nome inválido: somente letras e espaços são permitidos.");
-		}
 		catDespesa.setNome(catDespesa.getNome().trim());
-		if(catDespesa.getNome().length()<2) {
+		if(catDespesa.getNome().length() < 2) {
 			throw new DespesaException("O nome precisa ter no mínimo 2 caracteres.");
+		}
+		if (catDespesa.getNome().length() > 50) {
+			throw new DespesaException("O nome precisa ter no máximo 50 caracteres.");
+		}
+		if (!catDespesa.getNome().matches("^[a-zA-ZÀ-ú0-9 ]*$")) {
+			throw new DespesaException("Nome inválido: somente letras, espaços e números são permitidos.");
+		}
+		if (this.categorias.existsByNomeAndTipoTransacao(catDespesa.getNome(), TipoTransacao.DESPESA)) {
+			throw new DespesaException("Já existe uma Categoria de Despesa com este nome: "+catDespesa.getNome());
 		}
 		catDespesa.setNome(catDespesa.getNome().replaceAll("\\s+", " "));
 		

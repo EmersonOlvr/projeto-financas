@@ -21,6 +21,7 @@ import com.jolteam.financas.exceptions.UsuarioInexistenteException;
 import com.jolteam.financas.exceptions.UsuarioInvalidoException;
 import com.jolteam.financas.model.Codigo;
 import com.jolteam.financas.model.Usuario;
+import com.jolteam.financas.util.Util;
 
 @Service
 public class UsuarioService {
@@ -75,7 +76,7 @@ public class UsuarioService {
 		if (Strings.isBlank(nome)) {
 			throw new UsuarioInvalidoException("Insira um nome.");
 		}
-		if (!nome.matches("^[A-zÀ-ú ]*$")) {
+		if (!nome.matches("^[a-zA-ZÀ-ú ]*$")) {
 			throw new UsuarioInvalidoException("Nome inválido: somente letras e espaços são permitidos.");
 		}
 		if (nome.length() < 2 || nome.length() > 50) {
@@ -88,7 +89,7 @@ public class UsuarioService {
 		if (Strings.isBlank(sobrenome)) {
 			throw new UsuarioInvalidoException("Insira um sobrenome.");
 		}
-		if (!sobrenome.matches("^[A-zÀ-ú ]*$")) {
+		if (!sobrenome.matches("^[a-zA-ZÀ-ú ]*$")) {
 			throw new UsuarioInvalidoException("Sobrenome inválido: somente letras e espaços são permitidos.");
 		}
 		if (sobrenome.length() < 2 || sobrenome.length() > 50) {
@@ -101,7 +102,7 @@ public class UsuarioService {
 		if (Strings.isBlank(email)) {
 			throw new UsuarioInvalidoException("Insira um e-mail.");
 		}
-		if (!email.matches("^[\\w-\\+]+(\\.[\\w]+)*@[\\w-]+(\\.[\\w]+)*(\\.[A-z]{2,})$")) {
+		if (!Util.isEmailValido(email)) {
 			throw new UsuarioInvalidoException("E-mail em formato inválido.");
 		}
 		if (email.length() > 50) {

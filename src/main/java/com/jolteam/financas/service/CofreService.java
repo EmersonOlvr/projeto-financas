@@ -98,6 +98,12 @@ public class CofreService {
 		if (cofre.getFinalidade().length() < 2) {
 			throw new CofreException("A finalidade deve ter no mínimo 2 caracteres.");
 		}
+		if (cofre.getFinalidade().length() > 50) {
+			throw new CofreException("A finalidade deve ter no máximo 50 caracteres.");
+		}
+		if (!cofre.getFinalidade().matches("^[a-zA-ZÀ-ú0-9 ]*$")) {
+			throw new CofreException("Finalidade inválida: somente letras, espaços e números são permitidos.");
+		}
 		cofre.setFinalidade(cofre.getFinalidade().replaceAll("\\s+", " "));
 		
 		// se o cofre ainda não estiver cadastrado
@@ -119,7 +125,13 @@ public class CofreService {
 			throw new CofreException("O total desejado deve ser igual ou maior que R$ 0,05.");
 		}
 		
-		return this.cofres.save(cofre);
+		try {
+			return this.cofres.save(cofre);
+		} catch(DataIntegrityViolationException e) {
+			throw new CofreException("Valor(es) inválido(s): máximo de 19 números.");
+		} catch(Exception e) {
+			throw new CofreException("Desculpe, algo deu errado.");
+		}
 		
 	}
 	

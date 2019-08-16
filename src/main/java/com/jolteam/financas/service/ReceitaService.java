@@ -27,14 +27,25 @@ public class ReceitaService {
 	}
 
 	public void salvar(Receita receita) throws ReceitaException {
-		// validações
+		//Validação de categoria
 		if (receita.getCategoria() == null) {
 			throw new ReceitaException("Selecione uma categoria.");
 		}
+		
+		//Validação da descrição 
 		receita.setDescricao(receita.getDescricao().trim());
 		if (!Strings.isBlank(receita.getDescricao()) && receita.getDescricao().length() < 2) {
 			throw new ReceitaException("A descrição deve ter no mínimo 2 caracteres.");
 		}
+		if (receita.getDescricao().length() > 50) {
+			throw new ReceitaException("A descrição deve ter no máximo 50 caracteres.");
+		}
+		if (!receita.getDescricao().matches("^[a-zA-ZÀ-ú0-9 ]*$")) {
+			throw new ReceitaException("Descrição inválida: somente letras, espaços e números são permitidos.");
+		}
+		receita.setDescricao(receita.getDescricao().replaceAll("\\s+", " "));
+
+		//Validação do valor
 		if (receita.getValor().compareTo(new BigDecimal("0.05")) == -1) {
 			throw new ReceitaException("O valor da receita deve ser igual ou maior que R$ 0,05.");
 		}
@@ -49,28 +60,34 @@ public class ReceitaService {
 			throw new ReceitaException("Desculpe, algo deu errado.");
 		}
 	}
-	public void salvarCategoriaReceita(Categoria catReceitas) throws ReceitaException {
+	
+	public void salvarCategoriaReceita(Categoria catReceita) throws ReceitaException {
 		//define data de criação
-		catReceitas.setDataCriacao(LocalDateTime.now());
+		catReceita.setDataCriacao(LocalDateTime.now());
 		
 		//define tipo de transação da categoria 
-		catReceitas.setTipoTransacao(TipoTransacao.RECEITA);
+		catReceita.setTipoTransacao(TipoTransacao.RECEITA);
 		
 		//Validação nome e tratamento de dados
-		
-		if(Strings.isBlank(catReceitas.getNome())) {
+		if(Strings.isBlank(catReceita.getNome())) {
 			throw new ReceitaException("Insira nome da categoria.");
 		}
-		if(!catReceitas.getNome().matches("^[A-zÀ-ú ]*$")) {
-			throw new ReceitaException("Nome inválido: somente letras e espaços são permitidos.");
-		}
-		catReceitas.setNome(catReceitas.getNome().trim());
-		if(catReceitas.getNome().length()<2) {
+		catReceita.setNome(catReceita.getNome().trim());
+		if(catReceita.getNome().length() < 2) {
 			throw new ReceitaException("O nome precisa ter no mínimo 2 caracteres.");
 		}
-		catReceitas.setNome(catReceitas.getNome().replaceAll("\\s+", " "));
+		if (catReceita.getNome().length() > 50) {
+			throw new ReceitaException("O nome precisa ter no máximo 50 caracteres.");
+		}
+		if (!catReceita.getNome().matches("^[a-zA-ZÀ-ú0-9 ]*$")) {
+			throw new ReceitaException("Nome inválido: somente letras, espaços e números são permitidos.");
+		}
+		if (this.categorias.existsByNomeAndTipoTransacao(catReceita.getNome(), TipoTransacao.RECEITA)) {
+			throw new ReceitaException("Já existe uma Categoria de Receita com este nome: "+catReceita.getNome());
+		}
+		catReceita.setNome(catReceita.getNome().replaceAll("\\s+", " "));
 		
-		this.categorias.save(catReceitas);
+		this.categorias.save(catReceita);
 		
 	}
 }

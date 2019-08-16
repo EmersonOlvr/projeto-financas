@@ -46,9 +46,10 @@
 									<span aria-hidden="true">&times;</span>
 								</button>
 							</div>
+							
 							<form id="needs-validation" th:object="${receita}" th:action="@{/receitas/adicionar}" method="post" novalidate>
 								<div class="form-group">
-									<label class="text-normal text-dark">Categoria</label> - <a href="/receitas/categorias">Adicionar Categoria</a>
+									<label class="text-normal text-dark" for="categoria">Categoria</label> - <a href="/receitas/categorias">Adicionar Categoria</a>
 									<select th:field="*{categoria}" class="form-control" required>
 										<option value="">Selecione...</option>
 										<option th:if="${!#lists.isEmpty(categorias)}" th:each="categoria : ${categorias}" th:value="${categoria.id}">[[${categoria.nome}]]</option>
@@ -56,11 +57,11 @@
 									<div class="invalid-feedback">Selecione uma categoria</div>
 								</div>
 								<div class="form-group">
-									<label class="text-normal text-dark">Descrição (opcional)</label>
+									<label class="text-normal text-dark" for="descricao">Descrição (opcional)</label>
 									<input type="text" th:field="*{descricao}" class="form-control" placeholder="Descrição...">
 								</div>
 								<div class="form-group">
-									<label class="text-normal text-dark">Valor</label>
+									<label class="text-normal text-dark" for="str_valor">Valor</label>
 									<input type="text" id="str_valor" name="str_valor" th:value="${str_valor}" class="form-control" placeholder="Valor..." required>
 									<div class="invalid-feedback">Insira um valor</div>
 									<script type="text/javascript">
