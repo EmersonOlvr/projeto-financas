@@ -65,6 +65,9 @@ public class DespesaService {
 		if(Strings.isBlank(catDespesa.getNome())) {
 			throw new DespesaException("Insira nome da categoria.");
 		}
+		if(!catDespesa.getNome().matches("^[A-zÀ-ú ]*$")) {
+			throw new DespesaException("Nome inválido: somente letras e espaços são permitidos.");
+		}
 		catDespesa.setNome(catDespesa.getNome().trim());
 		if(catDespesa.getNome().length()<2) {
 			throw new DespesaException("O nome precisa ter no mínimo 2 caracteres.");

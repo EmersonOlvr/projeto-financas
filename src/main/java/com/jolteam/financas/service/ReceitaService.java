@@ -61,6 +61,9 @@ public class ReceitaService {
 		if(Strings.isBlank(catReceitas.getNome())) {
 			throw new ReceitaException("Insira nome da categoria.");
 		}
+		if(!catReceitas.getNome().matches("^[A-zÀ-ú ]*$")) {
+			throw new ReceitaException("Nome inválido: somente letras e espaços são permitidos.");
+		}
 		catReceitas.setNome(catReceitas.getNome().trim());
 		if(catReceitas.getNome().length()<2) {
 			throw new ReceitaException("O nome precisa ter no mínimo 2 caracteres.");
