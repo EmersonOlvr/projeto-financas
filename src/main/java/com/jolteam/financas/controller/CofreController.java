@@ -200,17 +200,25 @@ public class CofreController {
 		
 		int result = valor.compareTo(new BigDecimal("0"));
 		if (result > 0) {
-			this.cofreService.adicionarTransacao(cofre, valor, TipoTransacao.RECEITA);
+			try {
+				this.cofreService.adicionarTransacao(cofre, valor, TipoTransacao.RECEITA);
 
-			this.logService.save(new Log(usuario, TipoLog.CADASTRO_TRANSACAO_POSITIVA_COFRE, LocalDateTime.now(), 
-					Util.getUserIp(request)));
+				this.logService.save(new Log(usuario, TipoLog.CADASTRO_TRANSACAO_POSITIVA_COFRE, LocalDateTime.now(), 
+						Util.getUserIp(request)));
+			} catch (CofreException ce) {
+				return mv.addObject("msgErro", ce.getMessage());
+			}
 			
 			return mv.addObject("msgSucesso", "R$ "+Util.getStringOf(valor)+" adicionados ao cofre.");
 		} else if (result < 0) {
-			this.cofreService.adicionarTransacao(cofre, valor, TipoTransacao.DESPESA);
-			
-			this.logService.save(new Log(usuario, TipoLog.CADASTRO_TRANSACAO_NEGATIVA_COFRE, LocalDateTime.now(), 
-					Util.getUserIp(request)));
+			try {
+				this.cofreService.adicionarTransacao(cofre, valor, TipoTransacao.DESPESA);
+				
+				this.logService.save(new Log(usuario, TipoLog.CADASTRO_TRANSACAO_NEGATIVA_COFRE, LocalDateTime.now(), 
+						Util.getUserIp(request)));
+			} catch (CofreException ce) {
+				return mv.addObject("msgErro", ce.getMessage());
+			}
 			
 			return mv.addObject("msgSucesso", "R$ "+Util.getStringOf(valor.negate())+" retirados do cofre.");
 		} else {

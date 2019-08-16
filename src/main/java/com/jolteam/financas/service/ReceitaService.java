@@ -5,6 +5,7 @@ import java.time.LocalDateTime;
 
 import org.apache.logging.log4j.util.Strings;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 
 import com.jolteam.financas.dao.CategoriaDAO;
@@ -42,7 +43,9 @@ public class ReceitaService {
 		try {
 			this.transacoes.save(new Transacao(receita.getUsuario(), TipoTransacao.RECEITA, receita.getCategoria(),
 					receita.getDescricao(), receita.getValor()));
-		} catch (Exception e) {
+		} catch(DataIntegrityViolationException e) {
+			throw new ReceitaException("Valor inválido: máximo de 19 números.");
+		} catch(Exception e) {
 			throw new ReceitaException("Desculpe, algo deu errado.");
 		}
 	}

@@ -9,6 +9,7 @@ import javax.transaction.Transactional;
 
 import org.apache.logging.log4j.util.Strings;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 
 import com.jolteam.financas.dao.CofreDAO;
@@ -131,12 +132,18 @@ public class CofreService {
 		this.cofres.delete(cofre);
 	}
 	
-	public void adicionarTransacao(Cofre cofre, BigDecimal valor, TipoTransacao tipoTransacao) {
+	public void adicionarTransacao(Cofre cofre, BigDecimal valor, TipoTransacao tipoTransacao) throws CofreException {
 		if (cofre != null && cofre.getId() != null) {
 			if (valor != null) {
 				int result = valor.compareTo(new BigDecimal("0"));
 				if (result != 0) {
-					this.cofreTransacao.save(new CofreTransacao(cofre, valor, LocalDateTime.now()));
+					try {
+						this.cofreTransacao.save(new CofreTransacao(cofre, valor, LocalDateTime.now()));
+					} catch(DataIntegrityViolationException e) {
+						throw new CofreException("Valor inválido: máximo de 19 números.");
+					} catch(Exception e) {
+						throw new CofreException("Desculpe, algo deu errado.");
+					}
 				}
 			}
 		}
