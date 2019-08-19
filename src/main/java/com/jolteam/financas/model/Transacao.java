@@ -101,7 +101,7 @@ public class Transacao {
 	
 	@Override
 	public String toString() {
-		return "Transacao [id=" + id + ", usuario=" + usuario + ", tipo=" + tipo + ", categoria="
+		return "Transacao [id=" + id + ", usuario=" + (usuario != null ? "..." : usuario) + ", tipo=" + tipo + ", categoria="
 				+ categoria + ", descricao=" + descricao + ", valor=" + valor + ", data=" + data + "]";
 	}
 	

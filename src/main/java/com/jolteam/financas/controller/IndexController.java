@@ -1,9 +1,18 @@
 package com.jolteam.financas.controller;
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import org.apache.logging.log4j.util.Strings;
@@ -20,6 +29,7 @@ import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.jolteam.financas.dao.LogDAO;
+import com.jolteam.financas.dao.TransacaoDAO;
 import com.jolteam.financas.enums.Provedor;
 import com.jolteam.financas.enums.TipoCodigo;
 import com.jolteam.financas.enums.TipoLog;
@@ -28,10 +38,19 @@ import com.jolteam.financas.exceptions.UsuarioInexistenteException;
 import com.jolteam.financas.exceptions.UsuarioInvalidoException;
 import com.jolteam.financas.model.Codigo;
 import com.jolteam.financas.model.Log;
+import com.jolteam.financas.model.Transacao;
 import com.jolteam.financas.model.Usuario;
 import com.jolteam.financas.service.CodigoService;
 import com.jolteam.financas.service.UsuarioService;
 import com.jolteam.financas.util.Util;
+
+import net.sf.jasperreports.engine.JRException;
+import net.sf.jasperreports.engine.JasperCompileManager;
+import net.sf.jasperreports.engine.JasperExportManager;
+import net.sf.jasperreports.engine.JasperFillManager;
+import net.sf.jasperreports.engine.JasperPrint;
+import net.sf.jasperreports.engine.JasperReport;
+import net.sf.jasperreports.engine.data.JRBeanCollectionDataSource;
 
 @Controller
 public class IndexController {
@@ -39,6 +58,8 @@ public class IndexController {
 	@Autowired private LogDAO logs;
 	@Autowired private UsuarioService usuarioService;
 	@Autowired private CodigoService codigoService;
+	
+	@Autowired private TransacaoDAO transacoes;
 
 	@GetMapping("/")
 	public String viewIndex() {
@@ -266,6 +287,39 @@ public class IndexController {
 		}
 		
 		return "deslogado/redefinir-senha";
+	}
+	
+	@GetMapping("/teste/relatorio")
+	public void testeRelatorio(HttpServletResponse response) throws JRException, IOException {
+		// Define a fonte dos dados
+		List<Transacao> transacoes = this.transacoes.findAll();
+		JRBeanCollectionDataSource jr = new JRBeanCollectionDataSource(transacoes, false);
+		
+		// Define os parâmetros
+		Map<String, Object> parametros = new HashMap<>();
+		parametros.put("nome", "Emerson Oliveira");
+		parametros.put("mes", "Agosto");
+		parametros.put("dataMinimaConsulta", new Date());
+		parametros.put("dataMaximaConsulta", new Date());
+		
+		// Define o caminho do template
+		String path = "/jasper/movimentos.jrxml";
+		InputStream jasperTemplate = this.getClass().getResourceAsStream(path);
+		
+		// Compila o template
+		JasperReport jasperReport = JasperCompileManager.compileReport(jasperTemplate);
+		// Passa para o JasperPrint o relatório, os parâmetros e a fonte dos dados, no caso uma conexão ao banco de dados
+		JasperPrint jasperPrint = JasperFillManager.fillReport(jasperReport, parametros, jr);
+		
+		// Configura a respota para o tipo PDF
+		response.setContentType("application/pdf");
+		// Define que o arquivo pode ser visualizado no navegador e também nome final do arquivo
+		// para fazer download do relatório troque 'inline' por 'attachment'
+		response.setHeader("Content-Disposition", "inline; filename=relatorio"+LocalDate.now().toString()+".pdf");
+
+		// Faz a exportação do relatório para o HttpServletResponse
+		final OutputStream outStream = response.getOutputStream();
+		JasperExportManager.exportReportToPdfStream(jasperPrint, outStream);
 	}
 
 }

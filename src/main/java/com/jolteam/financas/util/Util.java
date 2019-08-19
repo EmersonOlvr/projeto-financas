@@ -3,6 +3,8 @@ package com.jolteam.financas.util;
 import java.math.BigDecimal;
 import java.text.DecimalFormat;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -47,6 +49,17 @@ public abstract class Util {
 		DecimalFormat df = (DecimalFormat) DecimalFormat.getCurrencyInstance(new Locale("pt", "BR"));
 		df.applyPattern("R$ #,##0.00;-R$ #,##0.00");
 		return df.format(valor);
+	}
+	
+	public static String formatDate(LocalDate data) {
+		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+		
+		return data.format(formatter);
+	}
+	public static String formatDateTime(LocalDateTime data) {
+		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss");
+		
+		return data.format(formatter);
 	}
 	
 	public static BigDecimal somarTransacoes(List<Transacao> transacoes) {
