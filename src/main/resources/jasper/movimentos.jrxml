@@ -55,14 +55,14 @@
 	<title>
 		<band height="60" splitType="Stretch">
 			<staticText>
-				<reportElement x="204" y="10" width="231" height="26" uuid="d1ff9154-fb42-4d26-9fea-44cf99e926e3"/>
-				<textElement>
-					<font size="19" isBold="true"/>
+				<reportElement x="200" y="10" width="272" height="26" uuid="d1ff9154-fb42-4d26-9fea-44cf99e926e3"/>
+				<textElement verticalAlignment="Middle">
+					<font size="19" isBold="true" pdfFontName="Helvetica-Bold"/>
 				</textElement>
 				<text><![CDATA[Relatório de Movimentos]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="495" y="21" width="60" height="15" uuid="eb6c72be-74b7-40d5-ab6f-444b6d93b6b8"/>
+				<reportElement x="472" y="21" width="83" height="15" uuid="eb6c72be-74b7-40d5-ab6f-444b6d93b6b8"/>
 				<textElement textAlignment="Right"/>
 				<text><![CDATA[Gerado em: ]]></text>
 			</staticText>
@@ -73,28 +73,23 @@
 			</textField>
 			<image>
 				<reportElement x="1" y="0" width="161" height="54" uuid="28c0dba2-9cc2-4af2-9a7e-9a5a7b321317"/>
-				<imageExpression><![CDATA["C:\\Users\\Emerson\\Pictures\\Diversas\\financas-5.png"]]></imageExpression>
+				<imageExpression><![CDATA["static/img/financas-5.png"]]></imageExpression>
 			</image>
 			<line>
 				<reportElement x="0" y="59" width="555" height="1" uuid="af8df50a-9ccf-4e95-8fe0-f1378d391bbf"/>
 			</line>
 			<textField>
-				<reportElement x="204" y="35" width="100" height="20" uuid="ceb6a4f3-078b-4c64-8823-c714931ef486"/>
+				<reportElement x="200" y="36" width="100" height="20" uuid="ceb6a4f3-078b-4c64-8823-c714931ef486"/>
 				<textFieldExpression><![CDATA[$P{nome}]]></textFieldExpression>
 			</textField>
 		</band>
 	</title>
 	<pageHeader>
 		<band height="35" splitType="Stretch">
-			<staticText>
-				<reportElement x="1" y="8" width="145" height="20" uuid="5ac9c265-cb29-4c15-9405-21b58c13b31b"/>
-				<textElement verticalAlignment="Middle"/>
-				<text><![CDATA[Lista de Movimentos no mês de ]]></text>
-			</staticText>
 			<textField>
-				<reportElement x="145" y="8" width="100" height="20" uuid="bc572608-f502-4922-8685-9b775bc498b5"/>
+				<reportElement x="0" y="8" width="244" height="20" uuid="70820b0f-b473-4bdb-a879-885e48227123"/>
 				<textElement verticalAlignment="Middle"/>
-				<textFieldExpression><![CDATA[$P{mes}]]></textFieldExpression>
+				<textFieldExpression><![CDATA["Lista de Movimentos no mês de " + $P{mes}]]></textFieldExpression>
 			</textField>
 		</band>
 	</pageHeader>
@@ -108,8 +103,8 @@
 					<bottomPen lineWidth="1.0"/>
 					<rightPen lineWidth="1.0"/>
 				</box>
-				<textElement>
-					<font isBold="true"/>
+				<textElement verticalAlignment="Middle">
+					<font isBold="true" pdfFontName="Helvetica-Bold"/>
 				</textElement>
 				<text><![CDATA[Tipo (Receita/Despesa)]]></text>
 			</staticText>
@@ -121,8 +116,8 @@
 					<bottomPen lineWidth="1.0"/>
 					<rightPen lineWidth="1.0"/>
 				</box>
-				<textElement>
-					<font isBold="true"/>
+				<textElement verticalAlignment="Middle">
+					<font isBold="true" pdfFontName="Helvetica-Bold"/>
 				</textElement>
 				<text><![CDATA[Categoria]]></text>
 			</staticText>
@@ -134,34 +129,34 @@
 					<bottomPen lineWidth="1.0"/>
 					<rightPen lineWidth="1.0"/>
 				</box>
-				<textElement>
-					<font isBold="true"/>
+				<textElement verticalAlignment="Middle">
+					<font isBold="true" pdfFontName="Helvetica-Bold"/>
 				</textElement>
 				<text><![CDATA[Valor]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="329" y="0" width="123" height="20" uuid="e9a887ca-f838-4bf0-90a8-150a409b504f"/>
+				<reportElement x="329" y="0" width="114" height="20" uuid="e9a887ca-f838-4bf0-90a8-150a409b504f"/>
 				<box topPadding="1" leftPadding="5" bottomPadding="1" rightPadding="1">
 					<topPen lineWidth="1.0"/>
 					<leftPen lineWidth="1.0"/>
 					<bottomPen lineWidth="1.0"/>
 					<rightPen lineWidth="1.0"/>
 				</box>
-				<textElement>
-					<font isBold="true"/>
+				<textElement verticalAlignment="Middle">
+					<font isBold="true" pdfFontName="Helvetica-Bold"/>
 				</textElement>
 				<text><![CDATA[Descrição]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="452" y="0" width="103" height="20" uuid="deb35237-47ea-4aea-8dfd-015c2a9f3d88"/>
+				<reportElement x="443" y="0" width="112" height="20" uuid="deb35237-47ea-4aea-8dfd-015c2a9f3d88"/>
 				<box topPadding="1" leftPadding="5" bottomPadding="1" rightPadding="1">
 					<topPen lineWidth="1.0"/>
 					<leftPen lineWidth="1.0"/>
 					<bottomPen lineWidth="1.0"/>
 					<rightPen lineWidth="1.0"/>
 				</box>
-				<textElement>
-					<font isBold="true"/>
+				<textElement verticalAlignment="Middle">
+					<font isBold="true" pdfFontName="Helvetica-Bold"/>
 				</textElement>
 				<text><![CDATA[Data e Hora]]></text>
 			</staticText>
@@ -169,17 +164,6 @@
 	</columnHeader>
 	<detail>
 		<band height="20" splitType="Stretch">
-			<textField isStretchWithOverflow="true">
-				<reportElement positionType="Float" stretchType="RelativeToBandHeight" x="452" y="0" width="103" height="20" uuid="92d7b881-401e-4003-9c3a-2d973dbe63cb"/>
-				<box topPadding="1" leftPadding="5" bottomPadding="1" rightPadding="1">
-					<topPen lineWidth="1.0"/>
-					<leftPen lineWidth="1.0"/>
-					<bottomPen lineWidth="1.0"/>
-					<rightPen lineWidth="1.0"/>
-				</box>
-				<textElement verticalAlignment="Middle"/>
-				<textFieldExpression><![CDATA[com.jolteam.financas.util.Util.formatDateTime($F{data})]]></textFieldExpression>
-			</textField>
 			<textField isStretchWithOverflow="true">
 				<reportElement positionType="Float" stretchType="RelativeToBandHeight" x="1" y="0" width="118" height="20" uuid="5e9548d6-9273-4202-9280-e78142c2ce0c"/>
 				<box topPadding="1" leftPadding="5" bottomPadding="1" rightPadding="1">
@@ -189,7 +173,7 @@
 					<rightPen lineWidth="1.0"/>
 				</box>
 				<textElement verticalAlignment="Middle"/>
-				<textFieldExpression><![CDATA[$F{tipo}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{tipo}.valor]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true">
 				<reportElement positionType="Float" stretchType="RelativeToBandHeight" x="119" y="0" width="106" height="20" uuid="1f6a00b4-5dfa-445e-b304-21aaf1915541"/>
@@ -214,7 +198,7 @@
 				<textFieldExpression><![CDATA["R$ " + com.jolteam.financas.util.Util.getStringOf($F{valor})]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true">
-				<reportElement positionType="Float" stretchType="RelativeToBandHeight" x="329" y="0" width="123" height="20" uuid="fa1b21d3-3f95-4873-bf04-af6e718f91de"/>
+				<reportElement positionType="Float" stretchType="RelativeToBandHeight" x="329" y="0" width="114" height="20" uuid="fa1b21d3-3f95-4873-bf04-af6e718f91de"/>
 				<box topPadding="1" leftPadding="5" bottomPadding="1" rightPadding="1">
 					<topPen lineWidth="1.0"/>
 					<leftPen lineWidth="1.0"/>
@@ -224,6 +208,30 @@
 				<textElement verticalAlignment="Middle"/>
 				<textFieldExpression><![CDATA[$F{descricao}]]></textFieldExpression>
 			</textField>
+			<textField isStretchWithOverflow="true">
+				<reportElement positionType="Float" stretchType="RelativeToBandHeight" x="443" y="0" width="112" height="20" uuid="3b5f8aba-dbc2-430e-a7a0-c7f24e995d2c"/>
+				<box topPadding="1" leftPadding="5" bottomPadding="1" rightPadding="1">
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[com.jolteam.financas.util.Util.formatDateTime($F{data})]]></textFieldExpression>
+			</textField>
 		</band>
 	</detail>
+	<pageFooter>
+		<band height="50">
+			<textField>
+				<reportElement x="435" y="30" width="80" height="20" uuid="ba833bfc-415a-49c1-838b-86fb334243a0"/>
+				<textElement textAlignment="Right"/>
+				<textFieldExpression><![CDATA["Página "+$V{PAGE_NUMBER}+" de"]]></textFieldExpression>
+			</textField>
+			<textField evaluationTime="Report">
+				<reportElement x="515" y="30" width="40" height="20" uuid="1ba7adf5-f56d-4803-96da-3d6f572e3b4f"/>
+				<textFieldExpression><![CDATA[" " + $V{PAGE_NUMBER}]]></textFieldExpression>
+			</textField>
+		</band>
+	</pageFooter>
 </jasperReport>
