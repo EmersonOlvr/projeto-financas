@@ -13,8 +13,8 @@ import com.jolteam.financas.dao.TransacaoDAO;
 import com.jolteam.financas.enums.TipoTransacao;
 import com.jolteam.financas.exceptions.DespesaException;
 import com.jolteam.financas.model.Categoria;
-import com.jolteam.financas.model.Despesa;
 import com.jolteam.financas.model.Transacao;
+import com.jolteam.financas.model.dto.Despesa;
 
 @Service
 public class DespesaService {

@@ -6,8 +6,33 @@
 	<link rel="icon" href="/img/favicon.ico">
 
 	<title>Lista de Movimentos</title>
+	
+	<script type="text/javascript">
+		if (window.location.search) {
+			if (window.history && history.pushState) {
+				window.history.pushState("", document.title, window.location.pathname);
+			} else {
+				// Prevent scrolling by storing the page's current scroll offset
+				var scroll = {
+					top: document.body.scrollTop,
+					left: document.body.scrollLeft
+				};
+				window.location.search = '';
+				// Restore the scroll offset, should be flicker free
+				document.body.scrollTop = scroll.top;
+				document.body.scrollLeft = scroll.left;
+			}
+		}
+	</script>
 
 	<th:block th:insert="includes/include.html :: #head"></th:block>
+	
+	<style>
+		.relSelect {
+			display: inline;
+			width: auto;
+		}
+	</style>
 	
 	<script type="text/javascript">
 		var id = 0;
@@ -116,7 +141,7 @@
 								</tbody>
 							</table>
 						</div>
-						<div class="bd bgc-white c-black p-20">
+						<div class="bd bgc-white c-black p-20" style="margin-bottom: 1rem;">
 							<div class="peers ai-c jc-sb ">
 								<div class="peer peer-greed">
 									<p class="mb-0">Receitas</p>
@@ -128,6 +153,46 @@
 									<p class="text-danger">[[|R$ ${#numbers.formatDecimal(totalDespesas, 1, 'POINT', 2, 'COMMA')}|]]</p>
 									<p class="text-info mb-0">[[|R$ ${#numbers.formatDecimal(saldoAtual, 1, 'POINT', 2, 'COMMA')}|]]</p>
 								</div>
+							</div>
+						</div>
+						<div class="bd bgc-white c-black p-20">
+							<h6 class="c-grey-900 mb-3">Gerar relatório em PDF</h6>
+							
+							<div th:if="${!#strings.isEmpty(msgErro)}"
+								class="alert alert-danger alert-dismissible fade show"
+								role="alert">
+								[[${msgErro}]]
+								<button type="button" class="close" data-dismiss="alert"
+									aria-label="Close">
+									<span aria-hidden="true">&times;</span>
+								</button>
+							</div>
+							
+							<div class="ai-c jc-sb ">
+								<form th:object="${relatorioForm}" th:action="@{/relatorio}" method="post">
+									<label for="mes">Mês: </label>
+									<select class="form-control form-control-sm relSelect mb-2" th:field="*{mes}">
+										<option value="1">Janeiro</option>
+										<option value="2">Fevereiro</option>
+										<option value="3">Março</option>
+										<option value="4">Abril</option>
+										<option value="5">Maio</option>
+										<option value="6">Junho</option>
+										<option value="7">Julho</option>
+										<option value="8" selected>Agosto</option>
+										<option value="9">Setembro</option>
+										<option value="10">Outubro</option>
+										<option value="11">Novembro</option>
+										<option value="12">Dezembro</option>
+									</select><br>
+									<label for="ano">Ano: </label>
+									<select class="form-control form-control-sm relSelect mb-3" th:field="*{ano}">
+										<option th:each="ano : ${anos}" th:value="${ano}">[[${ano}]]</option>
+									</select><br>
+									
+									<button class="btn btn-primary" name="acao" value="view" type="submit">Visualizar</button>
+									<button class="btn btn-primary" name="acao" value="download" type="submit">Baixar</button>
+								</form>
 							</div>
 						</div>
 					</div>

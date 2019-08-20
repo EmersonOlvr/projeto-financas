@@ -9,9 +9,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.servlet.ModelAndView;
 
-import com.jolteam.financas.exceptions.FotoNotFoundException;
 import com.jolteam.financas.model.Foto;
 import com.jolteam.financas.service.FotoStorageService;
 
@@ -28,24 +26,11 @@ public class FotoController {
 
         	return ResponseEntity.ok()
         		.contentType(MediaType.parseMediaType(foto.getTipo()))
-        		.header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + foto.getNome() + "\"")
+        		.header(HttpHeaders.CONTENT_DISPOSITION, "inline; filename=\"" + foto.getNome() + "\"")
         		.body(new ByteArrayResource(foto.getConteudo()));
         } catch (Exception e) {
 			return ResponseEntity.notFound().build();
 		}
     }
 	
-	@GetMapping("/view/{fotoId}")
-	public ModelAndView viewImage(@PathVariable String fotoId) {
-		ModelAndView mv = new ModelAndView("/view-img");
-		try {
-			this.fotoStorageService.obterPorId(fotoId);
-			mv.addObject("fotoId", fotoId);
-		} catch (FotoNotFoundException e) {
-			mv.addObject("msgErro", e.getMessage());
-		}
-		return mv;
-	}
-	
-
 }

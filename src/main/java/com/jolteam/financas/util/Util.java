@@ -17,6 +17,7 @@ import org.thymeleaf.expression.Numbers;
 
 import com.jolteam.financas.exceptions.BigDecimalInvalidoException;
 import com.jolteam.financas.model.Transacao;
+import com.jolteam.financas.model.Usuario;
 
 public abstract class Util {
 
@@ -60,6 +61,45 @@ public abstract class Util {
 		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss");
 		
 		return data.format(formatter);
+	}
+	
+	public static String obterMesDe(int mes) {
+		List<String> meses = Arrays.asList(
+				"Janeiro", "Fevereiro", "Março", "Abril", "Maio", "Junho", 
+				"Julho", "Agosto", "Setembro", "Outubro", "Novembro", "Dezembro"
+			);
+		
+		if (mes >= 0 && mes <= 12) {
+			return meses.get(mes - 1);
+		}
+		
+		return null;
+	}
+	public static int obterValorMesAtual() {
+		return LocalDate.now().getMonthValue();
+	}
+	public static int obterAnoAtual() {
+		return LocalDate.now().getYear();
+	}
+	
+	/**
+	 * @param usuario Usuário desejado para obter os anos de cadastro
+	 * @return Lista de inteiros contendo anos, incluindo o ano de cadastro do usuário até o ano atual
+	 */
+	public static List<Integer> obterAnosDeCadastradoDoUsuario(Usuario usuario) {
+		int anoCadastro = usuario.getRegistroData().getYear();
+		int anoAtual = LocalDate.now().getYear();
+		
+		List<Integer> anos = new ArrayList<>();
+		anos.add(anoCadastro);
+		
+		int ano = anoCadastro;
+		while (ano < anoAtual) {
+			ano++;
+			anos.add(ano);
+		}
+		
+		return anos;
 	}
 	
 	public static BigDecimal somarTransacoes(List<Transacao> transacoes) {

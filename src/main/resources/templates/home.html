@@ -6,22 +6,8 @@
 	<link rel="icon" href="/img/favicon.ico">
 
 	<title>Home</title>
-
-	<th:block th:insert="includes/include.html :: #head"></th:block>
-</head>
-<body class="app">
-
-	<div id="loader">
-		<div class="spinner"></div>
-	</div>
-	<script>
-		window.addEventListener('load', function load() {
-			const loader = document.getElementById('loader');
-			setTimeout(function() {
-				loader.classList.add('fadeOut');
-			}, 300);
-		});
-		
+	
+	<script type="text/javascript">
 		if (window.location.hash && window.location.hash == '#_=_') {
 			if (window.history && history.pushState) {
 				window.history.pushState("", document.title, window.location.pathname);
@@ -38,6 +24,41 @@
 			}
 		}
 	</script>
+	
+	<style>
+		#receitasHome {
+			transition: 0.3s ease-in-out;
+		}
+		#despesasHome {
+			transition: 0.3s ease-in-out;
+		}
+		#receitasHome:hover {
+			box-shadow: 0px 0px 10px 0.5px rgba(0,0,0,0.1);
+		}
+		#despesasHome:hover {
+			box-shadow: 0px 0px 10px 0.5px rgba(0,0,0,0.1);
+		}
+		
+		#rdLink {
+			color: #72777a;
+		}
+	</style>
+
+	<th:block th:insert="includes/include.html :: #head"></th:block>
+</head>
+<body class="app">
+
+	<div id="loader">
+		<div class="spinner"></div>
+	</div>
+	<script>
+		window.addEventListener('load', function load() {
+			const loader = document.getElementById('loader');
+			setTimeout(function() {
+				loader.classList.add('fadeOut');
+			}, 300);
+		});
+	</script>
 	<div>
 		<th:block th:insert="includes/include.html :: menuLateral"></th:block>
 		<div class="page-container">
@@ -53,50 +74,54 @@
 						<div class="masonry-item	w-100">
 							<div class="row gap-20">
 								<div class="col-md-6">
-									<div class="layers bd bgc-white p-20">
-										<div class="layer w-100 mB-10">
-											<h6 class="lh-1">Receitas (este Mês)</h6>
-										</div>
-										<div class="layer w-100">
-											<div class="peers ai-sb fxw-nw">
-												<div class="peer peer-greed">
-													<span id="sparklinedash">
-													</span>
-												</div>
-												<div class="peer">
-													<span class="d-ib lh-0 va-m fw-600 bdrs-10em pX-15 pY-15 bgc-green-50 c-green-500">
-														<script type="text/javascript">
-															var pr = ""+[[${porcentagemReceitasMesAtual}]];
-															document.write(pr.replace('.', ',') + "%");
-														</script>
-													</span>
+									<a href="/receitas/historico" id="rdLink">
+										<div class="layers bd bgc-white p-20" id="receitasHome">
+											<div class="layer w-100 mB-10">
+												<h6 class="lh-1">Receitas (este Mês)</h6>
+											</div>
+											<div class="layer w-100">
+												<div class="peers ai-sb fxw-nw">
+													<div class="peer peer-greed">
+														<span id="sparklinedash">
+														</span>
+													</div>
+													<div class="peer">
+														<span class="d-ib lh-0 va-m fw-600 bdrs-10em pX-15 pY-15 bgc-green-50 c-green-500">
+															<script type="text/javascript">
+																var pr = ""+[[${porcentagemReceitasMesAtual}]];
+																document.write(pr.replace('.', ',') + "%");
+															</script>
+														</span>
+													</div>
 												</div>
 											</div>
 										</div>
-									</div>
+									</a>
 								</div>
 								<div class="col-md-6">
-									<div class="layers bd bgc-white p-20">
-										<div class="layer w-100 mB-10">
-											<h6 class="lh-1">Despesas (este Mês)</h6>
-										</div>
-										<div class="layer w-100">
-											<div class="peers ai-sb fxw-nw">
-												<div class="peer peer-greed">
-													<span id="sparklinedash2">
-													</span>
-												</div>
-												<div class="peer">
-													<span class="d-ib lh-0 va-m fw-600 bdrs-10em pX-15 pY-15 bgc-red-50 c-red-500">
-														<script type="text/javascript">
-															var pd = ""+[[${porcentagemDespesasMesAtual}]];
-															document.write(pd.replace('.', ',') + "%");
-														</script>
-													</span>
+									<a href="/despesas/historico" id="rdLink">
+										<div class="layers bd bgc-white p-20" id="despesasHome">
+											<div class="layer w-100 mB-10">
+												<h6 class="lh-1">Despesas (este Mês)</h6>
+											</div>
+											<div class="layer w-100">
+												<div class="peers ai-sb fxw-nw">
+													<div class="peer peer-greed">
+														<span id="sparklinedash2">
+														</span>
+													</div>
+													<div class="peer">
+														<span class="d-ib lh-0 va-m fw-600 bdrs-10em pX-15 pY-15 bgc-red-50 c-red-500">
+															<script type="text/javascript">
+																var pd = ""+[[${porcentagemDespesasMesAtual}]];
+																document.write(pd.replace('.', ',') + "%");
+															</script>
+														</span>
+													</div>
 												</div>
 											</div>
 										</div>
-									</div>
+									</a>
 								</div>
 
 								<!--

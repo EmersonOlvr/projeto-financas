@@ -1,6 +1,9 @@
-package com.jolteam.financas.model;
+package com.jolteam.financas.model.dto;
 
 import java.util.List;
+
+import com.jolteam.financas.model.Cofre;
+import com.jolteam.financas.model.CofreTransacao;
 
 public class HistoricoCofreTransacao {
 

@@ -13,8 +13,8 @@ import com.jolteam.financas.dao.TransacaoDAO;
 import com.jolteam.financas.enums.TipoTransacao;
 import com.jolteam.financas.exceptions.ReceitaException;
 import com.jolteam.financas.model.Categoria;
-import com.jolteam.financas.model.Receita;
 import com.jolteam.financas.model.Transacao;
+import com.jolteam.financas.model.dto.Receita;
 
 @Service
 public class ReceitaService {

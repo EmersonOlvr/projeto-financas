@@ -29,8 +29,6 @@
 	</style>
 	<parameter name="nome" class="java.lang.String"/>
 	<parameter name="mes" class="java.lang.String"/>
-	<parameter name="dataMinimaConsulta" class="java.util.Date"/>
-	<parameter name="dataMaximaConsulta" class="java.util.Date"/>
 	<queryString>
 		<![CDATA[]]>
 	</queryString>
