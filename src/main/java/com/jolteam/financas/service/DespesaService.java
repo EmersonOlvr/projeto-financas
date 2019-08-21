@@ -82,7 +82,7 @@ public class DespesaService {
 		if (!catDespesa.getNome().matches("^[a-zA-ZÀ-ú0-9 ]*$")) {
 			throw new DespesaException("Nome inválido: somente letras, espaços e números são permitidos.");
 		}
-		if (this.categorias.existsByNomeAndTipoTransacao(catDespesa.getNome(), TipoTransacao.DESPESA)) {
+		if (this.categorias.existsByNomeAndTipoTransacaoAndUsuario(catDespesa.getNome(), TipoTransacao.DESPESA, catDespesa.getUsuario())) {
 			throw new DespesaException("Já existe uma Categoria de Despesa com este nome: "+catDespesa.getNome());
 		}
 		catDespesa.setNome(catDespesa.getNome().replaceAll("\\s+", " "));

@@ -82,7 +82,7 @@ public class ReceitaService {
 		if (!catReceita.getNome().matches("^[a-zA-ZÀ-ú0-9 ]*$")) {
 			throw new ReceitaException("Nome inválido: somente letras, espaços e números são permitidos.");
 		}
-		if (this.categorias.existsByNomeAndTipoTransacao(catReceita.getNome(), TipoTransacao.RECEITA)) {
+		if (this.categorias.existsByNomeAndTipoTransacaoAndUsuario(catReceita.getNome(), TipoTransacao.RECEITA, catReceita.getUsuario())) {
 			throw new ReceitaException("Já existe uma Categoria de Receita com este nome: "+catReceita.getNome());
 		}
 		catReceita.setNome(catReceita.getNome().replaceAll("\\s+", " "));

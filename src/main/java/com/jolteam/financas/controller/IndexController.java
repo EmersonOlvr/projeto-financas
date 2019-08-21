@@ -20,7 +20,6 @@ import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.jolteam.financas.dao.LogDAO;
-import com.jolteam.financas.dao.TransacaoDAO;
 import com.jolteam.financas.enums.Provedor;
 import com.jolteam.financas.enums.TipoCodigo;
 import com.jolteam.financas.enums.TipoLog;

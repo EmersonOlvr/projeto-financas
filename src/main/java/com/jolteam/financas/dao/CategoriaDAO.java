@@ -20,7 +20,7 @@ public interface CategoriaDAO extends JpaRepository<Categoria, Integer> {
 	List<Categoria> findByUsuarioAndTipoTransacaoOrderByDataCriacaoDesc(Usuario usuario, TipoTransacao tipoTransacao);
 	List<Categoria> findAllByTipoTransacao(TipoTransacao transacao);
 	
-	boolean existsByNomeAndTipoTransacao(String nome, TipoTransacao tipoTransacao);
+	boolean existsByNomeAndTipoTransacaoAndUsuario(String nome, TipoTransacao tipoTransacao, Usuario usuario);
 	
 	
 }
