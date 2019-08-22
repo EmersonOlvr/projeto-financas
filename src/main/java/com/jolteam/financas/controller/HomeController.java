@@ -94,6 +94,10 @@ public class HomeController {
 		mv.addObject("porcentagemReceitasMesAtual", porcentagemReceitasMesAtual);
 		mv.addObject("porcentagemDespesasMesAtual", porcentagemDespesasMesAtual);
 		
+		BigDecimal totalReceitas = this.movimentosService.totalReceitaAcumuladaDe(usuario);
+		BigDecimal totalDespesas = this.movimentosService.totalDespesaAcumuladaDe(usuario);
+		mv.addObject("saldoAtual", totalReceitas.subtract(totalDespesas));
+		
 		return mv;
 	}
 

@@ -32,11 +32,21 @@
 		#despesasHome {
 			transition: 0.3s ease-in-out;
 		}
+		
 		#receitasHome:hover {
 			box-shadow: 0px 0px 10px 0.5px rgba(0,0,0,0.1);
 		}
+		#receitasHome:active {
+			background-color: #f9f9f9!important;
+			box-shadow: inset 2px 2px 4px 0.5px rgba(0,0,0,0.1);
+		}
+		
 		#despesasHome:hover {
 			box-shadow: 0px 0px 10px 0.5px rgba(0,0,0,0.1);
+		}
+		#despesasHome:active {
+			background-color: #f9f9f9!important;
+			box-shadow: inset 2px 2px 4px 0.5px rgba(0,0,0,0.1);
 		}
 		
 		#rdLink {
@@ -122,6 +132,16 @@
 											</div>
 										</div>
 									</a>
+								</div>
+								<div class="col-md-12">
+									<div class="layers bd bgc-white p-20">
+										<div class="layer w-100">
+											<h6 class="lh-1">Saldo Atual</h6>
+											<h1 th:class="${saldoAtual >= 0 ? 'c-green-400' : 'c-red-400'}">
+												[[${T(com.jolteam.financas.util.Util).format(saldoAtual)}]]
+											</h1>
+										</div>
+									</div>
 								</div>
 
 								<!--
@@ -271,7 +291,7 @@
 							<div class="bd bgc-white">
 								<div class="layers">
 									<div class="layer w-100 pX-20 pT-20">
-										<h6 class="lh-1">Total de Receitas e Despesas por mês</h6>
+										<h6 class="lh-1">Total de Receitas e Despesas por mês (últimos 6 meses)</h6>
 									</div>
 									<div class="layer w-100 p-20">
 										<canvas id="graficoHome" height="120">
