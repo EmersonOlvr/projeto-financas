@@ -1,10 +1,10 @@
 package com.jolteam.financas.controller;
 
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.time.LocalDate;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -35,6 +35,7 @@ import net.sf.jasperreports.engine.JasperFillManager;
 import net.sf.jasperreports.engine.JasperPrint;
 import net.sf.jasperreports.engine.JasperReport;
 import net.sf.jasperreports.engine.data.JRBeanCollectionDataSource;
+import net.sf.jasperreports.engine.util.JRLoader;
 
 @Controller
 public class RelatorioController {
@@ -75,26 +76,28 @@ public class RelatorioController {
 				acao = "inline";
 			}
 			
+			
+			// ===== Compila o template quando ele ainda não está compilado (ou seja, com extensão .jrxml) ===== //
+//			InputStream inputStream = this.getClass().getResourceAsStream("/jasper/movimentos.jrxml");
+//			JasperReport jasperReport = JasperCompileManager.compileReport(inputStream);
+			
+			// ===== Usa o template que ja está compilado (ou seja, com extensão .jasper) ===== //
+			InputStream inputStream = this.getClass().getResourceAsStream("/jasper/movimentos.jasper");
+			JasperReport jasperReport = (JasperReport) JRLoader.loadObject(inputStream);
+			
+			
 			// Define os parâmetros
 			Map<String, Object> parametros = new HashMap<>();
 			parametros.put("nome", usuario.getNome() +" "+ usuario.getSobrenome());
 			parametros.put("mes", Util.obterMesDe(relatorioForm.getMes()));
-			parametros.put("dataMinimaConsulta", new Date());
-			parametros.put("dataMaximaConsulta", new Date());
 			
-			// Define o caminho do template
-			InputStream jasperTemplate = this.getClass().getResourceAsStream("/jasper/movimentos.jrxml");
-			
-			// Compila o template
-			JasperReport jasperReport = JasperCompileManager.compileReport(jasperTemplate);
-			// Passa para o JasperPrint o relatório, os parâmetros e a fonte dos dados, no caso uma Lista
+			// Passa para o JasperPrint o relatório, os parâmetros e a fonte dos dados, no caso uma lista
 			JasperPrint jasperPrint = JasperFillManager.fillReport(jasperReport, parametros, dataSource);
 			
-			String dataAtual = LocalDate.now().toString();
 			
 			// Configura a resposta para o tipo PDF
 			response.setContentType("application/pdf");
-			response.addHeader("Content-Disposition", acao+"; filename=relatorio-"+dataAtual+".pdf");
+			response.addHeader("Content-Disposition", acao+"; filename=relatorio-"+LocalDate.now().toString()+".pdf");
 
 			// Faz a exportação do relatório para o HttpServletResponse
 			final OutputStream outStream = response.getOutputStream();
@@ -102,6 +105,31 @@ public class RelatorioController {
 		} else {
 			response.sendRedirect("/movimentos?erro=sem_dados&mesErro="+relatorioForm.getMes()+"&anoErro="+relatorioForm.getAno());
 		}
+	}
+	
+//	@GetMapping("/relatorio/compilar")
+	public String compilarRelatorio() {
+		InputStream inputStream = this.getClass().getResourceAsStream("/jasper/movimentos.jrxml");
+		OutputStream outputStream = null;
+		
+		try {
+			outputStream = new FileOutputStream("src/main/resources/jasper/movimentos.jasper");
+			JasperCompileManager.compileReportToStream(inputStream, outputStream);
+			outputStream.close();
+		} catch (Exception e) {
+			System.out.println(e.getClass());
+			System.out.println(e.getMessage());
+		} finally {
+			if (outputStream != null) {
+				try {
+					outputStream.close();
+				} catch (IOException e) {
+					System.out.println("erro ao fechar");
+				}
+			}
+		}
+		
+		return "deslogado/index";
 	}
 	
 }
