@@ -9,6 +9,9 @@ import javax.servlet.http.HttpSession;
 import javax.transaction.Transactional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -36,17 +39,26 @@ public class MovimentosController {
 	@GetMapping("/movimentos")
 	public ModelAndView viewMovimentos(@RequestParam(required = false) String erro, 
 			@RequestParam(required = false) Integer mesErro, @RequestParam(required = false) Integer anoErro,
-			HttpSession session, RedirectAttributes ra) 
+			HttpSession session, RedirectAttributes ra,@RequestParam(required=false,defaultValue = "1") Integer page) 
 	{
 		ModelAndView mv = new ModelAndView("usuario/movimentos");
+		
+		if (page < 1) {
+			return new ModelAndView("redirect:/movimentos");
+		}
 		
 		// relacionado a listagem dos dados da página
 		Usuario usuario = (Usuario) session.getAttribute("usuarioLogado");
 		BigDecimal totalReceitas = this.movimentosService.totalReceitaAcumuladaDe(usuario);
 		BigDecimal totalDespesas = this.movimentosService.totalDespesaAcumuladaDe(usuario);
+		Page<Transacao> pagina=this.movimentosService.findAllByUsuario((Usuario) session.getAttribute("usuarioLogado"),PageRequest.of(page - 1, 15, Sort.by("data")));
+		
+		if (page > pagina.getTotalPages()) {
+			return new ModelAndView("redirect:/movimentos");
+		}
 		
 		mv.addObject("transacao", new Transacao());
-		mv.addObject("listatransacao", this.movimentosService.listarTodasPorUsuario(usuario));
+		mv.addObject("transacoes", pagina);
 		mv.addObject("categoria", this.categorias.listarTodasPorUsuario(usuario));
 		
 		mv.addObject("totalReceitas", totalReceitas);

@@ -4,6 +4,8 @@ import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -37,5 +39,7 @@ public interface TransacaoDAO extends JpaRepository<Transacao, Integer> {
 	Optional<Transacao> findByIdAndUsuario(@Param("id") Integer id, @Param("usuario") Usuario usuario);
 	
 	void deleteByIdAndUsuario(Integer id, Usuario usuario);
+	
+	Page<Transacao>findAllByUsuario(Usuario usuario,Pageable page);
 	
 }

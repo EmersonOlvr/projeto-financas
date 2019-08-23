@@ -8,21 +8,21 @@
 	<title>Lista de Movimentos</title>
 	
 	<script type="text/javascript">
-		if (window.location.search) {
-			if (window.history && history.pushState) {
-				window.history.pushState("", document.title, window.location.pathname);
-			} else {
-				// Prevent scrolling by storing the page's current scroll offset
-				var scroll = {
-					top: document.body.scrollTop,
-					left: document.body.scrollLeft
-				};
-				window.location.search = '';
-				// Restore the scroll offset, should be flicker free
-				document.body.scrollTop = scroll.top;
-				document.body.scrollLeft = scroll.left;
-			}
-		}
+// 		if (window.location.search) {
+// 			if (window.history && history.pushState) {
+// 				window.history.pushState("", document.title, window.location.pathname);
+// 			} else {
+// 				// Prevent scrolling by storing the page's current scroll offset
+// 				var scroll = {
+// 					top: document.body.scrollTop,
+// 					left: document.body.scrollLeft
+// 				};
+// 				window.location.search = '';
+// 				// Restore the scroll offset, should be flicker free
+// 				document.body.scrollTop = scroll.top;
+// 				document.body.scrollLeft = scroll.left;
+// 			}
+// 		}
 	</script>
 
 	<th:block th:insert="includes/include.html :: #head"></th:block>
@@ -94,7 +94,7 @@
 					</div>
 					<div>
 						<div class="table-responsive">
-							<table class="table table-hover table-bordered bgc-white">
+							<table class="table table-hover table-bordered bgc-white" style="margin-bottom: 0.5rem">
 								<thead>
 									<tr>
 										<th class="bdwT-0">Tipo (Receita/Despesa)</th>
@@ -106,7 +106,7 @@
 									</tr>
 								</thead>
 								<tbody>
-									<tr th:each = "transacao : ${listatransacao}">
+									<tr th:each = "transacao : ${transacoes}">
 										<td class="fw-600">[[${transacao.tipo}]]</td>
 										<td>
 											<span th:class="|badge p-10 lh-0 tt-c badge-pill${transacao.tipo.name() == 'DESPESA' ? ' bgc-red-50' : ' bgc-green-50'}|">
@@ -135,12 +135,38 @@
 											</button>
 										</td>
 									</tr>
-									<tr th:if="${listatransacao.size() == 0}">
+									<tr th:if="${transacoes.getTotalElements() == 0}">
 										<td colspan="6"><i>Nenhuma movimentação encontrada.</i></td>
+										
 									</tr>
 								</tbody>
 							</table>
 						</div>
+						
+						<div class="d-flex bd-highlight mb-3 pl-1 pr-1">
+							<div class="p-2 bd-highlight">
+								Página [[${transacoes.getNumber() + 1}]] de [[${transacoes.getTotalPages()}]]
+							</div>
+							<div class="ml-auto p-2 bd-highlight">
+								<ul class="pagination" th:if="${transacoes.getTotalElements() > 0}" style="margin-bottom: 1rem">
+									<!-- Página anterior -->
+									<li th:class="${transacoes.isFirst() ? 'page-item disabled' : 'page-item'}">
+										<a class="page-link" th:href="@{/movimentos(page=${(transacoes.getNumber() + 1) - 1})}">Anterior</a>
+									</li>
+									
+									<li th:each="i : ${#numbers.sequence(1, transacoes.totalPages)}"
+									th:class="${transacoes.getNumber() + 1 == i ? 'page-item active' : 'page-item'}">
+										<a class="page-link" th:href="@{/movimentos(page=${i})}">[[${i}]]</a>
+									</li>
+									
+									<!-- Próxima página -->
+									<li th:class="${transacoes.isLast() ? 'page-item disabled' : 'page-item'}">
+										<a class="page-link" th:href="@{/movimentos(page=${(transacoes.getNumber() + 1) + 1})}">Próxima</a>
+									</li>
+								</ul>
+							</div>
+						</div>
+						
 						<div class="bd bgc-white c-black p-20" style="margin-bottom: 1rem;">
 							<div class="peers ai-c jc-sb ">
 								<div class="peer peer-greed">

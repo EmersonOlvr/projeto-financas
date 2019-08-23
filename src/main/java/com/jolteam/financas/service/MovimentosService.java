@@ -7,6 +7,8 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import com.jolteam.financas.dao.TransacaoDAO;
@@ -65,6 +67,10 @@ public class MovimentosService {
 			totalAcumulado = totalAcumulado.add(transacao.getValor());
 		}
 		return totalAcumulado;
+	}
+	
+	public Page<Transacao> findAllByUsuario(Usuario usuario,Pageable page) {
+		return transacoes.findAllByUsuario(usuario,page);
 	}
 	
 }
