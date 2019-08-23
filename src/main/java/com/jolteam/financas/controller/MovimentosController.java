@@ -38,7 +38,7 @@ public class MovimentosController {
 			@RequestParam(required = false) Integer mesErro, @RequestParam(required = false) Integer anoErro,
 			HttpSession session, RedirectAttributes ra) 
 	{
-		ModelAndView mv = new ModelAndView("movimentos");
+		ModelAndView mv = new ModelAndView("usuario/movimentos");
 		
 		// relacionado a listagem dos dados da página
 		Usuario usuario = (Usuario) session.getAttribute("usuarioLogado");

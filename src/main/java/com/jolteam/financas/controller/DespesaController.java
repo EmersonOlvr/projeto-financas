@@ -45,7 +45,7 @@ public class DespesaController {
 	
 	@GetMapping("/adicionar")
 	public ModelAndView viewAdicionarDespesa(HttpSession session) {
-		ModelAndView mv=new ModelAndView("despesas-adicionar");
+		ModelAndView mv=new ModelAndView("usuario/despesa/adicionar");
 		mv.addObject("despesa", new Despesa());
 		mv.addObject("categorias", this.categoriaService.listarTodasPorUsuarioETipoTransacao((Usuario) session.getAttribute("usuarioLogado"), TipoTransacao.DESPESA));
 		return mv;
@@ -86,7 +86,7 @@ public class DespesaController {
 	
 	@GetMapping("/categorias")
 	public ModelAndView viewCategoriasDespesas(HttpSession session) {
-		ModelAndView mv= new ModelAndView("despesas-categorias");
+		ModelAndView mv= new ModelAndView("usuario/despesa/categorias");
 		mv.addObject("catDespesa", new Categoria());
 		mv.addObject("listaCatDespesa", this.categoriaService.listarTodasPorUsuarioETipoTransacao((Usuario) session.getAttribute("usuarioLogado"), TipoTransacao.DESPESA));
 		return mv;
@@ -132,9 +132,9 @@ public class DespesaController {
 		return "redirect:/despesas/categorias";
 	}
 	
-	@GetMapping("/historico")
+	@GetMapping("/extrato")
 	public ModelAndView viewHistoricoDespesas(HttpSession session) {
-		ModelAndView mv = new ModelAndView("despesas-historico");
+		ModelAndView mv = new ModelAndView("usuario/despesa/extrato");
 		
 		Usuario usuario = (Usuario) session.getAttribute("usuarioLogado");
 		

@@ -42,7 +42,7 @@ public class HomeController {
 	
 	@GetMapping("/home")
 	public ModelAndView viewHome(HttpSession session) {
-		ModelAndView mv=new ModelAndView("home");
+		ModelAndView mv=new ModelAndView("usuario/home");
 		
 		Usuario usuario = (Usuario) session.getAttribute("usuarioLogado");
 		
@@ -104,7 +104,7 @@ public class HomeController {
 	// ====== Configurações ====== //
 	@GetMapping("/configuracoes")
 	public ModelAndView viewConfiguracoes(HttpSession session) {
-		ModelAndView mv = new ModelAndView("configuracoes");
+		ModelAndView mv = new ModelAndView("usuario/configuracoes");
 		Usuario usuarioLogado = (Usuario) session.getAttribute("usuarioLogado");
 		mv.addObject("usuario", usuarioLogado);
 		mv.addObject("isProvedorLocal", usuarioLogado.getProvedor().equals(Provedor.LOCAL) ? true : false);
@@ -114,7 +114,7 @@ public class HomeController {
 	@PostMapping("/configuracoes/perfil")
 	@Transient
 	public String atualizarPerfilUsuario(@ModelAttribute Usuario usuario,@RequestParam(name="fotoUser",required = false)MultipartFile file, RedirectAttributes ra, HttpSession session) {
-		ModelAndView mv = new ModelAndView("configuracoes");
+		ModelAndView mv = new ModelAndView("usuario/configuracoes");
 		mv.addObject("usuario", usuario);
 		
 		Usuario usuarioLogado = (Usuario) session.getAttribute("usuarioLogado");

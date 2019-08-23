@@ -41,14 +41,14 @@ public class CofreController {
 	
 	@GetMapping("/listar")
 	public ModelAndView viewCofres(HttpSession session) {
-		ModelAndView mv = new ModelAndView("cofres");
+		ModelAndView mv = new ModelAndView("usuario/cofre/listar");
 		mv.addObject("listaCofres", this.cofreService.listarPorUsuario((Usuario)session.getAttribute("usuarioLogado")));
 		return mv;
 	}
 	
 	@GetMapping("/adicionar")
 	public ModelAndView viewCadastrarCofre() {
-		ModelAndView mv=new ModelAndView("cofres-adicionar");
+		ModelAndView mv=new ModelAndView("usuario/cofre/adicionar");
 		mv.addObject("cofre", new Cofre());
 		return mv;
 	}
@@ -111,7 +111,7 @@ public class CofreController {
 	
 	@GetMapping("/editar")
 	public ModelAndView viewEditarCofre(@RequestParam Integer id, HttpSession session) {
-		ModelAndView mv = new ModelAndView("cofres-editar");
+		ModelAndView mv = new ModelAndView("usuario/cofre/editar");
 		
 		try {
 			Cofre cofre = this.cofreService.obterPorIdEUsuario(id, (Usuario) session.getAttribute("usuarioLogado"))
@@ -165,7 +165,7 @@ public class CofreController {
 	
 	@GetMapping("/movimentar")
 	public ModelAndView viewMovimentos(HttpSession session) {
-		ModelAndView mv=new ModelAndView("cofres-movimentar");
+		ModelAndView mv=new ModelAndView("usuario/cofre/movimentar");
 		mv.addObject("listaCofres", this.cofreService.listarPorUsuario((Usuario)session.getAttribute("usuarioLogado")));
 		return mv;
 	}
@@ -227,9 +227,9 @@ public class CofreController {
 		
 	}
 	
-	@GetMapping("/historico")
+	@GetMapping("/extrato")
 	public ModelAndView viewHistorico(HttpSession session) {
-		ModelAndView mv = new ModelAndView("cofres-historico");
+		ModelAndView mv = new ModelAndView("usuario/cofre/extrato");
 		
 		Usuario usuario = (Usuario) session.getAttribute("usuarioLogado");
 		

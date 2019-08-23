@@ -129,7 +129,7 @@ public class RelatorioController {
 			}
 		}
 		
-		return "deslogado/index";
+		return "index";
 	}
 	
 }

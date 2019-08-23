@@ -42,12 +42,12 @@ public class IndexController {
 
 	@GetMapping("/")
 	public String viewIndex() {
-		return "deslogado/index";
+		return "index";
 	}
 
 	@GetMapping("/cadastrar")
 	public ModelAndView viewCadastrar() {
-		ModelAndView mv = new ModelAndView("deslogado/cadastrar");
+		ModelAndView mv = new ModelAndView("cadastrar");
 		mv.addObject("usuario", new Usuario());
 
 		return mv;
@@ -78,12 +78,12 @@ public class IndexController {
 			result.addError(new ObjectError("erroValidacao", e.getMessage()));
 		}
 
-		return new ModelAndView("deslogado/cadastrar").addObject("usuario", usuario);
+		return new ModelAndView("cadastrar").addObject("usuario", usuario);
 	}
 
 	@GetMapping("/entrar")
 	public ModelAndView viewEntrar(@RequestParam(required = false) String erro, RedirectAttributes ra) {
-		ModelAndView mv = new ModelAndView("deslogado/entrar");
+		ModelAndView mv = new ModelAndView("entrar");
 		
 		if (erro != null) {
 			mv.setViewName("redirect:/entrar");
@@ -139,7 +139,7 @@ public class IndexController {
 			model.addAttribute("isDesativado", true);
 		}
 
-		return "deslogado/entrar";
+		return "entrar";
 	}
 	
 	// ====== Ativação da Conta ====== //
@@ -186,19 +186,19 @@ public class IndexController {
 			model.addAttribute("msgErro", "Este link é inválido ou já foi usado antes.");
 		}
 		
-		return "deslogado/ativacao-conta";
+		return "ativacao-conta";
 	}
 
 	
 	// ====== Recuperação de Senha ====== //
 	@GetMapping("/recuperar-senha")
 	public String viewRecuperarSenha() {
-		return "deslogado/recuperar-senha";
+		return "recuperar-senha";
 	}
 
 	@PostMapping("recuperar-senha")
 	public ModelAndView recuperarSenha(@RequestParam String email, HttpServletRequest request) {
-		ModelAndView mv = new ModelAndView("deslogado/recuperar-senha");
+		ModelAndView mv = new ModelAndView("recuperar-senha");
 		
 		if (Strings.isBlank(email) || !Util.isEmailValido(email)) {
 			return mv.addObject("msgErro", "Insira um e-mail em formato válido.");
@@ -211,7 +211,7 @@ public class IndexController {
 					return mv.addObject("msgErro", "Apenas senhas de contas locais podem ser recuperadas.");
 				}
 			}
-			return new ModelAndView("deslogado/recuperar-senha-2").addObject("email", email);
+			return new ModelAndView("recuperar-senha-2").addObject("email", email);
 		}
 	}
 
@@ -225,7 +225,7 @@ public class IndexController {
 			model.addAttribute("msgErro", "Este link é inválido ou já foi usado antes.");
 		}
 		
-		return "deslogado/redefinir-senha";
+		return "redefinir-senha";
 	}
 	
 	@PostMapping("/redefinirSenha")
@@ -263,7 +263,7 @@ public class IndexController {
 			}
 		}
 		
-		return "deslogado/redefinir-senha";
+		return "redefinir-senha";
 	}
 
 }

@@ -18,7 +18,7 @@ public class FotoController {
 	
 @Autowired private FotoStorageService fotoStorageService;
 	
-	@GetMapping("/download/{fotoId}")
+	@GetMapping("/view/{fotoId}")
     public ResponseEntity<Resource> downloadImage(@PathVariable String fotoId) {
         try {
         	// Load file from database

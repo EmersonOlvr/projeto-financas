@@ -5,7 +5,7 @@
 	<meta name="viewport" content="width=device-width,initial-scale=1,shrink-to-fit=no">
 	<link rel="icon" href="/img/favicon.ico">
 
-	<title>Histórico de Despesas</title>
+	<title>Cofres - Extrato de Movimentações</title>
 
 	<th:block th:insert="includes/include.html :: #head"></th:block>
 	
@@ -15,7 +15,7 @@
 			id = novoId;
 		}
 		function redirecionar() {
-			window.location.href="/movimentos/excluir?id="+id+"&l=DH";
+			window.location.href="/cofres/historico/excluir?id="+id;
 		}
 	</script>
 </head>
@@ -40,7 +40,7 @@
 
 
 			<main class="main-content bgc-grey-100">
-				<h4 class="c-grey-900">Histórico das Despesas ordenado por Categoria</h4>
+				<h4 class="c-grey-900">Extrato das Movimentações ordenado por Cofre</h4>
 				<div class="row">
 					
 					<div th:if="${!#strings.isEmpty(msgSucessoExcluir)}" class="col-md-12">
@@ -52,33 +52,26 @@
 						</div>
 					</div>
 					
-					<div th:if="${#lists.isEmpty(historicoDespesas)}" class="col-md-12 mb-3">
+					<div th:if="${#lists.isEmpty(historico)}" class="col-md-12 mb-3">
 						<div class="bgc-white bd bdrs-3 p-20" style="font-style: italic;">
-							Nenhuma categoria e/ou transação de despesa encontrada.
+							Nenhum cofre e/ou movimentação encontrada.
 						</div>
 					</div>
-					<div th:each="historicoDespesa : ${historicoDespesas}" class="col-md-12 mb-3">
+					<div th:each="historico : ${historico}" class="col-md-12 mb-3">
 						<div class="bgc-white bd bdrs-3 p-20">
-							<h4 class="c-grey-900 mB-20">[[${historicoDespesa.categoria.nome}]]</h4>
+							<h4 class="c-grey-900 mB-20">Cofre (finalidade): [[${historico.cofre.finalidade}]]</h4>
 							<div class="table-responsive">
 								<table class="table table-hover table-bordered">
 									<thead>
 										<tr>
 											<th scope="col">Valor</th>
-											<th scope="col">Descrição</th>
 											<th scope="col">Data e Hora</th>
 											<th scope="col">Ações</th>
 										</tr>
 									</thead>
 									<tbody>
-										<tr th:each="transacao : ${historicoDespesa.transacoes}">
-											<td>[[|R$ ${#numbers.formatDecimal(transacao.valor, 1, 'POINT', 2, 'COMMA')}|]]</td>
-											
-											<td th:if="${#strings.isEmpty(transacao.descricao)}" style="font-style: italic; color: #72777a">
-												Vazia.
-											</td>
-											<td th:if="${!#strings.isEmpty(transacao.descricao)}" th:text="${transacao.descricao}"></td>
-											
+										<tr th:each="transacao : ${historico.transacoes}">
+											<td th:style="${transacao.valor > 0 ? 'color: green;' : 'color: red;'}">[[${T(com.jolteam.financas.util.Util).format(transacao.valor)}]]</td>
 											<td>[[${#temporals.format(transacao.data, 'dd/MM/yyyy HH:mm:ss')}]]</td>
 											<td>
 												<button class="btn btn-sm btn-outline-danger"
@@ -88,8 +81,8 @@
 												</button>
 											</td>
 										</tr>
-										<tr th:if="${#lists.isEmpty(historicoDespesa.transacoes)}">
-											<td colspan="4" style="font-style: italic;">Nenhuma transação encontrada para esta categoria.</td>
+										<tr th:if="${#lists.isEmpty(historico.transacoes)}">
+											<td colspan="4" style="font-style: italic;">Nenhuma movimentação encontrada para este cofre.</td>
 										</tr>
 									</tbody>
 								</table>
@@ -117,7 +110,7 @@
 					</button>
 				</div>
 				<div class="modal-body">
-					Tenha em mente que a exclusão desta transação alterará seu saldo atual. Deseja continuar?
+					Tenha em mente que a exclusão desta movimentação alterará o valor total acumulado no cofre. Deseja continuar?
 				</div>
 				<div class="modal-footer">
 					<button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>

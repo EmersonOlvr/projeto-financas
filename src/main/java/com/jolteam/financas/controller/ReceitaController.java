@@ -45,7 +45,7 @@ public class ReceitaController {
 	
 	@GetMapping("/adicionar")
 	public ModelAndView viewAdicionarReceita(HttpSession session) {
-		ModelAndView mv = new ModelAndView("receitas-adicionar");
+		ModelAndView mv = new ModelAndView("usuario/receita/adicionar");
 		mv.addObject("receita", new Receita());
 		mv.addObject("categorias", this.categoriaService.listarTodasPorUsuarioETipoTransacao((Usuario) session.getAttribute("usuarioLogado"), TipoTransacao.RECEITA));
 		return mv;
@@ -85,7 +85,7 @@ public class ReceitaController {
 	
 	@GetMapping("/categorias")
 	public ModelAndView viewCategoriasReceitas(HttpSession session) {
-		ModelAndView mv= new ModelAndView("receitas-categorias");
+		ModelAndView mv= new ModelAndView("usuario/receita/categorias");
 		mv.addObject("catReceita", new Categoria());
 		mv.addObject("listaCatReceita", this.categoriaService.listarTodasPorUsuarioETipoTransacao((Usuario) session.getAttribute("usuarioLogado"), TipoTransacao.RECEITA));
 		return mv;
@@ -131,9 +131,9 @@ public class ReceitaController {
 		return "redirect:/receitas/categorias";
 	}
 	
-	@GetMapping("/historico")
+	@GetMapping("/extrato")
 	public ModelAndView viewHistoricoReceitas(HttpSession session) {
-		ModelAndView mv = new ModelAndView("receitas-historico");
+		ModelAndView mv = new ModelAndView("usuario/receita/extrato");
 		
 		Usuario usuario = (Usuario) session.getAttribute("usuarioLogado");
 		
