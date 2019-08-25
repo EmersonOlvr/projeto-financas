@@ -10,7 +10,7 @@
 	</parent>
 	<groupId>com.jolteam</groupId>
 	<artifactId>projeto-financas</artifactId>
-	<version>0.7.0-SNAPSHOT</version>
+	<version>0.8.0-SNAPSHOT</version>
 	<name>projeto-financas</name>
 	<description>Projeto de finanças pessoais</description>
 
