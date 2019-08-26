@@ -142,7 +142,7 @@ public class DespesaController {
 		
 		List<Categoria> categoriasUsuario = this.categoriaService.listarTodasPorUsuarioETipoTransacao(usuario, TipoTransacao.DESPESA);
 		for (Categoria categoria : categoriasUsuario) {
-			List<Transacao> transacoesPorCategoria = this.transacoes.findAllByCategoria(categoria);
+			List<Transacao> transacoesPorCategoria = this.transacoes.findAllByCategoriaOrderByDataDesc(categoria);
 			historicoDespesas.add(new HistoricoTransacao(categoria, transacoesPorCategoria));
 		}
 		

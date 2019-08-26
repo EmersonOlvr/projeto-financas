@@ -246,7 +246,7 @@ public class CofreController {
 		return mv;
 	}
 	
-	@GetMapping("/historico/excluir")
+	@GetMapping("/extrato/excluir")
 	public String excluirTransacao(HttpSession session, HttpServletRequest request, 
 			@RequestParam(value = "id", required = false) Integer id, 
 			RedirectAttributes ra) 
@@ -270,7 +270,7 @@ public class CofreController {
 			}
 		}
 		
-		return "redirect:/cofres/historico";
+		return "redirect:/cofres/extrato";
 	}
 	
 	@GetMapping("/excluir")

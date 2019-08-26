@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import com.jolteam.financas.dao.CategoriaDAO;
@@ -25,7 +26,13 @@ public class CategoriaService {
 	}
 	
 	public List<Categoria> listarTodasPorUsuarioETipoTransacao(Usuario usuario, TipoTransacao tipoTransacao) {
-		return this.categorias.findByUsuarioAndTipoTransacaoOrderByDataCriacaoDesc(usuario, tipoTransacao);
+		List<Categoria> categorias = this.categorias.findAllByUsuarioAndTipoTransacao(usuario, tipoTransacao, Sort.by("dataCriacao").descending());
+		
+		for (Categoria cat : categorias) {
+			System.out.println(cat.getId() + " - " + cat.getNome());
+		}
+		
+		return categorias;
 	}
 	
 	public Optional<Categoria> obterPorIdEUsuarioETipoTransacao(Integer id, Usuario usuario, TipoTransacao tipoTransacao) {

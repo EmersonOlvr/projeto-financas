@@ -1,5 +1,8 @@
 package com.jolteam.financas.service;
 
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
@@ -11,14 +14,17 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCrypt;
 import org.springframework.stereotype.Service;
 
+import com.jolteam.financas.dao.CategoriaDAO;
 import com.jolteam.financas.dao.CodigoDAO;
 import com.jolteam.financas.dao.UsuarioDAO;
+import com.jolteam.financas.enums.Provedor;
 import com.jolteam.financas.enums.TipoCodigo;
 import com.jolteam.financas.enums.TipoEmail;
-import com.jolteam.financas.enums.Provedor;
+import com.jolteam.financas.enums.TipoTransacao;
 import com.jolteam.financas.exceptions.UsuarioDesativadoException;
 import com.jolteam.financas.exceptions.UsuarioInexistenteException;
 import com.jolteam.financas.exceptions.UsuarioInvalidoException;
+import com.jolteam.financas.model.Categoria;
 import com.jolteam.financas.model.Codigo;
 import com.jolteam.financas.model.Usuario;
 import com.jolteam.financas.util.Util;
@@ -29,6 +35,7 @@ public class UsuarioService {
 	@Autowired private EmailService emailService;
 
 	@Autowired private UsuarioDAO usuarios;
+	@Autowired private CategoriaDAO categorias;
 	@Autowired private CodigoDAO codigos;
 
 	// vai de 4 à 31 (o padrão do gensalt() é 10)
@@ -37,6 +44,36 @@ public class UsuarioService {
 	@Transient
 	public Usuario save(Usuario usuario) {
 		return this.usuarios.save(usuario);
+	}
+	
+	public void adicionarCategorias(Usuario usuario) {
+		List<String> nomesCategoriasReceitas = Arrays.asList("Bolsa Família", "Décimo Terceiro", "Empréstimo", "FGTS", "Herança", 
+																"Mesada", "PASEP", "PIS", "Salário", "Vendas");
+		List<String> nomesCategoriasDespesas = Arrays.asList("Bebidas", "Diversão", "Educação", "Gasolina", "Hotel", 
+																"Mascotes", "Restaurante", "Roupas", "Saúde", "Transporte");
+		
+		List<Categoria> categorias = new ArrayList<>();
+		for (String nomeCategoriaReceita : nomesCategoriasReceitas) {
+			Categoria categoriaAtual = new Categoria();
+			categoriaAtual.setNome(nomeCategoriaReceita);
+			categoriaAtual.setUsuario(usuario);
+			categoriaAtual.setTipoTransacao(TipoTransacao.RECEITA);
+			categoriaAtual.setDataCriacao(LocalDateTime.now());
+			
+			categorias.add(categoriaAtual);
+		}
+		for (String nomeCategoriaDespesa : nomesCategoriasDespesas) {
+			Categoria categoriaAtual = new Categoria();
+			categoriaAtual.setNome(nomeCategoriaDespesa);
+			categoriaAtual.setUsuario(usuario);
+			categoriaAtual.setTipoTransacao(TipoTransacao.DESPESA);
+			categoriaAtual.setDataCriacao(LocalDateTime.now());
+			
+			categorias.add(categoriaAtual);
+		}
+		
+		// salva as categorias do usuário
+		this.categorias.saveAll(categorias);
 	}
 
 	public Usuario getOne(Integer id) {

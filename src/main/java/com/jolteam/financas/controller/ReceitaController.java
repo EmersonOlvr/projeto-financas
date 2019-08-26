@@ -141,7 +141,7 @@ public class ReceitaController {
 		
 		List<Categoria> categoriasUsuario = this.categoriaService.listarTodasPorUsuarioETipoTransacao(usuario, TipoTransacao.RECEITA);
 		for (Categoria categoria : categoriasUsuario) {
-			List<Transacao> transacoesPorCategoria = this.transacoes.findAllByCategoria(categoria);
+			List<Transacao> transacoesPorCategoria = this.transacoes.findAllByCategoriaOrderByDataDesc(categoria);
 			historicoReceitas.add(new HistoricoTransacao(categoria, transacoesPorCategoria));
 		}
 		

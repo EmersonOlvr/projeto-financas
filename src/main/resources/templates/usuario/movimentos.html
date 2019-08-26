@@ -84,11 +84,12 @@
 					<div th:class="|${saldoAtual >= 0 ? 'bgc-light-green-500 ' : ''}c-white p-20|" th:style="${saldoAtual < 0 ? 'background-color: #f44336!important;' : ''}">
 						<div class="peers ai-c jc-sb">
 							<div class="peer peer-greed">
-								<h5>Lista de Movimentos</h5>
-<!-- 								<p class="mB-0"></p> -->
+								<h5 style="margin-bottom: 0px;font-size: 16pt">Lista de Movimentos</h5>
+								<p class="mB-0" style="margin-top: -6px;font-size: 12pt">ordenada por Data</p>
 							</div>
 							<div class="peer">
-								<h3 class="text-right">[[${T(com.jolteam.financas.util.Util).format(saldoAtual)}]]</h3>
+								<p class="mB-0" style="font-size: 12pt">Saldo atual</p>
+								<h3 class="text-right" style="margin-top: -10px;font-size: 20pt">[[${T(com.jolteam.financas.util.Util).format(saldoAtual)}]]</h3>
 							</div>
 						</div>
 					</div>

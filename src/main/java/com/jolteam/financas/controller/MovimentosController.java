@@ -48,7 +48,7 @@ public class MovimentosController {
 		Usuario usuario = (Usuario) session.getAttribute("usuarioLogado");
 		BigDecimal totalReceitas = this.movimentosService.totalReceitaAcumuladaDe(usuario);
 		BigDecimal totalDespesas = this.movimentosService.totalDespesaAcumuladaDe(usuario);
-		Page<Transacao> pagina=this.movimentosService.findAllByUsuario((Usuario) session.getAttribute("usuarioLogado"),PageRequest.of(page - 1, 15, Sort.by("data")));
+		Page<Transacao> pagina=this.movimentosService.findAllByUsuario((Usuario) session.getAttribute("usuarioLogado"),PageRequest.of(page - 1, 15, Sort.by("data").descending()));
 		
 		if (page > pagina.getTotalPages()) {
 			return new ModelAndView("redirect:/movimentos");
@@ -90,9 +90,9 @@ public class MovimentosController {
 		}
 		
 		if (local != null && local.equals("RH")) {
-			return "redirect:/receitas/historico";
+			return "redirect:/receitas/extrato";
 		} else if (local != null && local.equals("DH")) {
-			return "redirect:/despesas/historico";
+			return "redirect:/despesas/extrato";
 		}
 		
 		return "redirect:/movimentos";

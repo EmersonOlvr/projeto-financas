@@ -65,6 +65,9 @@ public class IndexController {
 
 			// salva o usuário no banco de dados
 			Usuario usuarioSalvo = this.usuarioService.save(usuario);
+			
+			// adiciona algumas categorias para este usuário recém cadastrado
+			this.usuarioService.adicionarCategorias(usuarioSalvo);
 
 			// envia o código de ativação para o e-mail do usuário
 			this.usuarioService.enviarCodigoAtivacao(usuarioSalvo, request);

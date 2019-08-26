@@ -12,7 +12,7 @@ import com.jolteam.financas.model.CofreTransacao;
 public interface CofreTransacaoDAO extends JpaRepository<CofreTransacao, Integer> {
 	
 	List<CofreTransacao> findByid(Integer id);
-	List<CofreTransacao> findAllByCofre(Cofre cofre);
+	List<CofreTransacao> findAllByCofreOrderByDataDesc(Cofre cofre);
 	
 	void deleteAllByCofre(Cofre cofre);
 	

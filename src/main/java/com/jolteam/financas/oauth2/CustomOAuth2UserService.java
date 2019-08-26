@@ -21,12 +21,14 @@ import com.jolteam.financas.oauth2.dto.FacebookOAuth2UserInfo;
 import com.jolteam.financas.oauth2.dto.GithubOAuth2UserInfo;
 import com.jolteam.financas.oauth2.dto.GoogleOAuth2UserInfo;
 import com.jolteam.financas.oauth2.dto.OAuth2UserInfo;
+import com.jolteam.financas.service.UsuarioService;
 
 @Service
 public class CustomOAuth2UserService extends DefaultOAuth2UserService {
 
-	@Autowired
-	private UsuarioDAO usuarios;
+	@Autowired private UsuarioService usuarioService;
+	
+	@Autowired private UsuarioDAO usuarios;
 
 	// este é o primeiro método a ser chamado após o usuário entrar no
 	// Google/Facebook
@@ -40,8 +42,7 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
 		OAuth2User oAuth2User = super.loadUser(userRequest);
 		Map<String, Object> attributes = super.loadUser(userRequest).getAttributes();
 
-		// OAuth2UserInfo é uma classe abstrata, portanto, esta variável aceita qualquer
-		// objeto
+		// OAuth2UserInfo é uma classe abstrata, portanto, esta variável aceita qualquer objeto
 		// de classes que extendam (extends) ela, por exemplo: GoogleOAuth2UserInfo
 		OAuth2UserInfo userInfo = null;
 
@@ -85,8 +86,7 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
 		boolean usuarioExiste = u.isPresent() ? true : false;
 		Usuario usuario = usuarioExiste ? u.get() : new Usuario();
 
-		// se o usuário existe e for um usuário cadastrado com uma conta de um provedor
-		// OAuth
+		// se o usuário existe e for um usuário cadastrado com uma conta de um provedor OAuth
 		// (ou seja, não é uma conta local)
 		if (usuarioExiste && !usuario.getProvedor().equals(Provedor.LOCAL)) {
 			// se o provedor do usuário do banco for o Google
@@ -97,7 +97,7 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
 					throw new OAuth2AuthenticationException(new OAuth2Error("unauthorized_client"),
 							"provedor_invalido_google");
 				}
-				// se o provedor do usuário do banco for o Facebook
+			// se o provedor do usuário do banco for o Facebook
 			} else if (usuario.getProvedor().equals(Provedor.FACEBOOK)) {
 				// mas o usuário da requisição (que acabou de fazer login) não for um usuário do
 				// Facebook
@@ -105,7 +105,7 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
 					throw new OAuth2AuthenticationException(new OAuth2Error("unauthorized_client"),
 							"provedor_invalido_facebook");
 				}
-				// se o provedor do usuário do banco for o GitHub
+			// se o provedor do usuário do banco for o GitHub
 			} else if (usuario.getProvedor().equals(Provedor.GITHUB)) {
 				// mas o usuário da requisição (que acabou de fazer login) não for um usuário do
 				// GitHub
@@ -122,7 +122,7 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
 		}
 
 		// se o usuário não tiver provedor (ou seja, é um usuário novo)
-		// ou o provedor for o Google/Facebook
+		// ou o provedor for o Google/Facebook/GitHub
 		if (usuario.getProvedor() == null || !usuario.getProvedor().equals(Provedor.LOCAL)) {
 			// os atributos nome, sobrenome e e-mail são definidos/atualizados
 			// independentemente de
@@ -174,13 +174,15 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
 				}
 				usuario.setSobrenome(((GithubOAuth2UserInfo) userInfo).getSobrenome());
 				usuario.setProvedor(Provedor.GITHUB);
-
-				System.out.println(userInfo);
 			}
 		}
 
 		// adiciona/atualiza o usuário no banco
 		this.usuarios.save(usuario);
+		
+		if (!usuarioExiste) {
+			this.usuarioService.adicionarCategorias(usuario);
+		}
 	}
 
 }

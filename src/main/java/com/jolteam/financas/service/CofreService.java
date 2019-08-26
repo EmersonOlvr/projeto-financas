@@ -65,7 +65,7 @@ public class CofreService {
 	}
 	
 	public List<CofreTransacao> listarTransacoesPorCofre(Cofre cofre) {
-		return this.cofreTransacao.findAllByCofre(cofre);
+		return this.cofreTransacao.findAllByCofreOrderByDataDesc(cofre);
 	}
 	public void deletarTransacao(CofreTransacao cofreTransacao) {
 		this.cofreTransacao.delete(cofreTransacao);
@@ -163,7 +163,7 @@ public class CofreService {
 	
 	public BigDecimal totalAcumuladoDe(Cofre cofre) {
 		BigDecimal totalAcumulado = new BigDecimal("0");
-		List<CofreTransacao> transacoes = this.cofreTransacao.findAllByCofre(cofre);
+		List<CofreTransacao> transacoes = this.cofreTransacao.findAllByCofreOrderByDataDesc(cofre);
 		for (CofreTransacao transacao : transacoes) {
 			totalAcumulado = totalAcumulado.add(transacao.getValor());
 		}
