@@ -1,0 +1,131 @@
+<!doctype html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport"
+		content="width=device-width,initial-scale=1,shrink-to-fit=no">
+	<link rel="icon" href="/img/favicon.ico">
+	
+	<script src="/js/jquery-3.3.1.slim.min.js" type="text/javascript"></script>
+	<script src="/js/jquery.maskMoney.js" type="text/javascript"></script>
+	
+	<title>Gerar Relatório</title>
+	
+	<script type="text/javascript">
+		if (window.location.search) {
+			if (window.history && history.pushState) {
+				window.history.pushState("", document.title, window.location.pathname);
+			} else {
+				// Prevent scrolling by storing the page's current scroll offset
+				var scroll = {
+					top: document.body.scrollTop,
+					left: document.body.scrollLeft
+				};
+				window.location.search = '';
+				// Restore the scroll offset, should be flicker free
+				document.body.scrollTop = scroll.top;
+				document.body.scrollLeft = scroll.left;
+			}
+		}
+	</script>
+	
+	<th:block th:insert="includes/include.html :: #head"></th:block>
+</head>
+<body class="app">
+	<div id="loader">
+		<div class="spinner"></div>
+	</div>
+	<script>
+		window.addEventListener('load', function load() {
+			const loader = document.getElementById('loader');
+			setTimeout(function() {
+				loader.classList.add('fadeOut');
+			}, 300);
+		});
+	</script>
+	<div>
+		<th:block th:insert="includes/include.html :: menuLateral"></th:block>
+		<div class="page-container">
+			<th:block th:insert="includes/include.html :: menuSuperior"></th:block>
+
+
+
+			<main class="main-content bgc-grey-100">
+				<div id="mainContent">
+					<div class="masonry-item col-md-12">
+						<div class="bgc-white p-20 bd">
+							<h6 class="c-grey-900">Gerar Relatório em PDF</h6>
+							<div class="mT-30">
+								<div th:if="${!#strings.isEmpty(msgSucesso)}"
+									class="alert alert-success alert-dismissible fade show"
+									role="alert">
+									<th:block th:if="${!#strings.isEmpty(msgSucesso)}">[[${msgSucesso}]]</th:block>
+	
+									<button type="button" class="close" data-dismiss="alert" aria-label="Close">
+										<span aria-hidden="true">&times;</span>
+									</button>
+								</div>
+								<div th:if="${!#strings.isEmpty(msgErro)}"
+									class="alert alert-danger alert-dismissible fade show"
+									role="alert">
+									[[${msgErro}]]
+									<button type="button" class="close" data-dismiss="alert" aria-label="Close">
+										<span aria-hidden="true">&times;</span>
+									</button>
+								</div>
+								
+								<form th:object="${relatorioForm}" th:action="@{/relatorio}" target="_blank" method="post">
+									<div class="row">
+										<div class="col-md-4">
+											<label for="tipoRelatorio">De: </label>
+											<select class="form-control form-control-sm" th:field="*{tipoRelatorio}">
+												<option value="AMBOS" selected="selected">Receitas e Despesas</option>
+												<option value="RECEITA">Receitas</option>
+												<option value="DESPESA">Despesas</option>
+											</select>
+											
+											<input type="hidden" name="tipoRelatorio" value="AMBOS">
+										</div>
+										<div class="col-md-4">
+											<label for="mes">Mês: </label>
+											<select class="form-control form-control-sm relSelect" th:field="*{mes}">
+												<option value="1">Janeiro</option>
+												<option value="2">Fevereiro</option>
+												<option value="3">Março</option>
+												<option value="4">Abril</option>
+												<option value="5">Maio</option>
+												<option value="6">Junho</option>
+												<option value="7">Julho</option>
+												<option value="8" selected>Agosto</option>
+												<option value="9">Setembro</option>
+												<option value="10">Outubro</option>
+												<option value="11">Novembro</option>
+												<option value="12">Dezembro</option>
+											</select>
+										</div>
+										<div class="col-md-4">
+											<label for="ano">Ano: </label>
+											<select class="form-control form-control-sm relSelect mb-3" th:field="*{ano}">
+												<option th:each="ano : ${anos}" th:value="${ano}">[[${ano}]]</option>
+											</select>
+										</div>
+									</div>
+									
+									<button class="btn btn-primary" name="acao" value="view" type="submit">Visualizar</button>
+									<button class="btn btn-primary" name="acao" value="download" type="submit">Baixar</button>
+								</form>
+							</div>
+						</div>
+					</div>
+				</div>
+			</main>
+		</div>
+
+
+
+		<th:block th:insert="includes/include.html :: footer"></th:block>
+	</div>
+
+	<th:block th:insert="includes/include.html :: scripts"></th:block>
+</body>
+</html>

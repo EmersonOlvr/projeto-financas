@@ -1,9 +1,12 @@
 package com.jolteam.financas.model.dto;
 
+import com.jolteam.financas.enums.TipoRelatorio;
+
 public class RelatorioForm {
 
 	private int mes;
 	private int ano;
+	private TipoRelatorio tipoRelatorio;
 	
 	public RelatorioForm() {}
 	public RelatorioForm(int mes, int ano) {
@@ -22,6 +25,12 @@ public class RelatorioForm {
 	}
 	public void setAno(int ano) {
 		this.ano = ano;
+	}
+	public TipoRelatorio getTipoRelatorio() {
+		return tipoRelatorio;
+	}
+	public void setTipoRelatorio(TipoRelatorio tipoRelatorio) {
+		this.tipoRelatorio = tipoRelatorio;
 	}
 	
 }

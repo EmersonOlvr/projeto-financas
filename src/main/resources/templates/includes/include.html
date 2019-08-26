@@ -29,62 +29,63 @@
 					</ul>
 					<ul class="nav-right">
 						<li class="notifications dropdown">
-							<span class="counter bgc-red">3</span>
+<!-- 							<span class="counter bgc-red">3</span> -->
 							<a href="" class="dropdown-toggle no-after" data-toggle="dropdown">
 								<i class="ti-bell"></i>
 							</a>
 							<ul class="dropdown-menu">
 								<li class="pX-20 pY-15 bdB">
 									<i class="ti-bell pR-10"></i>
-									<span class="fsz-sm fw-600 c-grey-900">Notificações</span>
+									<span class="fsz-sm fw-600 c-grey-900">Notificações <span class="badge badge-danger">BETA</span></span>
 								</li>
 								<li>
 									<ul class="ovY-a pos-r scrollable lis-n p-0 m-0 fsz-sm">
-										<li>
-											<a href="" class="peers fxw-nw td-n p-20 bdB c-grey-800 cH-blue bgcH-grey-100">
-												<div class="peer mR-15">
-													<img class="w-3r bdrs-50p" src="/img/logo.png" alt="">
-												</div>
-												<div class="peer peer-greed">
-													<span>
-														<span class="fw-500">[[${session.usuarioLogado.nome}]]</span>, <span class="c-grey-600">sua <span class="text-dark">conta de luz</span> vence hoje.</span>
-													</span>
-													<p class="m-0">
-														<small class="fsz-xs">5 min atrás</small>
-													</p>
-												</div>
-											</a>
-										</li>
-										<li>
-											<a href="" class="peers fxw-nw td-n p-20 bdB c-grey-800 cH-blue bgcH-grey-100">
-												<div class="peer mR-15">
-													<img class="w-3r bdrs-50p" src="/img/logo.png" alt="">
-												</div>
-												<div class="peer peer-greed">
-													<span>
-														<span class="fw-500">[[${session.usuarioLogado.nome}]]</span>, <span class="c-grey-600">sua <span class="text-dark">conta de água</span> venceu ontem.</span>
-													</span>
-													<p class="m-0">
-														<small class="fsz-xs">7 min atrás</small>
-													</p>
-												</div>
-											</a>
-										</li>
-										<li>
-											<a href="" class="peers fxw-nw td-n p-20 bdB c-grey-800 cH-blue bgcH-grey-100">
-												<div class="peer mR-15">
-													<img class="w-3r bdrs-50p" src="/img/logo.png" alt="">
-												</div>
-												<div class="peer peer-greed">
-													<span>
-														<span class="fw-500">[[${session.usuarioLogado.nome}]]</span>, <span class="c-grey-600">o <span class="text-dark">boleto da OI</span> vence daqui a 3 dias.</span>
-													</span>
-													<p class="m-0">
-														<small class="fsz-xs">10 min atrás</small>
-													</p>
-												</div>
-											</a>
-										</li>
+										<li class="font-italic" style="color: #676767; padding: 10px">Nenhuma notificação.</li>
+<!-- 										<li> -->
+<!-- 											<a href="" class="peers fxw-nw td-n p-20 bdB c-grey-800 cH-blue bgcH-grey-100"> -->
+<!-- 												<div class="peer mR-15"> -->
+<!-- 													<img class="w-3r bdrs-50p" src="/img/logo.png" alt=""> -->
+<!-- 												</div> -->
+<!-- 												<div class="peer peer-greed"> -->
+<!-- 													<span> -->
+<!-- 														<span class="fw-500">[[${session.usuarioLogado.nome}]]</span>, <span class="c-grey-600">sua <span class="text-dark">conta de luz</span> vence hoje.</span> -->
+<!-- 													</span> -->
+<!-- 													<p class="m-0"> -->
+<!-- 														<small class="fsz-xs">5 min atrás</small> -->
+<!-- 													</p> -->
+<!-- 												</div> -->
+<!-- 											</a> -->
+<!-- 										</li> -->
+<!-- 										<li> -->
+<!-- 											<a href="" class="peers fxw-nw td-n p-20 bdB c-grey-800 cH-blue bgcH-grey-100"> -->
+<!-- 												<div class="peer mR-15"> -->
+<!-- 													<img class="w-3r bdrs-50p" src="/img/logo.png" alt=""> -->
+<!-- 												</div> -->
+<!-- 												<div class="peer peer-greed"> -->
+<!-- 													<span> -->
+<!-- 														<span class="fw-500">[[${session.usuarioLogado.nome}]]</span>, <span class="c-grey-600">sua <span class="text-dark">conta de água</span> venceu ontem.</span> -->
+<!-- 													</span> -->
+<!-- 													<p class="m-0"> -->
+<!-- 														<small class="fsz-xs">7 min atrás</small> -->
+<!-- 													</p> -->
+<!-- 												</div> -->
+<!-- 											</a> -->
+<!-- 										</li> -->
+<!-- 										<li> -->
+<!-- 											<a href="" class="peers fxw-nw td-n p-20 bdB c-grey-800 cH-blue bgcH-grey-100"> -->
+<!-- 												<div class="peer mR-15"> -->
+<!-- 													<img class="w-3r bdrs-50p" src="/img/logo.png" alt=""> -->
+<!-- 												</div> -->
+<!-- 												<div class="peer peer-greed"> -->
+<!-- 													<span> -->
+<!-- 														<span class="fw-500">[[${session.usuarioLogado.nome}]]</span>, <span class="c-grey-600">o <span class="text-dark">boleto da OI</span> vence daqui a 3 dias.</span> -->
+<!-- 													</span> -->
+<!-- 													<p class="m-0"> -->
+<!-- 														<small class="fsz-xs">10 min atrás</small> -->
+<!-- 													</p> -->
+<!-- 												</div> -->
+<!-- 											</a> -->
+<!-- 										</li> -->
 									</ul>
 								</li>
 								<li class="pX-20 pY-15 ta-c bdT">
@@ -236,6 +237,14 @@
 								<a href="/cofres/extrato">Extrato</a>
 							</li>
 						</ul>
+					</li>
+					<li class="nav-item">
+						<a class="sidebar-link" href="/relatorio">
+							<span class="icon-holder">
+								<i class="c-teal-500 ti-file"></i>
+							</span>
+							<span class="title">Gerar Relatório</span>
+						</a>
 					</li>
 					<li class="nav-item dropdown" th:if="${session.usuarioLogado.permissao == 2}">
 						<a class="dropdown-toggle" href="javascript:void(0);">

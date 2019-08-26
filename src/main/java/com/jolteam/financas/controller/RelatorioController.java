@@ -20,9 +20,12 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.jolteam.financas.dao.TransacaoDAO;
+import com.jolteam.financas.enums.TipoRelatorio;
+import com.jolteam.financas.enums.TipoTransacao;
 import com.jolteam.financas.model.Transacao;
 import com.jolteam.financas.model.Usuario;
 import com.jolteam.financas.model.dto.RelatorioForm;
@@ -43,24 +46,65 @@ public class RelatorioController {
 	@Autowired private TransacaoDAO transacoes;
 	
 	@GetMapping("/relatorio")
-	public String redirecionaParaMovimentos() {
-		return "redirect:/movimentos";
+	public ModelAndView redirecionaParaMovimentos(HttpSession session, 
+			@RequestParam(required = false) String erro, 
+			@RequestParam(required = false) Integer mesErro, @RequestParam(required = false) Integer anoErro) 
+	{
+		ModelAndView mv = new ModelAndView("usuario/relatorio");
+		
+		Usuario usuario = (Usuario) session.getAttribute("usuarioLogado");
+		
+		int mesAtual = Util.obterValorMesAtual();
+		int anoAtual = Util.obterAnoAtual();
+		
+		RelatorioForm relatorioForm = new RelatorioForm(mesAtual, anoAtual);
+		
+		if (erro != null && erro.equals("sem_dados")) {
+			mv.addObject("msgErro", "Nenhuma movimentação encontrada para o mês/ano informados.");
+			relatorioForm = new RelatorioForm(mesErro, anoErro);
+		}
+		
+		mv.addObject("relatorioForm", relatorioForm);
+		mv.addObject("anos", Util.obterAnosDeCadastradoDoUsuario(usuario));
+		
+		return mv;
 	}
 	
 	@PostMapping("/relatorio")
 	public void testeRelatorio(@ModelAttribute RelatorioForm relatorioForm, @RequestParam String acao, 
 			HttpSession session, HttpServletResponse response, Model model, RedirectAttributes ra) throws JRException, IOException 
 	{
-		// Dados necessários para a consulta
-		LocalDate dataConsulta = LocalDate.of(relatorioForm.getAno(), relatorioForm.getMes(), 1);
 		Usuario usuario = (Usuario) session.getAttribute("usuarioLogado");
 		
-		// Consulta no banco
-		List<Transacao> transacoes = this.transacoes.findAllByMesAndAnoAndUsuario(dataConsulta, usuario);
+		// Define os parâmetros
+		Map<String, Object> parametros = new HashMap<>();
+		parametros.put("nome", usuario.getNome() +" "+ usuario.getSobrenome());
+		parametros.put("mes", Util.obterMesDe(relatorioForm.getMes()));
+		
+		// Consulta no banco dependendo do tipo (RECEITA, DESPESA, AMBOS)
+		List<Transacao> transacoes = null;
+		String relatorioNome = "extrato";
+		if (relatorioForm.getTipoRelatorio().equals(TipoRelatorio.RECEITA)) {
+			transacoes = this.transacoes.listarPorDataEUsuario(relatorioForm.getMes(), 
+																relatorioForm.getAno(), 
+																usuario, 
+																TipoTransacao.RECEITA);
+			parametros.put("tipoExtrato", "Receitas");
+		} else if (relatorioForm.getTipoRelatorio().equals(TipoRelatorio.DESPESA)) {
+			transacoes = this.transacoes.listarPorDataEUsuario(relatorioForm.getMes(), 
+																relatorioForm.getAno(), 
+																usuario, 
+																TipoTransacao.DESPESA);
+			parametros.put("tipoExtrato", "Despesas");
+		} else {
+			relatorioNome = "movimentos";
+			transacoes = this.transacoes.listarPorDataEUsuario(relatorioForm.getMes(), relatorioForm.getAno(), usuario);
+		}
+		
 		
 		// Verifica se existem transações para o mês/ano informados
 		if (transacoes.size() > 0) {
-			// Define a fonte dos dados (a Lista acima)
+			// Define a fonte dos dados
 			JRBeanCollectionDataSource dataSource = new JRBeanCollectionDataSource(transacoes, false);
 			
 			// inline: abre o arquivo no navegador, attachment: baixa o arquivo
@@ -82,14 +126,8 @@ public class RelatorioController {
 //			JasperReport jasperReport = JasperCompileManager.compileReport(inputStream);
 			
 			// ===== Usa o template que ja está compilado (ou seja, com extensão .jasper) ===== //
-			InputStream inputStream = this.getClass().getResourceAsStream("/jasper/movimentos.jasper");
+			InputStream inputStream = this.getClass().getResourceAsStream("/jasper/"+relatorioNome+".jasper");
 			JasperReport jasperReport = (JasperReport) JRLoader.loadObject(inputStream);
-			
-			
-			// Define os parâmetros
-			Map<String, Object> parametros = new HashMap<>();
-			parametros.put("nome", usuario.getNome() +" "+ usuario.getSobrenome());
-			parametros.put("mes", Util.obterMesDe(relatorioForm.getMes()));
 			
 			// Passa para o JasperPrint o relatório, os parâmetros e a fonte dos dados, no caso uma lista
 			JasperPrint jasperPrint = JasperFillManager.fillReport(jasperReport, parametros, dataSource);
@@ -103,17 +141,17 @@ public class RelatorioController {
 			final OutputStream outStream = response.getOutputStream();
 			JasperExportManager.exportReportToPdfStream(jasperPrint, outStream);
 		} else {
-			response.sendRedirect("/movimentos?erro=sem_dados&mesErro="+relatorioForm.getMes()+"&anoErro="+relatorioForm.getAno());
+			response.sendRedirect("/relatorio?erro=sem_dados&mesErro="+relatorioForm.getMes()+"&anoErro="+relatorioForm.getAno());
 		}
 	}
 	
-//	@GetMapping("/relatorio/compilar")
+	@GetMapping("/relatorio/compilar")
 	public String compilarRelatorio() {
-		InputStream inputStream = this.getClass().getResourceAsStream("/jasper/movimentos.jrxml");
+		InputStream inputStream = this.getClass().getResourceAsStream("/jasper/extrato.jrxml");
 		OutputStream outputStream = null;
 		
 		try {
-			outputStream = new FileOutputStream("src/main/resources/jasper/movimentos.jasper");
+			outputStream = new FileOutputStream("src/main/resources/jasper/extrato.jasper");
 			JasperCompileManager.compileReportToStream(inputStream, outputStream);
 			outputStream.close();
 		} catch (Exception e) {

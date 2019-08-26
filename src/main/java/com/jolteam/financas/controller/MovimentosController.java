@@ -23,7 +23,6 @@ import com.jolteam.financas.enums.TipoTransacao;
 import com.jolteam.financas.model.Log;
 import com.jolteam.financas.model.Transacao;
 import com.jolteam.financas.model.Usuario;
-import com.jolteam.financas.model.dto.RelatorioForm;
 import com.jolteam.financas.service.CategoriaService;
 import com.jolteam.financas.service.LogService;
 import com.jolteam.financas.service.MovimentosService;
@@ -37,9 +36,8 @@ public class MovimentosController {
 	@Autowired private LogService logService;
 	
 	@GetMapping("/movimentos")
-	public ModelAndView viewMovimentos(@RequestParam(required = false) String erro, 
-			@RequestParam(required = false) Integer mesErro, @RequestParam(required = false) Integer anoErro,
-			HttpSession session, RedirectAttributes ra,@RequestParam(required=false,defaultValue = "1") Integer page) 
+	public ModelAndView viewMovimentos(HttpSession session, RedirectAttributes ra, 
+			@RequestParam(required=false,defaultValue = "1") Integer page) 
 	{
 		ModelAndView mv = new ModelAndView("usuario/movimentos");
 		
@@ -47,7 +45,6 @@ public class MovimentosController {
 			return new ModelAndView("redirect:/movimentos");
 		}
 		
-		// relacionado a listagem dos dados da página
 		Usuario usuario = (Usuario) session.getAttribute("usuarioLogado");
 		BigDecimal totalReceitas = this.movimentosService.totalReceitaAcumuladaDe(usuario);
 		BigDecimal totalDespesas = this.movimentosService.totalDespesaAcumuladaDe(usuario);
@@ -64,20 +61,6 @@ public class MovimentosController {
 		mv.addObject("totalReceitas", totalReceitas);
 		mv.addObject("totalDespesas", totalDespesas);
 		mv.addObject("saldoAtual", totalReceitas.subtract(totalDespesas));
-		
-		// relacionado ao relatório
-		int mesAtual = Util.obterValorMesAtual();
-		int anoAtual = Util.obterAnoAtual();
-		
-		RelatorioForm relatorioForm = new RelatorioForm(mesAtual, anoAtual);
-		
-		if (erro != null && erro.equals("sem_dados")) {
-			mv.addObject("msgErro", "Nenhuma movimentação encontrada para o mês/ano informados.");
-			relatorioForm = new RelatorioForm(mesErro, anoErro);
-		}
-		
-		mv.addObject("relatorioForm", relatorioForm);
-		mv.addObject("anos", Util.obterAnosDeCadastradoDoUsuario(usuario));
 
 		return mv;
 	}

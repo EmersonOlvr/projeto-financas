@@ -26,11 +26,31 @@ public interface TransacaoDAO extends JpaRepository<Transacao, Integer> {
 
 	List<Transacao> findAllByCategoria(Categoria categoria);
 	
-	@Query("SELECT t FROM Transacao t WHERE month(t.data) = month(:data) AND t.tipo = :tipo AND t.usuario = :usuario")
-	List<Transacao> findAllByMesAndTipoAndUsuario(@Param("data")LocalDate data, @Param("tipo")TipoTransacao tipo, @Param("usuario")Usuario usuario);
+	@Query("SELECT t FROM Transacao t WHERE "
+			+ "month(t.data) = month(:data) AND "
+			+ "t.tipo = :tipo AND "
+			+ "t.usuario = :usuario")
+	List<Transacao> listarPorDataEUsuario(@Param("data") LocalDate data, 
+										@Param("usuario") Usuario usuario, 
+										@Param("tipo") TipoTransacao tipo);
 	
-	@Query("SELECT t FROM Transacao t WHERE month(t.data) = month(:data) AND year(t.data) = year(:data) AND t.usuario = :usuario")
-	List<Transacao> findAllByMesAndAnoAndUsuario(@Param("data")LocalDate data, @Param("usuario")Usuario usuario);
+	@Query("SELECT t FROM Transacao t WHERE "
+			+ "month(t.data) = :mes AND "
+			+ "year(t.data) = :ano AND "
+			+ "t.usuario = :usuario")
+	List<Transacao> listarPorDataEUsuario(@Param("mes") int mes, 
+										@Param("ano") int ano, 
+										@Param("usuario") Usuario usuario);
+	
+	@Query("SELECT t FROM Transacao t WHERE "
+			+ "month(t.data) = :mes AND "
+			+ "year(t.data) = :ano AND "
+			+ "t.usuario = :usuario AND "
+			+ "t.tipo = :tipo")
+	List<Transacao> listarPorDataEUsuario(@Param("mes") int mes, 
+										@Param("ano") int ano, 
+										@Param("usuario") Usuario usuario, 
+										@Param("tipo") TipoTransacao tipo);
 	
 	boolean existsByCategoria(Categoria categoria);
 	
@@ -40,6 +60,6 @@ public interface TransacaoDAO extends JpaRepository<Transacao, Integer> {
 	
 	void deleteByIdAndUsuario(Integer id, Usuario usuario);
 	
-	Page<Transacao>findAllByUsuario(Usuario usuario,Pageable page);
+	Page<Transacao>findAllByUsuario(Usuario usuario, Pageable page);
 	
 }
