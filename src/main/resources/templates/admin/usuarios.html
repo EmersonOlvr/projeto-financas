@@ -63,7 +63,7 @@
 											<td th:text="${usuario.provedor.valor}"></td>
 											
 											<td>
-												<a th:href="${usuario.provedor.name() == 'LOCAL' ? '/view/'+usuario.foto.id : usuario.foto.link}" target="_blank">
+												<a th:if="${usuario.foto != null}" th:href="${usuario.provedor.name() == 'LOCAL' ? '/view/'+usuario.foto.id : usuario.foto.link}" target="_blank">
 													Abrir em nova guia <img src="http://img.icons8.com/ios-glyphs/30/000000/external-link.png" width="13" style="margin-bottom: 8px">
 													
 												</a>
