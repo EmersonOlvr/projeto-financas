@@ -46,96 +46,105 @@
 									</button>
 								</div>
 								
-								<div class="row">
+								<span class="text-danger" th:if="${!isProvedorLocal}">
+									OBS: Algumas configurações não podem ser alteradas quando você utiliza uma conta do [[${session.usuarioLogado.provedor.valor}]].
+								</span>
+								
+								<div class="row mt-2">
 									<div class="col-sm-4">
 										<div class="list-group" id="lista" role="tablist">
-											<a th:if="${isProvedorLocal}" th:class="|list-group-item list-group-item-action${alvoLista == 'perfil' || alvoLista == null ? ' active': ''}|" id="perfil-list" data-toggle="list" href="#perfil" role="tab" aria-controls="perfil">Perfil</a>
-											<a th:if="${isProvedorLocal}" th:class="|list-group-item list-group-item-action${alvoLista == 'senha' ? ' active': ''}|" id="senha-list" data-toggle="list" href="#senha" role="tab" aria-controls="senha">Senha</a>
-											<a th:class="|list-group-item list-group-item-action${alvoLista == 'notificacoes' || isProvedorLocal == false ? ' active': ''}|" id="notificacoes-list" data-toggle="list" href="#notificacoes" role="tab" aria-controls="notificacoes">Notificações</a>
-											<a th:class="|list-group-item list-group-item-action${alvoLista == 'privacidade' ? ' active': ''}|" id="privacidade-list" data-toggle="list" href="#privacidade" role="tab" aria-controls="privacidade">Privacidade</a>
+											<a th:class="|list-group-item list-group-item-action${alvoLista == 'perfil' || alvoLista == null ? ' active': ''}|" id="perfil-list" data-toggle="list" href="#perfil" role="tab" aria-controls="perfil">Perfil</a>
+											<a th:class="|list-group-item list-group-item-action${alvoLista == 'senha' ? ' active': ''}|" id="senha-list" data-toggle="list" href="#senha" role="tab" aria-controls="senha">Senha</a>
+											<a th:class="|list-group-item list-group-item-action${alvoLista == 'notificacoes' ? ' active': ''}|" id="notificacoes-list" data-toggle="list" href="#notificacoes" role="tab" aria-controls="notificacoes">Notificações <span class="badge badge-danger">BETA</span></a>
+											<!-- <a th:class="|list-group-item list-group-item-action${alvoLista == 'privacidade' ? ' active': ''}|" id="privacidade-list" data-toggle="list" href="#privacidade" role="tab" aria-controls="privacidade">Privacidade</a>  -->
 										</div>
 									</div>
 									<div class="col-sm-8">
 										<div class="tab-content" id="nav-tabContent">
-											<div th:if="${isProvedorLocal}" th:class="|tab-pane fade pY-10 pX-10${alvoLista == 'perfil' || alvoLista == null ? ' show active': ''}|" id="perfil" role="tabpanel" aria-labelledby="perfil-list">
+											<div th:class="|tab-pane fade pY-10 pX-10${alvoLista == 'perfil' || alvoLista == null ? ' show active': ''}|" id="perfil" role="tabpanel" aria-labelledby="perfil-list">
 												<form id="needs-validation1" th:object="${usuario}" th:action="@{/configuracoes/perfil}" method="post" novalidate enctype="multipart/form-data">
 													<div class="row">
 														<div class="col-sm-6">
 															<div class="form-group">
 																<label for="nome" class="text-normal text-dark">Nome</label>
-																<input type="text" th:field="*{nome}" class="form-control" placeholder="Nome..." required>
+																<input type="text" th:field="*{nome}" class="form-control" placeholder="Nome..." required th:disabled="${isProvedorLocal == false ? 'disabled' : 'false'}">
 																<div class="invalid-feedback">Insira um nome</div>
 															</div>
 														</div>
 														<div class="col-sm-6">
 															<div class="form-group">
 																<label for="sobrenome" class="text-normal text-dark">Sobrenome</label>
-																<input type="text" th:field="*{sobrenome}" class="form-control" placeholder="Sobrenome..." required>
+																<input type="text" th:field="*{sobrenome}" class="form-control" placeholder="Sobrenome..." required th:disabled="${isProvedorLocal == false ? 'disabled' : 'false'}">
 																<div class="invalid-feedback">Insira um sobrenome</div>
 															</div>
 														</div>
 														<div class="col-sm-12">
 															<div class="form-group">
 																<label for="email" class="text-normal text-dark">E-mail</label>
-																<input type="text" th:field="*{email}" class="form-control" placeholder="E-mail..." required>
+																<input type="text" th:field="*{email}" class="form-control" placeholder="E-mail..." required th:disabled="${isProvedorLocal == false ? 'disabled' : 'false'}">
 																<div class="invalid-feedback">Insira um e-mail</div>
 															</div>
 														</div>
 														<div class="col-sm-12">
 															<div class="form-group">
 																<label for="foto" class="text-normal text-dark">Foto</label><br>
-																<input type="file" id="foto" name="fotoUser"  >
+																<input type="file" id="foto" name="fotoUser" th:disabled="${isProvedorLocal == false ? 'disabled' : 'false'}">
 															</div>
 														</div>
 														
 														<div class="col-sm-12">
 															<div class="form-group d-flex justify-content-center">
-																<button type="submit" class="btn btn-primary">Salvar alterações</button>
+																<button type="submit" class="btn btn-primary" th:disabled="${isProvedorLocal == false ? 'disabled' : 'false'}">Salvar alterações</button>
 															</div>
 														</div>
 													</div>
 												</form>
 											</div>
-											<div th:if="${isProvedorLocal}" th:class="|tab-pane fade pY-10 pX-10${alvoLista == 'senha' ? ' show active': ''}|" id="senha" role="tabpanel" aria-labelledby="senha-list">
+											<div th:class="|tab-pane fade pY-10 pX-10${alvoLista == 'senha' ? ' show active': ''}|" id="senha" role="tabpanel" aria-labelledby="senha-list">
 												<form id="needs-validation2" th:object="${usuario}" th:action="@{/configuracoes/senha}" method="post" novalidate>
 													<div class="row">
 														<div class="col-sm-12">
 															<div class="form-group">
 																<label for="senhaAtual" class="text-normal text-dark">Senha atual</label>
-																<input type="password" id="senhaAtual" name="senhaAtual" class="form-control" placeholder="Senha atual..." required>
+																<input type="password" id="senhaAtual" name="senhaAtual" class="form-control" placeholder="Senha atual..." required th:disabled="${isProvedorLocal == false ? 'disabled' : 'false'}">
 																<div class="invalid-feedback">Insira a senha atual</div>
 															</div>
 														</div>
 														<div class="col-sm-6">
 															<div class="form-group">
 																<label for="novaSenha" class="text-normal text-dark">Nova senha</label>
-																<input type="password" id="novaSenha" name="novaSenha" class="form-control" placeholder="Nova senha..." required>
+																<input type="password" id="novaSenha" name="novaSenha" class="form-control" placeholder="Nova senha..." required th:disabled="${isProvedorLocal == false ? 'disabled' : 'false'}">
 																<div class="invalid-feedback">Insira a nova senha</div>
 															</div>
 														</div>
 														<div class="col-sm-6">
 															<div class="form-group">
 																<label for="novaSenhaRepetida" class="text-normal text-dark">Nova senha (repita)</label>
-																<input type="password" id="novaSenhaRepetida" name="novaSenhaRepetida" class="form-control" placeholder="Repita a nova senha..." required>
+																<input type="password" id="novaSenhaRepetida" name="novaSenhaRepetida" class="form-control" placeholder="Repita a nova senha..." required th:disabled="${isProvedorLocal == false ? 'disabled' : 'false'}">
 																<div class="invalid-feedback">Por favor, repita a nova senha</div>
 															</div>
 														</div>
 														
 														<div class="col-sm-12">
 															<div class="form-group d-flex justify-content-center">
-																<button type="submit" class="btn btn-primary">Salvar alterações</button>
+																<button type="submit" class="btn btn-primary" th:disabled="${isProvedorLocal == false ? 'disabled' : 'false'}">Salvar alterações</button>
 															</div>
 														</div>
 													</div>
 												</form>
 											</div>
-											<div th:class="|tab-pane fade pY-10 pX-10${alvoLista == 'notificacoes' || isProvedorLocal == false ? ' show active': ''}|" id="notificacoes" role="tabpanel" aria-labelledby="notificacoes-list">
-												<input type="checkbox" id="receberNotificacoes">
-												<label for="receberNotificacoes">Receber notificações</label>
+											<div th:class="|tab-pane fade pY-10 pX-10${alvoLista == 'notificacoes' ? ' show active': ''}|" id="notificacoes" role="tabpanel" aria-labelledby="notificacoes-list">
+												<input type="checkbox" id="receberNotificacoesEmail" disabled>
+												<label for="receberNotificacoesEmail">Receber notificações por e-mail</label><br>
+												
+												<input type="checkbox" id="receberNotificacoesDesktop" disabled>
+												<label for="receberNotificacoesDesktop">Receber notificações na área de trabalho</label><br><br>
+														
+												<button type="submit" class="btn btn-primary" disabled title="Em breve!">Salvar alterações</button>
 											</div>
-											<div th:class="|tab-pane fade pY-10 pX-10${alvoLista == 'privacidade' ? ' show active': ''}|" id="privacidade" role="tabpanel" aria-labelledby="privacidade-list">
+											<!-- <div th:class="|tab-pane fade pY-10 pX-10${alvoLista == 'privacidade' ? ' show active': ''}|" id="privacidade" role="tabpanel" aria-labelledby="privacidade-list">
 												Privacidade...
-											</div>
+											</div> -->
 										</div>
 									</div>
 								</div>
