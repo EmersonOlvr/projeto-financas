@@ -1,0 +1,76 @@
+<!doctype html>
+<html xmlns:th="http://www.thymeleaf.org" lang="pt-BR">
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport"
+		content="width=device-width,initial-scale=1,shrink-to-fit=no">
+	<link rel="icon" href="/img/favicon.ico">
+	
+	<script src="/js/jquery-3.3.1.slim.min.js" type="text/javascript"></script>
+	
+	<title>Logs</title>
+	
+	<th:block th:insert="includes/include.html :: #head"></th:block>
+</head>
+<body class="app">
+	<div id="loader">
+		<div class="spinner"></div>
+	</div>
+	<script>
+		window.addEventListener('load', function load() {
+			const loader = document.getElementById('loader');
+			setTimeout(function() {
+				loader.classList.add('fadeOut');
+			}, 300);
+		});
+	</script>
+	<div>
+		<th:block th:insert="includes/include.html :: menuLateral"></th:block>
+		<div class="page-container">
+			<th:block th:insert="includes/include.html :: menuSuperior"></th:block>
+
+
+
+			<main class="main-content bgc-grey-100">
+				<div id="mainContent">
+					<div class="row gap-20 masonry pos-r">
+						<div class="masonry-sizer col-md-6"></div>
+						<div class="masonry-item col-md-12">
+							<div class="bgc-white p-20 bd">
+								<h5 class="c-grey-900">Logs</h5>
+								<div class="table-responsive mT-30">
+									<div class="table-responsive">
+										<table class="table table-hover table-bordered">
+											<thead>
+												<tr>
+													<th>Data</th>
+													<th>Ação</th>
+												</tr>
+											</thead>
+											<tbody>
+												<tr th:if="${logs.getTotalElements() > 0}" th:each="log: ${logs}">
+													<td th:text="${#temporals.format(log.data, 'dd/MM/yyyy HH:mm:ss')}"></td>
+													<td th:text="${log.tipo.valor}"></td>
+												</tr>
+												<tr th:if="${logs.getTotalElements() == 0}" class="font-italic">
+													<td colspan="2">Nenhum log encontrado.</td>
+												</tr>
+											</tbody>
+										</table>
+									</div>
+								</div>
+							</div>
+						</div>	
+					</div>
+				</div>
+			</main>
+
+
+
+			<th:block th:insert="includes/include.html :: footer"></th:block>
+		</div>
+	</div>
+
+	<th:block th:insert="includes/include.html :: scripts"></th:block>
+</body>
+</html>

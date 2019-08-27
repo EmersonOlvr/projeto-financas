@@ -47,6 +47,8 @@
 											<th>E-mail</th>
 											<th>Ativado</th>
 											<th>Permissão</th>
+											<th>Provedor</th>
+											<th>Foto</th>
 											<th>Registro Data</th>
 											<th>Registro IP</th>
 										</tr>
@@ -58,6 +60,16 @@
 											<td th:text="${usuario.email}"></td>
 											<td th:text="${usuario.ativado ? 'Sim' : 'Não'}"></td>
 											<td th:text="${usuario.permissao}"></td>
+											<td th:text="${usuario.provedor.valor}"></td>
+											
+											<td>
+												<a th:href="${usuario.provedor.name() == 'LOCAL' ? '/view/'+usuario.foto.id : usuario.foto.link}" target="_blank">
+													Abrir em nova guia <img src="http://img.icons8.com/ios-glyphs/30/000000/external-link.png" width="13" style="margin-bottom: 8px">
+													
+												</a>
+												<span th:if="${usuario.foto == null}" class="font-italic" style="color:#72777a">Nenhuma</span>
+											</td>
+											
 											<td th:text="${#temporals.format(usuario.registroData, 'dd/MM/yyyy HH:mm:ss')}"></td>
 											<td th:text="${usuario.registroIp}"></td>
 										</tr>

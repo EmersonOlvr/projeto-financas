@@ -12,6 +12,9 @@ import javax.servlet.http.HttpSession;
 
 import org.apache.logging.log4j.util.Strings;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -25,9 +28,11 @@ import com.jolteam.financas.enums.Provedor;
 import com.jolteam.financas.exceptions.FotoInvalidaException;
 import com.jolteam.financas.exceptions.UsuarioInvalidoException;
 import com.jolteam.financas.model.Foto;
+import com.jolteam.financas.model.Log;
 import com.jolteam.financas.model.Transacao;
 import com.jolteam.financas.model.Usuario;
 import com.jolteam.financas.service.FotoStorageService;
+import com.jolteam.financas.service.LogService;
 import com.jolteam.financas.service.MovimentosService;
 import com.jolteam.financas.service.UsuarioService;
 import com.jolteam.financas.util.Util;
@@ -35,10 +40,10 @@ import com.jolteam.financas.util.Util;
 @Controller
 public class HomeController {
 
-	@Autowired
-	private UsuarioService usuarioService;
-	@Autowired MovimentosService movimentosService;
-	@Autowired FotoStorageService fotoService;
+	@Autowired private UsuarioService usuarioService;
+	@Autowired private MovimentosService movimentosService;
+	@Autowired private FotoStorageService fotoService;
+	@Autowired private LogService logService;
 	
 	@GetMapping("/home")
 	public ModelAndView viewHome(HttpSession session) {
@@ -202,7 +207,26 @@ public class HomeController {
 		return "redirect:/configuracoes";
 	}
 
-	
+	@GetMapping("/logs")
+	public ModelAndView viewLogs(@RequestParam(required=false,defaultValue = "1") Integer page, 
+			HttpSession session) 
+	{
+		Usuario usuario = (Usuario) session.getAttribute("usuarioLogado");
+		ModelAndView mv = new ModelAndView("usuario/logs");
+		
+		if (page < 1) {
+			return new ModelAndView("redirect:/logs");
+		}
+		
+		Page<Log> pagina = this.logService.findAllByUsuario(usuario, PageRequest.of(page - 1, 15, Sort.by("data").descending()));
+		mv.addObject("logs", pagina);
+		
+		if (page > pagina.getTotalPages()) {
+			return new ModelAndView("redirect:/logs");
+		}
+		
+		return mv;
+	}
 
 	@GetMapping("/sair")
 	public String sair(HttpSession session) {
