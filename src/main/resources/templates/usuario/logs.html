@@ -59,6 +59,29 @@
 										</table>
 									</div>
 								</div>
+								<div class="d-flex bd-highlight mb-3 pl-1 pr-1">
+									<div class="p-2 bd-highlight">
+										Página [[${logs.getNumber() + 1}]] de [[${logs.getTotalPages()}]]
+									</div>
+									<div class="ml-auto p-2 bd-highlight">
+										<ul class="pagination" th:if="${logs.getTotalElements() > 0}" style="margin-bottom: 1rem">
+											<!-- Página anterior -->
+											<li th:class="${logs.isFirst() ? 'page-item disabled' : 'page-item'}">
+												<a class="page-link" th:href="@{/logs(page=${(logs.getNumber() + 1) - 1})}">Anterior</a>
+											</li>
+											
+											<li th:each="i : ${#numbers.sequence(1, logs.totalPages)}"
+											th:class="${logs.getNumber() + 1 == i ? 'page-item active' : 'page-item'}">
+												<a class="page-link" th:href="@{/logs(page=${i})}">[[${i}]]</a>
+											</li>
+											
+											<!-- Próxima página -->
+											<li th:class="${logs.isLast() ? 'page-item disabled' : 'page-item'}">
+												<a class="page-link" th:href="@{/logs(page=${(logs.getNumber() + 1) + 1})}">Próxima</a>
+											</li>
+										</ul>
+									</div>
+								</div>
 							</div>
 						</div>	
 					</div>
