@@ -50,7 +50,7 @@ public class UsuarioService {
 		List<String> nomesCategoriasReceitas = Arrays.asList("Bolsa Família", "Décimo Terceiro", "Empréstimo", "FGTS", "Herança", 
 																"Mesada", "PASEP", "PIS", "Salário", "Vendas");
 		List<String> nomesCategoriasDespesas = Arrays.asList("Bebidas", "Diversão", "Educação", "Gasolina", "Hotel", 
-																"Mascotes", "Restaurante", "Roupas", "Saúde", "Transporte");
+																"Mascotes", "Restaurante", "Alimentação", "Saúde", "Transporte");
 		
 		List<Categoria> categorias = new ArrayList<>();
 		for (String nomeCategoriaReceita : nomesCategoriasReceitas) {

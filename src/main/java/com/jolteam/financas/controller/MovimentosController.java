@@ -50,7 +50,7 @@ public class MovimentosController {
 		BigDecimal totalDespesas = this.movimentosService.totalDespesaAcumuladaDe(usuario);
 		Page<Transacao> pagina=this.movimentosService.findAllByUsuario((Usuario) session.getAttribute("usuarioLogado"),PageRequest.of(page - 1, 15, Sort.by("data").descending()));
 		
-		if (page > pagina.getTotalPages()) {
+		if (page != 1 && page > pagina.getTotalPages()) {
 			return new ModelAndView("redirect:/movimentos");
 		}
 		

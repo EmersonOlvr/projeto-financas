@@ -26,13 +26,7 @@ public class CategoriaService {
 	}
 	
 	public List<Categoria> listarTodasPorUsuarioETipoTransacao(Usuario usuario, TipoTransacao tipoTransacao) {
-		List<Categoria> categorias = this.categorias.findAllByUsuarioAndTipoTransacao(usuario, tipoTransacao, Sort.by("dataCriacao").descending());
-		
-		for (Categoria cat : categorias) {
-			System.out.println(cat.getId() + " - " + cat.getNome());
-		}
-		
-		return categorias;
+		return this.categorias.findAllByUsuarioAndTipoTransacao(usuario, tipoTransacao, Sort.by("dataCriacao").descending());
 	}
 	
 	public Optional<Categoria> obterPorIdEUsuarioETipoTransacao(Integer id, Usuario usuario, TipoTransacao tipoTransacao) {
