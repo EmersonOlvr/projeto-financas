@@ -3,9 +3,12 @@ package com.jolteam.financas.controller;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.Month;
+import java.time.Year;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import javax.persistence.Transient;
 import javax.servlet.http.HttpSession;
@@ -46,22 +49,27 @@ public class HomeController {
 	@Autowired private LogService logService;
 	
 	@GetMapping("/home")
-	public ModelAndView viewHome(HttpSession session) {
+	public ModelAndView viewHome(HttpSession session, @RequestParam Integer currentMonth) throws Exception {
 		ModelAndView mv=new ModelAndView("usuario/home");
 		
 		Usuario usuario = (Usuario) session.getAttribute("usuarioLogado");
 		
-		int mesAtual = LocalDate.now().getMonthValue();
-		int mesAtualMenosSeis = LocalDate.now().getMonthValue() - 5;
+		int mesAtual = currentMonth;
+		int anoAtual = LocalDate.now().getYear();
+		
+		Map<Integer, Integer> ultimosSeisMeses = Util.obterUltimosSeisMesesEAno(mesAtual, anoAtual);
 		
 		List<BigDecimal> receitas = new ArrayList<>();
 		List<BigDecimal> despesas = new ArrayList<>();
 		
-		for (int i = mesAtualMenosSeis; i <= mesAtual; i++) {
-			Month mes = Month.of(i);
+		for (int m : ultimosSeisMeses.keySet()) {
+			System.out.println(m + "/" + ultimosSeisMeses.get(m));
 			
-			List<Transacao> receitasPorMes = this.movimentosService.obterReceitasPorMes(mes, usuario);
-			List<Transacao> despesasPorMes = this.movimentosService.obterDespesasPorMes(mes, usuario);
+			Month mes = Month.of(m);
+			Year ano = Year.of(ultimosSeisMeses.get(m));
+			
+			List<Transacao> receitasPorMes = this.movimentosService.obterReceitasPorMesAno(mes, ano, usuario);
+			List<Transacao> despesasPorMes = this.movimentosService.obterDespesasPorMesAno(mes, ano, usuario);
 			
 			BigDecimal totalReceitasPorMes = Util.somarTransacoes(receitasPorMes);
 			BigDecimal totalDespesasPorMes = Util.somarTransacoes(despesasPorMes);
@@ -70,12 +78,12 @@ public class HomeController {
 			despesas.add(totalDespesasPorMes);
 		}
 		
-		mv.addObject("meses", Util.obterUltimosSeisMeses());
+		mv.addObject("meses", Util.obterUltimosSeisMeses(currentMonth));
 		mv.addObject("receitas", receitas);
 		mv.addObject("despesas", despesas);
 		
-		List<Transacao> receitasMesAtual = this.movimentosService.obterReceitasPorMes(Month.of(mesAtual), usuario);
-		List<Transacao> despesasMesAtual = this.movimentosService.obterDespesasPorMes(Month.of(mesAtual), usuario);
+		List<Transacao> receitasMesAtual = this.movimentosService.obterReceitasPorMesAno(Month.of(mesAtual), Year.of(LocalDateTime.now().getYear()), usuario);
+		List<Transacao> despesasMesAtual = this.movimentosService.obterDespesasPorMesAno(Month.of(mesAtual), Year.of(LocalDateTime.now().getYear()), usuario);
 		
 		BigDecimal totalReceitasMesAtual = Util.somarTransacoes(receitasMesAtual);
 		BigDecimal totalDespesasMesAtual = Util.somarTransacoes(despesasMesAtual);

@@ -28,6 +28,7 @@ public interface TransacaoDAO extends JpaRepository<Transacao, Integer> {
 	
 	@Query("SELECT t FROM Transacao t WHERE "
 			+ "month(t.data) = month(:data) AND "
+			+ "year(t.data) = year(:data) AND "
 			+ "t.tipo = :tipo AND "
 			+ "t.usuario = :usuario")
 	List<Transacao> listarPorDataEUsuario(@Param("data") LocalDate data, 

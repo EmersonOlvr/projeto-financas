@@ -7,8 +7,10 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -112,16 +114,133 @@ public abstract class Util {
 		return total;
 	}
 	
-	public static List<String> obterUltimosSeisMeses() {
+	public static List<String> obterUltimosSeisMeses(int mesAtual) throws Exception {
 		List<String> meses = new ArrayList<>(Arrays.asList(
 					"Janeiro", "Fevereiro", "Março", "Abril", "Maio", "Junho", 
 					"Julho", "Agosto", "Setembro", "Outubro", "Novembro", "Dezembro"
 				));
 		
-		int mesAtual = LocalDate.now().getMonthValue();
-		int primeiroMes = mesAtual - 6;
+		if (mesAtual == 1) {
+			return Arrays.asList(meses.get(7), meses.get(8), meses.get(9), meses.get(10), meses.get(11), meses.get(0));
+		} else if (mesAtual == 2) {
+			return Arrays.asList(meses.get(8), meses.get(9), meses.get(10), meses.get(11), meses.get(0), meses.get(1));
+		} else if (mesAtual == 3) {
+			return Arrays.asList(meses.get(9), meses.get(10), meses.get(11), meses.get(0), meses.get(1), meses.get(2));
+		} else if (mesAtual == 4) {
+			return Arrays.asList(meses.get(10), meses.get(11), meses.get(0), meses.get(1), meses.get(2), meses.get(3));
+		} else if (mesAtual == 5) {
+			return Arrays.asList(meses.get(11), meses.get(0), meses.get(1), meses.get(2), meses.get(3), meses.get(4));
+		} else if (mesAtual == 6) {
+			return Arrays.asList(meses.get(0), meses.get(1), meses.get(2), meses.get(3), meses.get(4), meses.get(5));
+		} else if (mesAtual == 7) {
+			return Arrays.asList(meses.get(1), meses.get(2), meses.get(3), meses.get(4), meses.get(5), meses.get(6));
+		} else if (mesAtual == 8) {
+			return Arrays.asList(meses.get(2), meses.get(3), meses.get(4), meses.get(5), meses.get(6), meses.get(7));
+		} else if (mesAtual == 9) {
+			return Arrays.asList(meses.get(3), meses.get(4), meses.get(5), meses.get(6), meses.get(7), meses.get(8));
+		} else if (mesAtual == 10) {
+			return Arrays.asList(meses.get(4), meses.get(5), meses.get(6), meses.get(7), meses.get(8), meses.get(9));
+		} else if (mesAtual == 11) {
+			return Arrays.asList(meses.get(5), meses.get(6), meses.get(7), meses.get(8), meses.get(9), meses.get(10));
+		} else if (mesAtual == 12) {
+			return Arrays.asList(meses.get(6), meses.get(7), meses.get(8), meses.get(9), meses.get(10), meses.get(11));
+		} else {
+			throw new Exception("O mês atual informado por parâmetro é inválido.");
+		}
+	}
+	
+	public static Map<Integer, Integer> obterUltimosSeisMesesEAno(int mesAtual, int anoAtual) {
+		Map<Integer, Integer> ultimosSeisMeses = new LinkedHashMap<Integer, Integer>();
 		
-		return meses.subList(primeiroMes, mesAtual);
+		int anoAnterior = anoAtual - 1;
+		
+		if (mesAtual == 1) {
+			ultimosSeisMeses.put(8, anoAnterior);
+			ultimosSeisMeses.put(9, anoAnterior);
+			ultimosSeisMeses.put(10, anoAnterior);
+			ultimosSeisMeses.put(11, anoAnterior);
+			ultimosSeisMeses.put(12, anoAnterior);
+			ultimosSeisMeses.put(1, anoAtual);
+		} else if (mesAtual == 2) {
+			ultimosSeisMeses.put(9, anoAnterior);
+			ultimosSeisMeses.put(10, anoAnterior);
+			ultimosSeisMeses.put(11, anoAnterior);
+			ultimosSeisMeses.put(12, anoAnterior);
+			ultimosSeisMeses.put(1, anoAtual);
+			ultimosSeisMeses.put(2, anoAtual);
+		} else if (mesAtual == 3) {
+			ultimosSeisMeses.put(10, anoAnterior);
+			ultimosSeisMeses.put(11, anoAnterior);
+			ultimosSeisMeses.put(12, anoAnterior);
+			ultimosSeisMeses.put(1, anoAtual);
+			ultimosSeisMeses.put(2, anoAtual);
+			ultimosSeisMeses.put(3, anoAtual);
+		} else if (mesAtual == 4) {
+			ultimosSeisMeses.put(11, anoAnterior);
+			ultimosSeisMeses.put(12, anoAnterior);
+			ultimosSeisMeses.put(1, anoAtual);
+			ultimosSeisMeses.put(2, anoAtual);
+			ultimosSeisMeses.put(3, anoAtual);
+			ultimosSeisMeses.put(4, anoAtual);
+		} else if (mesAtual == 5) {
+			ultimosSeisMeses.put(12, anoAnterior);
+			ultimosSeisMeses.put(1, anoAtual);
+			ultimosSeisMeses.put(2, anoAtual);
+			ultimosSeisMeses.put(3, anoAtual);
+			ultimosSeisMeses.put(4, anoAtual);
+			ultimosSeisMeses.put(5, anoAtual);
+		} else if (mesAtual == 6) {
+			ultimosSeisMeses.put(1, anoAtual);
+			ultimosSeisMeses.put(2, anoAtual);
+			ultimosSeisMeses.put(3, anoAtual);
+			ultimosSeisMeses.put(4, anoAtual);
+			ultimosSeisMeses.put(5, anoAtual);
+			ultimosSeisMeses.put(6, anoAtual);
+		} else if (mesAtual == 7) {
+			ultimosSeisMeses.put(2, anoAtual);
+			ultimosSeisMeses.put(3, anoAtual);
+			ultimosSeisMeses.put(4, anoAtual);
+			ultimosSeisMeses.put(5, anoAtual);
+			ultimosSeisMeses.put(6, anoAtual);
+			ultimosSeisMeses.put(7, anoAtual);
+		} else if (mesAtual == 8) {
+			ultimosSeisMeses.put(3, anoAtual);
+			ultimosSeisMeses.put(4, anoAtual);
+			ultimosSeisMeses.put(5, anoAtual);
+			ultimosSeisMeses.put(6, anoAtual);
+			ultimosSeisMeses.put(7, anoAtual);
+			ultimosSeisMeses.put(8, anoAtual);
+		} else if (mesAtual == 9) {
+			ultimosSeisMeses.put(4, anoAtual);
+			ultimosSeisMeses.put(5, anoAtual);
+			ultimosSeisMeses.put(6, anoAtual);
+			ultimosSeisMeses.put(7, anoAtual);
+			ultimosSeisMeses.put(8, anoAtual);
+			ultimosSeisMeses.put(9, anoAtual);
+		} else if (mesAtual == 10) {
+			ultimosSeisMeses.put(5, anoAtual);
+			ultimosSeisMeses.put(6, anoAtual);
+			ultimosSeisMeses.put(7, anoAtual);
+			ultimosSeisMeses.put(8, anoAtual);
+			ultimosSeisMeses.put(9, anoAtual);
+			ultimosSeisMeses.put(10, anoAtual);
+		} else if (mesAtual == 11) {
+			ultimosSeisMeses.put(6, anoAtual);
+			ultimosSeisMeses.put(7, anoAtual);
+			ultimosSeisMeses.put(8, anoAtual);
+			ultimosSeisMeses.put(9, anoAtual);
+			ultimosSeisMeses.put(10, anoAtual);
+			ultimosSeisMeses.put(11, anoAtual);
+		} else if (mesAtual == 12) {
+			ultimosSeisMeses.put(7, anoAtual);
+			ultimosSeisMeses.put(8, anoAtual);
+			ultimosSeisMeses.put(9, anoAtual);
+			ultimosSeisMeses.put(10, anoAtual);
+			ultimosSeisMeses.put(11, anoAtual);
+			ultimosSeisMeses.put(12, anoAtual);
+		}
+		
+		return ultimosSeisMeses;
 	}
 	
 	public static boolean isEmailValido(String email) {

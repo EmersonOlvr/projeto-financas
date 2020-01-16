@@ -3,6 +3,7 @@ package com.jolteam.financas.service;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.Month;
+import java.time.Year;
 import java.util.List;
 import java.util.Optional;
 
@@ -37,8 +38,18 @@ public class MovimentosService {
 		
 		return this.transacoes.listarPorDataEUsuario(data, usuario, TipoTransacao.RECEITA);
 	}
+	public List<Transacao> obterReceitasPorMesAno(Month mes, Year ano, Usuario usuario) {
+		LocalDate data = LocalDate.of(ano.getValue(), mes, 1);
+		
+		return this.transacoes.listarPorDataEUsuario(data, usuario, TipoTransacao.RECEITA);
+	}
 	public List<Transacao> obterDespesasPorMes(Month mes, Usuario usuario) {
 		LocalDate data = LocalDate.of(LocalDate.now().getYear(), mes, 1);
+		
+		return this.transacoes.listarPorDataEUsuario(data, usuario, TipoTransacao.DESPESA);
+	}
+	public List<Transacao> obterDespesasPorMesAno(Month mes, Year ano, Usuario usuario) {
+		LocalDate data = LocalDate.of(ano.getValue(), mes, 1);
 		
 		return this.transacoes.listarPorDataEUsuario(data, usuario, TipoTransacao.DESPESA);
 	}
