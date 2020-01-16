@@ -49,12 +49,12 @@ public class HomeController {
 	@Autowired private LogService logService;
 	
 	@GetMapping("/home")
-	public ModelAndView viewHome(HttpSession session, @RequestParam Integer currentMonth) throws Exception {
+	public ModelAndView viewHome(HttpSession session) throws Exception {
 		ModelAndView mv=new ModelAndView("usuario/home");
 		
 		Usuario usuario = (Usuario) session.getAttribute("usuarioLogado");
 		
-		int mesAtual = currentMonth;
+		int mesAtual = LocalDate.now().getMonthValue();
 		int anoAtual = LocalDate.now().getYear();
 		
 		Map<Integer, Integer> ultimosSeisMeses = Util.obterUltimosSeisMesesEAno(mesAtual, anoAtual);
@@ -78,7 +78,7 @@ public class HomeController {
 			despesas.add(totalDespesasPorMes);
 		}
 		
-		mv.addObject("meses", Util.obterUltimosSeisMeses(currentMonth));
+		mv.addObject("meses", Util.obterUltimosSeisMeses(mesAtual));
 		mv.addObject("receitas", receitas);
 		mv.addObject("despesas", despesas);
 		
