@@ -63,8 +63,6 @@ public class HomeController {
 		List<BigDecimal> despesas = new ArrayList<>();
 		
 		for (int m : ultimosSeisMeses.keySet()) {
-			System.out.println(m + "/" + ultimosSeisMeses.get(m));
-			
 			Month mes = Month.of(m);
 			Year ano = Year.of(ultimosSeisMeses.get(m));
 			
